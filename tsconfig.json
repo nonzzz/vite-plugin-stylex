@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "allowJs": true,
+      "baseUrl": ".",
+      "noImplicitThis": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "target": "ES2019",
+      "lib": ["esnext", "dom"],
+      "resolveJsonModule": true,
+      "module": "CommonJS",
+      "moduleResolution": "node",
+      "outDir": "dist"
+    }
+  }
+  

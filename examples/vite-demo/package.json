@@ -1,0 +1,12 @@
+{
+    "name": "vite-demo",
+    "devDependencies": {
+        "@vitejs/plugin-vue": "4.5.1",
+        "vite-plugin-stylex": "workspace:*",
+        "vue": "^3.3.10"
+    },
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    }
+}
