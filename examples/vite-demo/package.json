@@ -2,6 +2,7 @@
     "name": "vite-demo",
     "devDependencies": {
         "@vitejs/plugin-vue": "4.5.1",
+        "vite": "^5.0.6",
         "vite-plugin-stylex": "workspace:*",
         "vue": "^3.3.10"
     },
