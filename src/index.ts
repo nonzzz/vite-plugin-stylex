@@ -87,6 +87,7 @@ const VIRTUAL_STYLEX_MODULE = '\0stylex:virtual'
 const VIRTUAL_STYLEX_CSS_MODULE = VIRTUAL_STYLEX_MODULE + '.css'
 
 //  'astro:build', 'remix'
+const VITE_INTERNAL_CSS_PLUGIN_NAMES = ['vite:css', 'vite:css-post']
 const QWIK_OR_OTHER_PLUGIN_NAMES = ['vite-plugin-qwik']
 
 export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
@@ -103,6 +104,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   let isProd = false
   let viteServer: ViteDevServer | null = null
   let hasQwikOrAstro = false
+  const viteCSSPlugins: Plugin[] = []
   const processStylexRules = () => {
     const rules = Object.values(stylexRules).flat()
     if (!rules.length) return
@@ -135,11 +137,15 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     configResolved(conf) {
       isProd = conf.mode === 'production' || conf.env.mode === 'production'
       for (const plugin of conf.plugins) {
-        if (QWIK_OR_OTHER_PLUGIN_NAMES.includes(plugin.name)) {
+        if (VITE_INTERNAL_CSS_PLUGIN_NAMES.includes(plugin.name)) {
+          viteCSSPlugins.push(plugin)
+        }
+        if (QWIK_OR_OTHER_PLUGIN_NAMES.includes(plugin.name) && !hasQwikOrAstro) {
           hasQwikOrAstro = true
-          break
+          continue
         }
       }
+      viteCSSPlugins.sort((a, b) => a.name === 'vite:css' && b.name === 'vite:css-post' ? -1 : 1)
     },
     load(id) {
       if (id === VIRTUAL_STYLEX_CSS_MODULE) {
@@ -192,8 +198,18 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
         }
       }
       return html
+    },
+    async renderChunk(_, chunk) {
+      // Should we keep fileName? 
+      const [plugin_1, plugin_2] = viteCSSPlugins
+      for (const moudleId of chunk.moduleIds) {
+        if (moudleId.includes(VIRTUAL_STYLEX_CSS_MODULE)) {
+          if (typeof plugin_1.transform === 'function' && typeof plugin_2.transform === 'function') {
+            const { code: css } = await plugin_1.transform.call(this, processStylexRules(), VIRTUAL_STYLEX_CSS_MODULE)
+            await plugin_2.transform.call(this, css, VIRTUAL_STYLEX_CSS_MODULE)
+          }
+        }
+      }
     }
-    // Should we keep fileName? If not i think renderChunk or generateBundle
-    // is unnecessary.
   }
 }

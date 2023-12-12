@@ -1,6 +1,9 @@
 <template>
   <div :class="cl">
-    123
+    <Card>
+      123
+      456
+    </Card>
   </div>
 </template>
 
@@ -8,6 +11,7 @@
 import * as stylex from '@stylexjs/stylex'
 import { computed } from 'vue'
 import { styles } from './stylex'
+import Card from './card.vue'
 
 const cl = computed(() => stylex.props(styles.normal).className)
 </script>
