@@ -2,7 +2,8 @@ import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
   normal: {
-    color: 'red'
+    color: 'red',
+    display: 'flex'
   }
 })
 

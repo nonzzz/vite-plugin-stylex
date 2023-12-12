@@ -6,7 +6,7 @@ import typescriptSyntaxPlugin from '@babel/plugin-syntax-typescript'
 
 import type { PluginItem } from '@babel/core'
 import * as babel from '@babel/core'
-import type { Plugin, ResolvedConfig } from 'vite'
+import type { Plugin, ResolvedConfig, ViteDevServer } from 'vite'
 import type { Rule } from '@stylexjs/babel-plugin'
 import { FilterPattern } from '@rollup/pluginutils'
 import { createFilter } from '@rollup/pluginutils'
@@ -73,10 +73,18 @@ function transformWithStylex(code: string, id: string, transformOptions: Transfo
         ? flowSyntaxPlugin
         : typescriptSyntaxPlugin,
       isJSX && jsxSyntaxPlugin,
-      [stylexBabelPlugin, { dev: !isProduction, unstable_moduleResolution, ...options }]
+      [stylexBabelPlugin, { dev: !isProduction, unstable_moduleResolution, runtimeInjection: false, ...options }]
     ].filter(Boolean)
   })
 }
+
+// stylex provide a dev runtime AFAK. 
+// But from a design principles. We won't need it. Only using virtual module is enough.
+// Judging from the previous experimental implementation of style9,It's worth to do it.
+
+const VIRTUAL_STYLEX_MODULE = '\0stylex:virtual'
+
+const VIRTUAL_STYLEX_CSS_MODULE = VIRTUAL_STYLEX_MODULE + '.css'
 
 export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   const {
@@ -93,6 +101,14 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   let isProd = false
   let assetsDir = 'assets'
   let publicDir = '/'
+  let viteServer: ViteDevServer | null = null
+
+  const processStylexRules = () => {
+    const rules = Object.values(stylexRules).flat()
+    if (!rules.length) return
+    return stylexBabelPlugin.processStylexRules(rules, false)
+  }
+
   return {
     name: 'vite-plugin-stylex',
     enforce: 'post',
@@ -103,19 +119,37 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       stylexRules[id] = meta.stylex
       return false
     },
+    configureServer(server) {
+      viteServer = server
+    },
     configResolved(conf) {
       isProd = conf.mode === 'production' || conf.env.mode === 'production'
       assetsDir = conf.build.assetsDir ?? 'assets'
       publicDir = conf.base || '/'
     },
+    load(id) {
+      if (id === VIRTUAL_STYLEX_CSS_MODULE) return processStylexRules()
+    },
+    resolveId(id) {
+      if (id === VIRTUAL_STYLEX_MODULE) return VIRTUAL_STYLEX_CSS_MODULE
+    },
     async transform(inputCode, id, transformOptios) {
       if (!filter(id)) return
       if (!stylexImports.some((importName) => inputCode.includes(importName))) return
       const result = await transformWithStylex(inputCode, id, { isProduction: isProd, presets, plugins, unstable_moduleResolution, ...options })
-      if (isProd && 'stylex' in result.metadata) {
-        const rule = result.metadata.stylex as Rule[]
-        if (rule.length > 0) {
-          stylexRules[id] = rule
+      if (!result) return
+      if ('stylex' in result.metadata) {
+        const rules = result.metadata.stylex as Rule[]
+        if (!rules.length) return
+        result.code = `import ${JSON.stringify(VIRTUAL_STYLEX_MODULE)};\n${result.code}`
+        stylexRules[id] = rules
+      }
+      if (viteServer) {
+        const { moduleGraph } = viteServer
+        const virtualModule = moduleGraph.getModuleById(VIRTUAL_STYLEX_CSS_MODULE)
+        if (virtualModule) {
+          moduleGraph.invalidateModule(virtualModule)
+          virtualModule.lastHMRTimestamp = Date.now()
         }
       }
       return {
@@ -126,7 +160,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     },
     transformIndexHtml(html, ctx) {
       if (!isProd) return html
-      // onst publicPath = path.join(publicBasePath, fileName);
+      // const publicPath = path.join(publicBasePath, fileName);
       return {
         html,
         tags: [
@@ -143,9 +177,8 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     },
     generateBundle() {
       // respect vite's assetDir
-      const rules = Object.values(stylexRules).flat()
-      if (!rules.length) return
-      const collectedCSS = stylexBabelPlugin.processStylexRules(rules, false)
+      const collectedCSS = processStylexRules()
+      if (!collectedCSS) return
       const outputFile = path.join(assetsDir, fileName)
       this.emitFile({ fileName: outputFile, source: collectedCSS, type: 'asset' })
     }
