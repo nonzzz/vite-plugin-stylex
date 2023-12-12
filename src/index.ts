@@ -86,8 +86,8 @@ const VIRTUAL_STYLEX_MODULE = '\0stylex:virtual'
 
 const VIRTUAL_STYLEX_CSS_MODULE = VIRTUAL_STYLEX_MODULE + '.css'
 
-// const VITE_INTERNAL_CSS_PLUGIN = ['vite:css', 'vite:css-post']
-const QWIK_OR_OTHER_PLUGIN_NAMES = ['vite-plugin-qwik', 'astro:build', 'remix']
+//  'astro:build', 'remix'
+const QWIK_OR_OTHER_PLUGIN_NAMES = ['vite-plugin-qwik']
 
 export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   const {
@@ -101,10 +101,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   const filter = createFilter(include, exclude)
   let stylexRules: Record<string, Rule[]> = {}
   let isProd = false
-  // let assetsDir = 'assets'
-  // let publicDir = '/'
   let viteServer: ViteDevServer | null = null
-  // const viteCSSPlugins: Plugin[] = []
   let hasQwikOrAstro = false
   const processStylexRules = () => {
     const rules = Object.values(stylexRules).flat()

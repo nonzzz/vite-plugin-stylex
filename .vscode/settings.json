@@ -1,3 +1,6 @@
 {
     "eslint.experimental.useFlatConfig": true,
+    "[yaml]": {
+       "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
 }

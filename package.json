@@ -23,7 +23,8 @@
     "./*": "./*"
   },
   "scripts": {
-    "dev": "tsup --watch src"
+    "dev": "tsup --watch src",
+    "build": "tsup"
   },
   "keywords": [],
   "author": "",
