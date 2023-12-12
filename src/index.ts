@@ -86,10 +86,12 @@ const VIRTUAL_STYLEX_MODULE = '\0stylex:virtual'
 
 const VIRTUAL_STYLEX_CSS_MODULE = VIRTUAL_STYLEX_MODULE + '.css'
 
+// const VITE_INTERNAL_CSS_PLUGIN = ['vite:css', 'vite:css-post']
+const QWIK_OR_OTHER_PLUGIN_NAMES = ['vite-plugin-qwik', 'astro:build', 'remix']
+
 export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   const {
     unstable_moduleResolution = { type: 'commonJS', rootDir: process.cwd() },
-    fileName = 'stlex.css',
     babelConfig: { plugins = [], presets = [] } = {},
     stylexImports = ['stylex', '@stylexjs/stylex'],
     include = /\.(mjs|js|ts|vue|jsx|tsx)(\?.*|)$/,
@@ -99,10 +101,11 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   const filter = createFilter(include, exclude)
   let stylexRules: Record<string, Rule[]> = {}
   let isProd = false
-  let assetsDir = 'assets'
-  let publicDir = '/'
+  // let assetsDir = 'assets'
+  // let publicDir = '/'
   let viteServer: ViteDevServer | null = null
-
+  // const viteCSSPlugins: Plugin[] = []
+  let hasQwikOrAstro = false
   const processStylexRules = () => {
     const rules = Object.values(stylexRules).flat()
     if (!rules.length) return
@@ -121,19 +124,25 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     // https://github.com/BuilderIO/qwik/blob/main/packages/qwik/src/optimizer/src/plugins/vite-server.ts#L55-L56
     configureServer(server) {
       viteServer = server
-      viteServer.middlewares.use((req, res, next) => {
-        if (/stylex:virtual\.css/.test(req.originalUrl)) {
-          res.setHeader('Content-Type', 'text/css')
-          res.end(processStylexRules())
-          return
-        }
-        next()
-      })
+      if (hasQwikOrAstro) {
+        viteServer.middlewares.use((req, res, next) => {
+          if (/stylex:virtual\.css/.test(req.originalUrl)) {
+            res.setHeader('Content-Type', 'text/css')
+            res.end(processStylexRules())
+            return
+          }
+          next()
+        })
+      }
     },
     configResolved(conf) {
       isProd = conf.mode === 'production' || conf.env.mode === 'production'
-      assetsDir = conf.build.assetsDir ?? 'assets'
-      publicDir = conf.base || '/'
+      for (const plugin of conf.plugins) {
+        if (QWIK_OR_OTHER_PLUGIN_NAMES.includes(plugin.name)) {
+          hasQwikOrAstro = true
+          break
+        }
+      }
     },
     load(id) {
       if (id === VIRTUAL_STYLEX_CSS_MODULE) {
@@ -151,6 +160,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       if ('stylex' in result.metadata) {
         const rules = result.metadata.stylex as Rule[]
         if (!rules.length) return
+        // pipe to vite's internal plugin for processing.
         result.code = `import ${JSON.stringify(VIRTUAL_STYLEX_MODULE)};\n${result.code}`
         stylexRules[id] = rules
       }
@@ -168,8 +178,8 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
         meta: result.metadata
       }
     },
-    transformIndexHtml(html, ctx) {
-      if (!isProd) {
+    transformIndexHtml(html) {
+      if (!isProd && hasQwikOrAstro) {
         return {
           html,
           tags: [
@@ -182,29 +192,11 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
               }
             }
           ]
-        } 
+        }
       }
-      // const publicPath = path.join(publicBasePath, fileName);
-      return {
-        html,
-        tags: [
-          {
-            tag: 'link',
-            injectTo: 'head',
-            attrs: {
-              rel: 'stylesheet',
-              href: path.join(publicDir, fileName)
-            }
-          }
-        ]
-      }
-    },
-    generateBundle() {
-      // respect vite's assetDir
-      const collectedCSS = processStylexRules()
-      if (!collectedCSS) return
-      const outputFile = path.join(assetsDir, fileName)
-      this.emitFile({ fileName: outputFile, source: collectedCSS, type: 'asset' })
+      return html
     }
+    // Should we keep fileName? If not i think renderChunk or generateBundle
+    // is unnecessary.
   }
 }
