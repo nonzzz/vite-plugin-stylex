@@ -111,7 +111,6 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
 
   return {
     name: 'vite-plugin-stylex',
-    enforce: 'post',
     buildStart() {
       stylexRules = {}
     },
@@ -119,8 +118,17 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       stylexRules[id] = meta.stylex
       return false
     },
+    // https://github.com/BuilderIO/qwik/blob/main/packages/qwik/src/optimizer/src/plugins/vite-server.ts#L55-L56
     configureServer(server) {
       viteServer = server
+      viteServer.middlewares.use((req, res, next) => {
+        if (/stylex:virtual\.css/.test(req.originalUrl)) {
+          res.setHeader('Content-Type', 'text/css')
+          res.end(processStylexRules())
+          return
+        }
+        next()
+      })
     },
     configResolved(conf) {
       isProd = conf.mode === 'production' || conf.env.mode === 'production'
@@ -128,12 +136,14 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       publicDir = conf.base || '/'
     },
     load(id) {
-      if (id === VIRTUAL_STYLEX_CSS_MODULE) return processStylexRules()
+      if (id === VIRTUAL_STYLEX_CSS_MODULE) {
+        return processStylexRules()
+      }
     },
     resolveId(id) {
       if (id === VIRTUAL_STYLEX_MODULE) return VIRTUAL_STYLEX_CSS_MODULE
     },
-    async transform(inputCode, id, transformOptios) {
+    async transform(inputCode, id) {
       if (!filter(id)) return
       if (!stylexImports.some((importName) => inputCode.includes(importName))) return
       const result = await transformWithStylex(inputCode, id, { isProduction: isProd, presets, plugins, unstable_moduleResolution, ...options })
@@ -159,7 +169,21 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       }
     },
     transformIndexHtml(html, ctx) {
-      if (!isProd) return html
+      if (!isProd) {
+        return {
+          html,
+          tags: [
+            {
+              tag: 'link',
+              injectTo: 'head',
+              attrs: {
+                rel: 'stylesheet',
+                href: VIRTUAL_STYLEX_CSS_MODULE
+              }
+            }
+          ]
+        } 
+      }
       // const publicPath = path.join(publicBasePath, fileName);
       return {
         html,
