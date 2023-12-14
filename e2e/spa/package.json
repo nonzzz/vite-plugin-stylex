@@ -1,0 +1,8 @@
+{
+  "name": "vite-plugin-stylex-e2e-spa",
+  "private": "true",
+  "dependencies": {
+    "vite": "^5",
+    "@vitejs/plugin-vue": "^4.5.2"
+  }
+}

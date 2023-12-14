@@ -1,6 +1,12 @@
 {
-    "eslint.experimental.useFlatConfig": true,
-    "[yaml]": {
-       "editor.defaultFormatter": "esbenp.prettier-vscode"
-    }
+  "eslint.experimental.useFlatConfig": true,
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
