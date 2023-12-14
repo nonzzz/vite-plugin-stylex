@@ -3,10 +3,10 @@ import stylexBabelPlugin from '@stylexjs/babel-plugin'
 import flowSyntaxPlugin from '@babel/plugin-syntax-flow'
 import jsxSyntaxPlugin from '@babel/plugin-syntax-jsx'
 import typescriptSyntaxPlugin from '@babel/plugin-syntax-typescript'
-
+import type { NextHandleFunction } from 'connect'
 import type { PluginItem } from '@babel/core'
 import * as babel from '@babel/core'
-import type { Plugin, ResolvedConfig, ViteDevServer } from 'vite'
+import type { Plugin, ViteDevServer } from 'vite'
 import type { Rule } from '@stylexjs/babel-plugin'
 import { FilterPattern } from '@rollup/pluginutils'
 import { createFilter } from '@rollup/pluginutils'
@@ -29,30 +29,6 @@ interface StylexPluginOptions {
   babelConfig?: BabelConfig
   stylexImports?: string[]
   [prop: string]: any
-}
-
-function slash(path: string) {
-  const isExtendedLengthPath = /^\\\\\?\\/.test(path)
-  if (isExtendedLengthPath) return path
-  return path.replace(/\\/g, '/')
-}
-
-// eslint-disable-next-line no-unused-vars
-function handleOutputOptions(conf: ResolvedConfig) {
-  const outputs: Set<string> = new Set()
-  const prepareAbsPath = (root: string, sub: string) => slash(path.resolve(root, sub))
-  if (conf.build.rollupOptions?.output) {
-    const outputOptions = Array.isArray(conf.build.rollupOptions.output)
-      ? conf.build.rollupOptions.output
-      : [conf.build.rollupOptions.output]
-    outputOptions.forEach((opt) => {
-      if (typeof opt === 'object' && !Object.keys(opt).length) return
-      outputs.add(prepareAbsPath(conf.root, opt.dir || conf.build.outDir))
-    })
-  } else {
-    outputs.add(prepareAbsPath(conf.root, conf.build.outDir))
-  }
-  return outputs
 }
 
 interface TransformWithStylexOptions extends Partial<BabelConfig> {
@@ -86,10 +62,24 @@ const VIRTUAL_STYLEX_MODULE = '\0stylex:virtual'
 
 const VIRTUAL_STYLEX_CSS_MODULE = VIRTUAL_STYLEX_MODULE + '.css'
 
-//  'astro:build', 'remix'
 const VITE_INTERNAL_CSS_PLUGIN_NAMES = ['vite:css', 'vite:css-post']
-const QWIK_OR_OTHER_PLUGIN_NAMES = ['vite-plugin-qwik']
 
+function createSSRMiddleware(processStylexRules: () => string): NextHandleFunction {
+  return function stylexDevMiddleware(req, res, next) {
+    const protocol = 'encrypted' in req.connection ? 'https' : 'http'
+    const { host } = req.headers
+    const url = new URL(req.originalUrl, `${protocol}://${host}`)
+    if (url.pathname.endsWith('.css') && url.pathname.includes('stylex:virtual')) {
+      // Check style sheet is registered.
+      res.setHeader('Content-Type', 'text/css')
+      res.end(processStylexRules())
+      return
+    }
+    next()
+  }
+}
+
+// TODO
 export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   const {
     unstable_moduleResolution = { type: 'commonJS', rootDir: process.cwd() },
@@ -103,7 +93,6 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   let stylexRules: Record<string, Rule[]> = {}
   let isProd = false
   let viteServer: ViteDevServer | null = null
-  let hasQwikOrAstro = false
   const viteCSSPlugins: Plugin[] = []
   const processStylexRules = () => {
     const rules = Object.values(stylexRules).flat()
@@ -120,31 +109,20 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       stylexRules[id] = meta.stylex
       return false
     },
+    // https://github.com/vitejs/vite/blob/main/packages/vite/src/node/server/index.ts#L715-L745
+    // https://github.com/vitejs/vite/blob/main/packages/vite/src/node/server/middlewares/transform.ts#L175-L187
     // https://github.com/BuilderIO/qwik/blob/main/packages/qwik/src/optimizer/src/plugins/vite-server.ts#L55-L56
     configureServer(server) {
       viteServer = server
-      if (hasQwikOrAstro) {
-        viteServer.middlewares.use((req, res, next) => {
-          if (/stylex:virtual\.css/.test(req.originalUrl)) {
-            res.setHeader('Content-Type', 'text/css')
-            res.end(processStylexRules())
-            return
-          }
-          next()
-        })
+      // Enable middleware when the project is custrom render or ssr 
+      if (viteServer.config.appType === 'custom' || viteServer.config.server.middlewareMode) {
+        const stylexDevMiddleware = createSSRMiddleware(processStylexRules)
+        viteServer.middlewares.use(stylexDevMiddleware)
       }
     },
     configResolved(conf) {
       isProd = conf.mode === 'production' || conf.env.mode === 'production'
-      for (const plugin of conf.plugins) {
-        if (VITE_INTERNAL_CSS_PLUGIN_NAMES.includes(plugin.name)) {
-          viteCSSPlugins.push(plugin)
-        }
-        if (QWIK_OR_OTHER_PLUGIN_NAMES.includes(plugin.name) && !hasQwikOrAstro) {
-          hasQwikOrAstro = true
-          continue
-        }
-      }
+      viteCSSPlugins.push(...conf.plugins.filter(p => VITE_INTERNAL_CSS_PLUGIN_NAMES.includes(p.name)))
       viteCSSPlugins.sort((a, b) => a.name === 'vite:css' && b.name === 'vite:css-post' ? -1 : 1)
     },
     load(id) {
@@ -181,26 +159,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
         meta: result.metadata
       }
     },
-    transformIndexHtml(html) {
-      if (!isProd && hasQwikOrAstro) {
-        return {
-          html,
-          tags: [
-            {
-              tag: 'link',
-              injectTo: 'head',
-              attrs: {
-                rel: 'stylesheet',
-                href: VIRTUAL_STYLEX_CSS_MODULE
-              }
-            }
-          ]
-        }
-      }
-      return html
-    },
     async renderChunk(_, chunk) {
-      // Should we keep fileName? 
       const [plugin_1, plugin_2] = viteCSSPlugins
       for (const moudleId of chunk.moduleIds) {
         if (moudleId.includes(VIRTUAL_STYLEX_CSS_MODULE)) {
