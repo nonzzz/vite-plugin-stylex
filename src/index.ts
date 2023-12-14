@@ -21,7 +21,7 @@ interface BabelConfig {
   presets: Array<PluginItem>
 }
 
-interface StylexPluginOptions {
+export interface StylexPluginOptions {
   include?: FilterPattern
   exclude?: FilterPattern
   unstable_moduleResolution?: UnstableModuleResolution
@@ -160,6 +160,8 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       }
     },
     async renderChunk(_, chunk) {
+      // plugin_1 is vite:css plugin using it we will re set the finally css (Vite using prost-css in here.)
+      // plugin_2 is vite:css-post plugin. vite will compress css here.
       const [plugin_1, plugin_2] = viteCSSPlugins
       for (const moudleId of chunk.moduleIds) {
         if (moudleId.includes(VIRTUAL_STYLEX_CSS_MODULE)) {
