@@ -10952,6 +10952,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"vite-plugin-stylex-e2e-spa@workspace:e2e/spa":
+  version: 0.0.0-use.local
+  resolution: "vite-plugin-stylex-e2e-spa@workspace:e2e/spa"
+  dependencies:
+    "@vitejs/plugin-vue": 4.5.1
+    vite: ^5.0.6
+    vite-plugin-stylex: "workspace:*"
+    vue: ^3.3.10
+  languageName: unknown
+  linkType: soft
+
 "vite-plugin-stylex@workspace:*, vite-plugin-stylex@workspace:.":
   version: 0.0.0-use.local
   resolution: "vite-plugin-stylex@workspace:."
