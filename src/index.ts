@@ -8,7 +8,7 @@ import type { PluginItem } from '@babel/core'
 import * as babel from '@babel/core'
 import type { Plugin, ViteDevServer } from 'vite'
 import type { Rule } from '@stylexjs/babel-plugin'
-import { FilterPattern } from '@rollup/pluginutils'
+import type { FilterPattern } from '@rollup/pluginutils'
 import { createFilter } from '@rollup/pluginutils'
 
 interface UnstableModuleResolution {

@@ -2624,6 +2624,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/utils@npm:^6.14.0":
+  version: 6.14.0
+  resolution: "@typescript-eslint/utils@npm:6.14.0"
+  dependencies:
+    "@eslint-community/eslint-utils": ^4.4.0
+    "@types/json-schema": ^7.0.12
+    "@types/semver": ^7.5.0
+    "@typescript-eslint/scope-manager": 6.14.0
+    "@typescript-eslint/types": 6.14.0
+    "@typescript-eslint/typescript-estree": 6.14.0
+    semver: ^7.5.4
+  peerDependencies:
+    eslint: ^7.0.0 || ^8.0.0
+  checksum: 36e8501cb85647947189f31017c36d6f6ac7ef0399fa0e18eb64f1b83e00f1e8ace1d9ac5015ef4d9c1b820179f1def8d61d7ea9e5d61433eb848cf5c49dc8b0
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/visitor-keys@npm:5.62.0":
   version: 5.62.0
   resolution: "@typescript-eslint/visitor-keys@npm:5.62.0"
@@ -8721,6 +8738,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"playwright-core@npm:1.32.3":
+  version: 1.32.3
+  resolution: "playwright-core@npm:1.32.3"
+  bin:
+    playwright: cli.js
+  checksum: 7ea091c41a7d1bb97b445bc541a85b123ffcf167bcc00fb7e13e9079f06c92f59fd27caf9d1c1d7e0054f2b5765d1a16d198833c2be7266cebb9dbb916cd90f4
+  languageName: node
+  linkType: hard
+
+"playwright@npm:~1.32.3":
+  version: 1.32.3
+  resolution: "playwright@npm:1.32.3"
+  dependencies:
+    playwright-core: 1.32.3
+  bin:
+    playwright: cli.js
+  checksum: 9627771a131ab96a26d702757e89dcf09a228f0038c43a14f982cc59a2eca672cb27c9d92c324ddc2c44457b82d77c30b3562b386601969e0456b52dba5df176
+  languageName: node
+  linkType: hard
+
 "plur@npm:^5.1.0":
   version: 5.1.0
   resolution: "plur@npm:5.1.0"
@@ -10952,9 +10989,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-stylex-e2e-spa@workspace:e2e/spa":
+"vite-plugin-stylex-e2e-spa@workspace:e2e/fixtures/spa":
   version: 0.0.0-use.local
-  resolution: "vite-plugin-stylex-e2e-spa@workspace:e2e/spa"
+  resolution: "vite-plugin-stylex-e2e-spa@workspace:e2e/fixtures/spa"
   dependencies:
     "@vitejs/plugin-vue": 4.5.1
     vite: ^5.0.6
@@ -10979,12 +11016,14 @@ __metadata:
     "@types/deepmerge": ^2.2.0
     "@types/node": ^20.10.4
     "@typescript-eslint/parser": ^6.14.0
+    "@typescript-eslint/utils": ^6.14.0
     ava: ^6.0.1
     c8: ^8.0.1
     deepmerge: ^4.3.1
     eslint: ^8.55.0
     eslint-config-kagura: ^2.1.1
     eslint-plugin-vue: ^9.19.2
+    playwright: ~1.32.3
     tsup: ^8.0.1
     tsx: ^4.6.2
     typescript: ^5.3.3

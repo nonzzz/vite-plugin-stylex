@@ -6,5 +6,6 @@ export const tsup: Options = {
   format: ['cjs', 'esm'],
   splitting: true,
   clean: true,
-  shims: false
+  shims: false,
+  external: ['@rollup/pluginutils']
 }
