@@ -64,6 +64,8 @@ const VIRTUAL_STYLEX_CSS_MODULE = VIRTUAL_STYLEX_MODULE + '.css'
 
 const VITE_INTERNAL_CSS_PLUGIN_NAMES = ['vite:css', 'vite:css-post']
 
+const VITE_TRANSFORM_MIDDLEWARE_NAME = 'viteTransformMiddleware'
+
 function createSSRMiddleware(processStylexRules: () => string): NextHandleFunction {
   return function stylexDevMiddleware(req, res, next) {
     const protocol = 'encrypted' in req.connection ? 'https' : 'http'
@@ -115,9 +117,19 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     configureServer(server) {
       viteServer = server
       // Enable middleware when the project is custrom render or ssr 
-      if (viteServer.config.appType === 'custom' || viteServer.config.server.middlewareMode) {
-        const stylexDevMiddleware = createSSRMiddleware(processStylexRules)
-        viteServer.middlewares.use(stylexDevMiddleware)
+      // Make sure the insert order
+      // reset the order of the middlewares
+      return () => {
+        if (viteServer.config.appType === 'custom' || viteServer.config.server.middlewareMode) {
+          const stylexDevMiddleware = createSSRMiddleware(processStylexRules)
+          viteServer.middlewares.use(stylexDevMiddleware)
+          const order = viteServer.middlewares.stack.findIndex(m => {
+            if (typeof m.handle === 'function') return m.handle.name === VITE_TRANSFORM_MIDDLEWARE_NAME
+            return -1
+          })
+          viteServer.middlewares.stack.splice(order + 1, 0, viteServer.middlewares.stack[viteServer.middlewares.stack.length - 1])
+          viteServer.middlewares.stack.pop()
+        }
       }
     },
     configResolved(conf) {

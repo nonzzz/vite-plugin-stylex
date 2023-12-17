@@ -18,7 +18,6 @@ export default component$(() => {
    
   const handleClick = $(() => {
     color.value = color.value === 'red' ? 'blue' : 'red'
-    console.log(color.value)
   })
   return (
     <div>
