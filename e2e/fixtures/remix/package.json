@@ -1,13 +1,7 @@
 {
-  "name": "remix-demo",
+  "name": "vite-plugin-stylex-e2e-remix",
   "private": true,
   "sideEffects": false,
-  "scripts": {
-    "build": "vite build && vite build --ssr",
-    "dev": "vite dev",
-    "start": "remix-serve ./build/index.js",
-    "typecheck": "tsc"
-  },
   "dependencies": {
     "@remix-run/node": "^2.3.1",
     "@remix-run/react": "^2.3.1",
