@@ -10,14 +10,15 @@ export async function createChromeBrowser(server: ViteDevServer) {
   return { page }
 }
 
-export async function createE2EServer(configFile: string) {
+export async function createE2EServer(taskName: string) {
+  const configFile = path.join(__dirname, 'fixtures', taskName, 'vite.config.mts')
   const { createServer } = await import('vite')
   const server = await createServer({
     configFile,
     server: {
       port: 0
     },
-    root: path.join(__dirname, 'fixtures', 'spa')
+    root: path.join(__dirname, 'fixtures', taskName)
   })
   await server.listen()
   const { page } = await createChromeBrowser(server)

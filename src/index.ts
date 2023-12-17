@@ -149,7 +149,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
         const { moduleGraph } = viteServer
         const virtualModule = moduleGraph.getModuleById(VIRTUAL_STYLEX_CSS_MODULE)
         if (virtualModule) {
-          moduleGraph.invalidateModule(virtualModule)
+          moduleGraph.invalidateModule(virtualModule, new Set())
           virtualModule.lastHMRTimestamp = Date.now()
         }
       }
