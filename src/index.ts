@@ -25,7 +25,6 @@ export interface StylexPluginOptions {
   include?: FilterPattern
   exclude?: FilterPattern
   unstable_moduleResolution?: UnstableModuleResolution
-  fileName?: string
   babelConfig?: BabelConfig
   stylexImports?: string[]
   [prop: string]: any
@@ -71,8 +70,8 @@ function createSSRMiddleware(processStylexRules: () => string): NextHandleFuncti
     const protocol = 'encrypted' in req.connection ? 'https' : 'http'
     const { host } = req.headers
     const url = new URL(req.originalUrl, `${protocol}://${host}`)
+    // Check style sheet is registered.
     if (url.pathname.endsWith('.css') && url.pathname.includes('stylex:virtual')) {
-      // Check style sheet is registered.
       res.setHeader('Content-Type', 'text/css')
       res.end(processStylexRules())
       return
@@ -118,7 +117,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       viteServer = server
       // Enable middleware when the project is custrom render or ssr 
       // Make sure the insert order
-      // reset the order of the middlewares
+      // Reset the order of the middlewares
       return () => {
         if (viteServer.config.appType === 'custom' || viteServer.config.server.middlewareMode) {
           const stylexDevMiddleware = createSSRMiddleware(processStylexRules)
@@ -127,8 +126,10 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
             if (typeof m.handle === 'function') return m.handle.name === VITE_TRANSFORM_MIDDLEWARE_NAME
             return -1
           })
-          viteServer.middlewares.stack.splice(order + 1, 0, viteServer.middlewares.stack[viteServer.middlewares.stack.length - 1])
-          viteServer.middlewares.stack.pop()
+          const middleware = viteServer.middlewares.stack.pop()
+          if (order !== -1) {
+            viteServer.middlewares.stack.splice(order + 1, 0, middleware)
+          }
         }
       }
     },

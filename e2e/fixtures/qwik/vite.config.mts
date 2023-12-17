@@ -11,6 +11,7 @@ export default defineConfig({
       'Cache-Control': 'public, max-age=600'
     }
   },
-  mode: 'ssr'
+  mode: 'ssr',
+  logLevel: 'silent'
 
 })

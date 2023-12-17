@@ -4,5 +4,6 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import { stylexPlugin } from 'vite-plugin-stylex'
 
 export default defineConfig({
-  plugins: [remix(), tsconfigPaths(), stylexPlugin()]
+  plugins: [remix(), tsconfigPaths(), stylexPlugin()],
+  logLevel: 'silent'
 })
