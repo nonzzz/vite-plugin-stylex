@@ -30,7 +30,7 @@ export default function Index() {
 
   return (
     <div>
-      <div role="button" onClick={handleClick} {...stylex.props(styles.text, color === 'red' ? styles.red : styles.blue)}>Action</div>
+      <div role="button" onClick={handleClick} className={stylex.props(styles.text, color === 'red' ? styles.red : styles.blue).className}>Action</div>
     </div>
   )
 }

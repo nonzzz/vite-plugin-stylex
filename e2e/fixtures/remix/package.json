@@ -2,6 +2,9 @@
   "name": "vite-plugin-stylex-e2e-remix",
   "private": true,
   "sideEffects": false,
+  "scripts": {
+    "dev": "vite dev"
+  },
   "dependencies": {
     "@remix-run/node": "^2.3.1",
     "@remix-run/react": "^2.3.1",

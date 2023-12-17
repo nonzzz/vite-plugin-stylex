@@ -10,13 +10,20 @@ export async function createChromeBrowser(server: ViteDevServer) {
   return { page }
 }
 
+// I don't know thy vite don't accept port 0 
+function genRandomPort() {
+  const minPort = 5173
+  const maxPort = 49151
+  return Math.floor(Math.random() * (maxPort - minPort + 1)) + minPort
+}
+
 export async function createE2EServer(taskName: string) {
   const configFile = path.join(__dirname, 'fixtures', taskName, 'vite.config.mts')
   const { createServer } = await import('vite')
   const server = await createServer({
     configFile,
     server: {
-      port: 0
+      port: genRandomPort()
     },
     root: path.join(__dirname, 'fixtures', taskName)
   })
