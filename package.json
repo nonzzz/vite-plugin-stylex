@@ -1,6 +1,6 @@
 {
-  "name": "vite-plugin-stylex",
-  "version": "0.0.0",
+  "name": "vite-plugin-stylex-dev",
+  "version": "0.1.0",
   "description": "an unofficial stylex vite plugin",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,13 +23,22 @@
     },
     "./*": "./*"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "dev": "tsup --watch src",
     "build": "tsup",
     "test": "c8 -r=lcov ava __tests__/*.spec.ts",
     "e2e": "ava e2e/e2e.spec.ts"
   },
-  "keywords": [],
+  "keywords": [
+    "stylex",
+    "experimental",
+    "css-in-js"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {

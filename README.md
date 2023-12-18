@@ -12,11 +12,15 @@
 
 ## Usage
 
-Clone repo and install all dependencies then run `yarn build` and copy the dist directroy to your project.
+```bash
+
+$ yarn add vite-plugin-stylex-dev -D
+
+```
 
 ```ts
 import { defineConfig } from "vite";
-import { stylexPlugin } from "vite-plugin-stylex";
+import { stylexPlugin } from "vite-plugin-stylex-dev";
 
 export default defineConfig({
   plugins: [stylexPlugin()],
@@ -36,3 +40,7 @@ export default defineConfig({
 ## Author
 
 Kanno
+
+## LICENSE
+
+[MIT](./LICENSE)

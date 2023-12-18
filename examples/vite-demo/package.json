@@ -1,14 +1,14 @@
 {
-    "name": "vite-demo",
-    "devDependencies": {
-        "@vitejs/plugin-vue": "4.5.1",
-        "vite": "^5.0.6",
-        "vite-plugin-stylex": "workspace:*",
-        "vue": "^3.3.10"
-    },
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "preview": "vite preview"
-    }
+  "name": "vite-demo",
+  "devDependencies": {
+    "@vitejs/plugin-vue": "4.5.1",
+    "vite": "^5.0.6",
+    "vite-plugin-stylex-dev": "workspace:*",
+    "vue": "^3.3.10"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  }
 }
