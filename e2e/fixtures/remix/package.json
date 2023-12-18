@@ -15,7 +15,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@remix-run/dev": "0.0.0-nightly-9a845b6-20231212",
+    "@remix-run/dev": "0.0.0-nightly-9edcf88-20231216",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "typescript": "^5.1.6",
