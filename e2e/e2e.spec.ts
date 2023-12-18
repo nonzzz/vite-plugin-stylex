@@ -14,7 +14,7 @@ import { createSSRServer } from './fixtures/vue-ssr/server'
 //   }, [windowHandle, elementHandle])
 //   t.is(red, 'rgb(255, 0, 0)', 'first load spa button text color should be red')
 //   await elementHandle.click()
-//   await new Promise((resolve) => setTimeout(resolve, 2000))
+//   await new Promise((resolve) => setTimeout(resolve, 5000))
 //   const blue = await page.evaluate(([window, el]) => {
 //     return (window as Window).getComputedStyle(el as Element).color
 //   }, [windowHandle, elementHandle])
@@ -31,7 +31,7 @@ test('fixture spa', async (t) => {
   }, [windowHandle, elementHandle])
   t.is(red, 'rgb(255, 0, 0)', 'first load spa button text color should be red')
   await elementHandle.click()
-  await new Promise((resolve) => setTimeout(resolve, 2000))
+  await new Promise((resolve) => setTimeout(resolve, 5000))
   const blue = await page.evaluate(([window, el]) => {
     return (window as Window).getComputedStyle(el as Element).color
   }, [windowHandle, elementHandle])
@@ -48,7 +48,7 @@ test('fixture qwik', async (t) => {
   }, [windowHandle, elementHandle])
   t.is(red, 'rgb(255, 0, 0)', 'first load spa button text color should be red')
   await elementHandle.click()
-  await new Promise((resolve) => setTimeout(resolve, 2000))
+  await new Promise((resolve) => setTimeout(resolve, 5000))
   const blue = await page.evaluate(([window, el]) => {
     return (window as Window).getComputedStyle(el as Element).color
   }, [windowHandle, elementHandle])
@@ -65,7 +65,7 @@ test('fixture vue ssr', async (t) => {
   }, [windowHandle, elementHandle])
   t.is(red, 'rgb(255, 0, 0)', 'first load spa button text color should be red')
   await elementHandle.click()
-  await new Promise((resolve) => setTimeout(resolve, 2000))
+  await new Promise((resolve) => setTimeout(resolve, 5000))
   const blue = await page.evaluate(([window, el]) => {
     return (window as Window).getComputedStyle(el as Element).color
   }, [windowHandle, elementHandle])
