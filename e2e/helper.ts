@@ -1,17 +1,16 @@
 import path from 'path'
 import { chromium } from 'playwright'
-import type { ViteDevServer } from 'vite'
 
-export async function createChromeBrowser(server: ViteDevServer) {
+export async function createChromeBrowser(port: number) {
   const browser = await chromium.launch()
   const page = await browser.newPage()
-  const localURL = `http://localhost:${server.config.server.port}`
+  const localURL = `http://localhost:${port}`
   page.goto(localURL)
   return { page }
 }
 
-// I don't know thy vite don't accept port 0 
-function genRandomPort() {
+// I don't know why vite don't accept port 0 
+export function genRandomPort() {
   const minPort = 5173
   const maxPort = 49151
   return Math.floor(Math.random() * (maxPort - minPort + 1)) + minPort
@@ -28,6 +27,6 @@ export async function createE2EServer(taskName: string) {
     root: path.join(__dirname, 'fixtures', taskName)
   })
   await server.listen()
-  const { page } = await createChromeBrowser(server)
+  const { page } = await createChromeBrowser(server.config.server.port)
   return { page, server }
 }

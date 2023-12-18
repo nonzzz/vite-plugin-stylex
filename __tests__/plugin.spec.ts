@@ -34,7 +34,8 @@ async function mockBuild(taskName: string, opts: BuildOptions = {}) {
       ...viteOptions?.build,
       write: false
     },
-    plugins: [stylexPlugin(stylex)]
+    plugins: [stylexPlugin(stylex)],
+    logLevel: 'silent'
   }, viteOptions))
   let css = ''
   let js = ''
