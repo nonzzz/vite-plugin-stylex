@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-stylex-dev",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "an unofficial stylex vite plugin",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -39,10 +39,9 @@
     "experimental",
     "css-in-js"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "kanno",
+  "license": "MIT",
   "devDependencies": {
-    "@rollup/pluginutils": "^5.1.0",
     "@stylexjs/stylex": "0.3.0",
     "@types/babel__core": "^7.20.5",
     "@types/connect": "^3.4.38",
@@ -68,6 +67,7 @@
     "@babel/plugin-syntax-flow": "^7.18.6",
     "@babel/plugin-syntax-jsx": "^7.14.5",
     "@babel/plugin-syntax-typescript": "^7.14.5",
+    "@rollup/pluginutils": "^5.1.0",
     "@stylexjs/babel-plugin": "0.3.0"
   },
   "resolutions": {
