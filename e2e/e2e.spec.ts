@@ -14,7 +14,7 @@ import { createSSRServer } from './fixtures/vue-ssr/server'
 //   }, [windowHandle, elementHandle])
 //   t.is(red, 'rgb(255, 0, 0)', 'first load spa button text color should be red')
 //   await elementHandle.click()
-//   await new Promise((resolve) => setTimeout(resolve, 5000))
+//   await new Promise((resolve) => setTimeout(resolve, 2000))
 //   const blue = await page.evaluate(([window, el]) => {
 //     return (window as Window).getComputedStyle(el as Element).color
 //   }, [windowHandle, elementHandle])
@@ -31,7 +31,7 @@ test('fixture spa', async (t) => {
   }, [windowHandle, elementHandle])
   t.is(red, 'rgb(255, 0, 0)', 'first load spa button text color should be red')
   await elementHandle.click()
-  await new Promise((resolve) => setTimeout(resolve, 5000))
+  await new Promise((resolve) => setTimeout(resolve, 2000))
   const blue = await page.evaluate(([window, el]) => {
     return (window as Window).getComputedStyle(el as Element).color
   }, [windowHandle, elementHandle])
@@ -48,7 +48,7 @@ test('fixture qwik', async (t) => {
   }, [windowHandle, elementHandle])
   t.is(red, 'rgb(255, 0, 0)', 'first load spa button text color should be red')
   await elementHandle.click()
-  await new Promise((resolve) => setTimeout(resolve, 5000))
+  await new Promise((resolve) => setTimeout(resolve, 2000))
   const blue = await page.evaluate(([window, el]) => {
     return (window as Window).getComputedStyle(el as Element).color
   }, [windowHandle, elementHandle])
@@ -57,6 +57,7 @@ test('fixture qwik', async (t) => {
 
 test('fixture vue ssr', async (t) => {
   const { page } = await createSSRServer(path.join(__dirname, 'fixtures', 'vue-ssr', 'vite.config.mts'))
+  await new Promise((resolve) => setTimeout(resolve, 5000)) 
   await page.waitForSelector('div[role="button"]')
   const elementHandle = await page.$('div[role="button"]')
   const windowHandle = await page.evaluateHandle(() => Promise.resolve(window))
@@ -65,7 +66,7 @@ test('fixture vue ssr', async (t) => {
   }, [windowHandle, elementHandle])
   t.is(red, 'rgb(255, 0, 0)', 'first load spa button text color should be red')
   await elementHandle.click()
-  await new Promise((resolve) => setTimeout(resolve, 5000))
+  await new Promise((resolve) => setTimeout(resolve, 2000))
   const blue = await page.evaluate(([window, el]) => {
     return (window as Window).getComputedStyle(el as Element).color
   }, [windowHandle, elementHandle])
