@@ -39,7 +39,6 @@ interface TransformWithStylexOptions extends Partial<BabelConfig> {
 function transformWithStylex(code: string, id: string, transformOptions: TransformWithStylexOptions = {}) {
   const { isProduction = false, presets = [], plugins = [], unstable_moduleResolution, ...options } = transformOptions
   const isJSX = path.extname(id) === '.jsx' || path.extname(id) === '.tsx'
-  
   return babel.transformAsync(code, {
     babelrc: false,
     filename: id,
@@ -157,7 +156,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
         if (!rules.length) return
         // pipe to vite's internal plugin for processing.
         result.code = `import ${JSON.stringify(VIRTUAL_STYLEX_MODULE)};\n${result.code}`
-        isProd && (stylexRules[id] = rules)
+        stylexRules[id] = rules
       }
       if (viteServer) {
         const { moduleGraph } = viteServer
