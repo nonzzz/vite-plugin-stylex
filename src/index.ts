@@ -57,9 +57,11 @@ function transformWithStylex(code: string, id: string, transformOptions: Transfo
 // But from a design principles. We won't need it. Only using virtual module is enough.
 // Judging from the previous experimental implementation of style9,It's worth to do it.
 
-const VIRTUAL_STYLEX_MODULE = '\0stylex:virtual'
+// I don't understand why nuxt has to handle virtual module. so i had to change the name :(
+// And ensure that the middleware only process the correct request headers.
+const VIRTUAL_STYLEX_MODULE = '\0vite-plugin:stylex'
 
-const VIRTUAL_STYLEX_CSS_MODULE = VIRTUAL_STYLEX_MODULE + '.css'
+const VIRTUAL_STYLEX_CSS_MODULE = 'vite-plugin:stylex.css'
 
 const VITE_INTERNAL_CSS_PLUGIN_NAMES = ['vite:css', 'vite:css-post']
 
@@ -71,7 +73,7 @@ function createSSRMiddleware(processStylexRules: () => string): NextHandleFuncti
     const { host } = req.headers
     const url = new URL(req.originalUrl, `${protocol}://${host}`)
     // Check style sheet is registered.
-    if (url.pathname.endsWith('.css') && url.pathname.includes('stylex:virtual')) {
+    if (url.pathname.endsWith('.css') && url.pathname.includes('vite-plugin:stylex') && req.headers['content-type'] === 'text/css') {
       res.setHeader('Content-Type', 'text/css')
       res.end(processStylexRules())
       return
