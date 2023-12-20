@@ -22,6 +22,7 @@ interface BabelConfig {
 }
 
 export interface StylexPluginOptions {
+  useCSSLayers?: boolean,
   include?: FilterPattern
   exclude?: FilterPattern
   unstable_moduleResolution?: UnstableModuleResolution
@@ -58,10 +59,9 @@ function transformWithStylex(code: string, id: string, transformOptions: Transfo
 // Judging from the previous experimental implementation of style9,It's worth to do it.
 
 // I don't understand why nuxt has to handle virtual module. so i had to change the name :(
-// And ensure that the middleware only process the correct request headers.
 const VIRTUAL_STYLEX_MODULE = '\0vite-plugin:stylex'
 
-const VIRTUAL_STYLEX_CSS_MODULE = 'vite-plugin:stylex.css'
+const VIRTUAL_STYLEX_CSS_MODULE = VIRTUAL_STYLEX_MODULE + '.css'
 
 const VITE_INTERNAL_CSS_PLUGIN_NAMES = ['vite:css', 'vite:css-post']
 
@@ -73,7 +73,7 @@ function createSSRMiddleware(processStylexRules: () => string): NextHandleFuncti
     const { host } = req.headers
     const url = new URL(req.originalUrl, `${protocol}://${host}`)
     // Check style sheet is registered.
-    if (url.pathname.endsWith('.css') && url.pathname.includes('vite-plugin:stylex') && req.headers['content-type'] === 'text/css') {
+    if (url.pathname.endsWith('.css') && url.pathname.includes('vite-plugin:stylex')) {
       res.setHeader('Content-Type', 'text/css')
       res.end(processStylexRules())
       return
@@ -85,6 +85,7 @@ function createSSRMiddleware(processStylexRules: () => string): NextHandleFuncti
 // TODO
 export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   const {
+    useCSSLayers = false,
     unstable_moduleResolution = { type: 'commonJS', rootDir: process.cwd() },
     babelConfig: { plugins = [], presets = [] } = {},
     stylexImports = ['stylex', '@stylexjs/stylex'],
@@ -100,7 +101,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   const processStylexRules = () => {
     const rules = Object.values(stylexRules).flat()
     if (!rules.length) return
-    return stylexBabelPlugin.processStylexRules(rules, false)
+    return stylexBabelPlugin.processStylexRules(rules, useCSSLayers)
   }
 
   return {

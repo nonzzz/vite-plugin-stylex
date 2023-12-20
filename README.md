@@ -36,6 +36,7 @@ export default defineConfig({
 | `stylexImports`             | `string[]`                                    | `['stylex', '@stylexjs/stylex']`               | Only assets bigger than this size are processed (in bytes) |
 | `babelConfig`               | `object`                                      | `{}`                                           | Babel config for stylex                                    |
 | `unstable_moduleResolution` | `Record<string,any>`                          | `{ type: 'commonJS', rootDir: process.cwd() }` | See stylex document                                        |
+| `useCSSLayers`              | `boolean`                                     | `default`                                      | See stylex document                                        |
 
 ## Author
 
