@@ -8118,6 +8118,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postcss-pxtorem@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "postcss-pxtorem@npm:6.0.0"
+  peerDependencies:
+    postcss: ^8.0.0
+  checksum: b798ec6c82aaa57067b983bd61f640f7319bd1f02bd698be84558982da64d1d6574359b7f6ea197058f09e894768d282dc8d8cf1a1d833c6e1a86a577065a3ad
+  languageName: node
+  linkType: hard
+
 "postcss-selector-parser@npm:^6.0.13, postcss-selector-parser@npm:^6.0.2, postcss-selector-parser@npm:^6.0.4":
   version: 6.0.13
   resolution: "postcss-selector-parser@npm:6.0.13"
@@ -10213,6 +10222,7 @@ __metadata:
     eslint-config-kagura: ^2.1.1
     eslint-plugin-vue: ^9.19.2
     playwright: ~1.32.3
+    postcss-pxtorem: ^6.0.0
     tsup: ^8.0.1
     tsx: ^4.6.2
     typescript: ^5.3.3
