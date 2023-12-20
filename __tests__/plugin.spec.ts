@@ -1,7 +1,6 @@
 import path from 'path'
 import test from 'ava'
 import type { UserConfig } from 'vite'
-import deepmerge from 'deepmerge'
 import { stylexPlugin } from '../src'
 import type { StylexPluginOptions } from '../src'
 
@@ -17,7 +16,7 @@ interface BuildOptions {
 async function mockBuild(taskName: string, opts: BuildOptions = {}) {
   const { stylex = {}, vite: viteOptions = {} } = opts
   const vite = await import('vite')
-  const bundle = await vite.build(deepmerge({
+  const bundle = await vite.build(vite.mergeConfig({
     build: {
       lib: {
         entry: path.join(__dirname, 'fixtures', taskName, 'main.ts'),
@@ -80,4 +79,16 @@ test('normal suite enable css minify', async (t) => {
   const { css } = await mockBuild('normal')
   await sleep()
   t.is(css, '.xju2f9n:not(#\\#){color:#00f}.x1e2nbdu:not(#\\#){color:red}\n')
+})
+
+test('pxtorem suite should transform px to rem', async (t) => {
+  const { css } = await mockBuild('pxtorem', { vite: {
+    css: { 
+      postcss: {
+        plugins: [(await import('postcss-pxtorem')).default]
+      } 
+    }
+  } })
+  await sleep()
+  t.is(css, '.x1j61zf2:not(#\\#){font-size:1rem}\n')
 })
