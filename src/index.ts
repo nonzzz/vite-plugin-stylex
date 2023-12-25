@@ -82,6 +82,15 @@ function createSSRMiddleware(processStylexRules: () => string): NextHandleFuncti
   }
 }
 
+function patchOptmizeDepsExcludeId(id: string) {
+  const { ext, dir, name } = path.parse(id)
+  if (ext.includes('?')) {
+    const extension = ext.split('?')[0]
+    return path.join(dir, name + extension)
+  }
+  return id
+}
+
 // TODO
 export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   const {
@@ -138,6 +147,9 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     },
     configResolved(conf) {
       isProd = conf.mode === 'production' || conf.env.mode === 'production'
+      if (!isProd) {
+        conf.optimizeDeps.exclude = ['@stylexjs/open-props']
+      }
       viteCSSPlugins.push(...conf.plugins.filter(p => VITE_INTERNAL_CSS_PLUGIN_NAMES.includes(p.name)))
       viteCSSPlugins.sort((a, b) => a.name === 'vite:css' && b.name === 'vite:css-post' ? -1 : 1)
     },
@@ -152,6 +164,8 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     async transform(inputCode, id) {
       if (!filter(id)) return
       if (!stylexImports.some((importName) => inputCode.includes(importName))) return
+      // TODO
+      id = patchOptmizeDepsExcludeId(id)
       const result = await transformWithStylex(inputCode, id, { isProduction: isProd, presets, plugins, unstable_moduleResolution, ...options })
       if (!result) return
       if ('stylex' in result.metadata) {

@@ -46,7 +46,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.15.5, @babel/core@npm:^7.20.7, @babel/core@npm:^7.21.8, @babel/core@npm:^7.22.9, @babel/core@npm:^7.23.0, @babel/core@npm:^7.23.3":
+"@babel/core@npm:^7.15.5, @babel/core@npm:^7.20.7, @babel/core@npm:^7.21.8, @babel/core@npm:^7.22.9, @babel/core@npm:^7.23.0, @babel/core@npm:^7.23.3, @babel/core@npm:^7.23.5":
   version: 7.23.6
   resolution: "@babel/core@npm:7.23.6"
   dependencies:
@@ -381,6 +381,28 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 720a231ceade4ae4d2632478db4e7fecf21987d444942b72d523487ac8d715ca97de6c8f415c71e939595e1a4776403e7dc24ed68fe9125ad4acf57753c9bff7
+  languageName: node
+  linkType: hard
+
+"@babel/plugin-transform-react-jsx-self@npm:^7.23.3":
+  version: 7.23.3
+  resolution: "@babel/plugin-transform-react-jsx-self@npm:7.23.3"
+  dependencies:
+    "@babel/helper-plugin-utils": ^7.22.5
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 882bf56bc932d015c2d83214133939ddcf342e5bcafa21f1a93b19f2e052145115e1e0351730897fd66e5f67cad7875b8a8d81ceb12b6e2a886ad0102cb4eb1f
+  languageName: node
+  linkType: hard
+
+"@babel/plugin-transform-react-jsx-source@npm:^7.23.3":
+  version: 7.23.3
+  resolution: "@babel/plugin-transform-react-jsx-source@npm:7.23.3"
+  dependencies:
+    "@babel/helper-plugin-utils": ^7.22.5
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 92287fb797e522d99bdc77eaa573ce79ff0ad9f1cf4e7df374645e28e51dce0adad129f6f075430b129b5bac8dad843f65021970e12e992d6d6671f0d65bb1e0
   languageName: node
   linkType: hard
 
@@ -2325,6 +2347,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@stylexjs/open-props@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@stylexjs/open-props@npm:0.3.0"
+  dependencies:
+    css-mediaquery: ^0.1.2
+    invariant: ^2.2.4
+    styleq: 0.1.3
+    utility-types: ^3.10.0
+  checksum: a09a90a32c7a409e3dd242f11b04fee238d3adf40021555e264a96b3b1ab39e83836ba3691c7311b2cb0e04870d8085469d9863c196eeebd787f39576622e081
+  languageName: node
+  linkType: hard
+
 "@stylexjs/shared@npm:0.3.0":
   version: 0.3.0
   resolution: "@stylexjs/shared@npm:0.3.0"
@@ -2655,7 +2689,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.2.7":
+"@types/react-dom@npm:^18.2.18, @types/react-dom@npm:^18.2.7":
   version: 18.2.18
   resolution: "@types/react-dom@npm:18.2.18"
   dependencies:
@@ -2664,7 +2698,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.2.20":
+"@types/react@npm:*, @types/react@npm:^18.2.20, @types/react@npm:^18.2.45":
   version: 18.2.45
   resolution: "@types/react@npm:18.2.45"
   dependencies:
@@ -2987,6 +3021,21 @@ __metadata:
   bin:
     nft: out/cli.js
   checksum: 19aaf55cef3c082d3b3da2597eef59cac64240dd1ab7b966c1e384d425b6cdfef9cc927cdffd8f3f1861fc408aeed4165af5f195101360313fc0df2a109441ad
+  languageName: node
+  linkType: hard
+
+"@vitejs/plugin-react@npm:^4.2.1":
+  version: 4.2.1
+  resolution: "@vitejs/plugin-react@npm:4.2.1"
+  dependencies:
+    "@babel/core": ^7.23.5
+    "@babel/plugin-transform-react-jsx-self": ^7.23.3
+    "@babel/plugin-transform-react-jsx-source": ^7.23.3
+    "@types/babel__core": ^7.20.5
+    react-refresh: ^0.14.0
+  peerDependencies:
+    vite: ^4.2.0 || ^5.0.0
+  checksum: 08d227d27ff2304e395e746bd2d4b5fee40587f69d7e2fcd6beb7d91163c1f1dc26d843bc48e2ffb8f38c6b8a1b9445fb07840e3dcc841f97b56bbb8205346aa
   languageName: node
   linkType: hard
 
@@ -13649,6 +13698,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"vite-plugin-stylex-e2e-open-props@workspace:e2e/fixtures/open-props":
+  version: 0.0.0-use.local
+  resolution: "vite-plugin-stylex-e2e-open-props@workspace:e2e/fixtures/open-props"
+  dependencies:
+    "@stylexjs/open-props": ^0.3.0
+    "@types/react": ^18.2.45
+    "@types/react-dom": ^18.2.18
+    "@vitejs/plugin-react": ^4.2.1
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    vite: ^5.0.10
+    vite-plugin-stylex-dev: "workspace:*"
+  languageName: unknown
+  linkType: soft
+
 "vite-plugin-stylex-e2e-qwik@workspace:e2e/fixtures/qwik":
   version: 0.0.0-use.local
   resolution: "vite-plugin-stylex-e2e-qwik@workspace:e2e/fixtures/qwik"
@@ -13726,6 +13790,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"vite-react-demo@workspace:examples/vite-react-demo":
+  version: 0.0.0-use.local
+  resolution: "vite-react-demo@workspace:examples/vite-react-demo"
+  dependencies:
+    "@stylexjs/open-props": ^0.3.0
+    "@types/react": ^18.2.45
+    "@types/react-dom": ^18.2.18
+    "@vitejs/plugin-react": ^4.2.1
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    vite: ^5.0.10
+    vite-plugin-stylex-dev: "workspace:*"
+  languageName: unknown
+  linkType: soft
+
 "vite-tsconfig-paths@npm:^4.2.1":
   version: 4.2.2
   resolution: "vite-tsconfig-paths@npm:4.2.2"
@@ -13782,7 +13861,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.0.0, vite@npm:^5.0.6":
+"vite@npm:^5.0.0, vite@npm:^5.0.10, vite@npm:^5.0.6":
   version: 5.0.10
   resolution: "vite@npm:5.0.10"
   dependencies:
