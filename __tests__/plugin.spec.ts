@@ -55,8 +55,8 @@ async function mockBuild(taskName: string, opts: BuildOptions = {}) {
 test('normal suit disable css minify', async (t) => {
   const { css, js } = await mockBuild('normal', { vite: { build: { cssMinify: false } } })
   await sleep()
-  t.is(css, `.xju2f9n:not(#\\#){color:blue}
-.x1e2nbdu:not(#\\#){color:red}`)
+  t.is(css, `.xju2f9n{color:blue}
+.x1e2nbdu{color:red}`)
   t.is(js, `import * as s from "@stylexjs/stylex";
 const e = {
   blue: {
@@ -78,7 +78,7 @@ export {
 test('normal suite enable css minify', async (t) => {
   const { css } = await mockBuild('normal')
   await sleep()
-  t.is(css, '.xju2f9n:not(#\\#){color:#00f}.x1e2nbdu:not(#\\#){color:red}\n')
+  t.is(css, '.xju2f9n{color:#00f}.x1e2nbdu{color:red}\n')
 })
 
 test('pxtorem suite should transform px to rem', async (t) => {
@@ -90,5 +90,5 @@ test('pxtorem suite should transform px to rem', async (t) => {
     }
   } })
   await sleep()
-  t.is(css, '.x1j61zf2:not(#\\#){font-size:1rem}\n')
+  t.is(css, '.x1j61zf2{font-size:1rem}\n')
 })
