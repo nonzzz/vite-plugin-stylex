@@ -1,6 +1,8 @@
 import * as stylex from '@stylexjs/stylex'
 import { ComponentProps } from 'react'
-import { colors } from './tokens.stylex'
+import { colors } from '@/tokens.stylex'
+import { fonts } from '@/tokens/nested.stylex'
+import { others } from '~/other.stylex'
 
 type ButtonProps = {
   variant?: 'primary',
@@ -11,10 +13,11 @@ type ButtonProps = {
 const baseStyle = {
   borderWidth: '1px',
   borderStyle: 'solid',
-  color: colors.white,
-  borderRadius: '5px',
+  color: colors.primary,
+  borderRadius: others.borderRadius,
   cursor: 'pointer',
-  padding: '10px 15px'
+  padding: '10px 15px',
+  fontSize: fonts.font
 }
 
 const s = stylex.create({

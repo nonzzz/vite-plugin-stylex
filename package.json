@@ -58,7 +58,7 @@
     "tsup": "^8.0.1",
     "tsx": "^4.6.2",
     "typescript": "^5.3.3",
-    "vite": "^5.0.6",
+    "vite": "^5.0.10",
     "vue-eslint-parser": "^9.3.2"
   },
   "dependencies": {
@@ -66,8 +66,9 @@
     "@babel/plugin-syntax-flow": "^7.23.3",
     "@babel/plugin-syntax-jsx": "^7.23.3",
     "@babel/plugin-syntax-typescript": "^7.23.3",
-    "@rollup/pluginutils": "^5.1.0",
-    "@stylexjs/babel-plugin": "^0.4.1"
+    "@stylexjs/babel-plugin": "^0.4.1",
+    "magic-string": "^0.30.5",
+    "rs-module-lexer": "^2.1.1"
   },
   "resolutions": {
     "sharp": "0.32.6"
