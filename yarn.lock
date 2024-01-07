@@ -13886,6 +13886,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"vite-plugin-stylex-e2e-paths-alias@workspace:e2e/fixtures/path-alias":
+  version: 0.0.0-use.local
+  resolution: "vite-plugin-stylex-e2e-paths-alias@workspace:e2e/fixtures/path-alias"
+  dependencies:
+    "@types/react": ^18.2.45
+    "@types/react-dom": ^18.2.18
+    "@vitejs/plugin-react": ^4.2.1
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    vite: ^5.0.10
+    vite-plugin-stylex-dev: "workspace:*"
+  languageName: unknown
+  linkType: soft
+
 "vite-plugin-stylex-e2e-qwik@workspace:e2e/fixtures/qwik":
   version: 0.0.0-use.local
   resolution: "vite-plugin-stylex-e2e-qwik@workspace:e2e/fixtures/qwik"
@@ -13927,6 +13941,21 @@ __metadata:
     vite: ^5.0.6
     vite-plugin-stylex-dev: "workspace:*"
     vue: ^3.3.10
+  languageName: unknown
+  linkType: soft
+
+"vite-plugin-stylex-e2e-tsconfig-paths@workspace:e2e/fixtures/tsconfig-paths":
+  version: 0.0.0-use.local
+  resolution: "vite-plugin-stylex-e2e-tsconfig-paths@workspace:e2e/fixtures/tsconfig-paths"
+  dependencies:
+    "@types/react": ^18.2.45
+    "@types/react-dom": ^18.2.18
+    "@vitejs/plugin-react": ^4.2.1
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    vite: ^5.0.10
+    vite-plugin-stylex-dev: "workspace:*"
+    vite-tsconfig-paths: ^4.2.3
   languageName: unknown
   linkType: soft
 
