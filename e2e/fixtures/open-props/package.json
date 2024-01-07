@@ -1,5 +1,8 @@
 {
   "name": "vite-plugin-stylex-e2e-open-props",
+  "scripts": {
+    "dev": "vite"
+  },
   "devDependencies": {
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
@@ -10,6 +13,6 @@
     "vite-plugin-stylex-dev": "workspace:*"
   },
   "dependencies": {
-    "@stylexjs/open-props": "^0.3.0"
+    "@stylexjs/open-props": "^0.4.1"
   }
 }

@@ -2419,6 +2419,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@stylexjs/open-props@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "@stylexjs/open-props@npm:0.4.1"
+  dependencies:
+    css-mediaquery: ^0.1.2
+    invariant: ^2.2.4
+    styleq: 0.1.3
+    utility-types: ^3.10.0
+  checksum: b88b06c09d08fe41e5aff405727d8acee2688330c18ab0160bd82a10c8ef80d2bdb0edc8717ce99c82b65e001ddd4048ff735f1af3cd0c430343615e9605381d
+  languageName: node
+  linkType: hard
+
 "@stylexjs/shared@npm:0.4.1":
   version: 0.4.1
   resolution: "@stylexjs/shared@npm:0.4.1"
@@ -13863,7 +13875,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "vite-plugin-stylex-e2e-open-props@workspace:e2e/fixtures/open-props"
   dependencies:
-    "@stylexjs/open-props": ^0.3.0
+    "@stylexjs/open-props": ^0.4.1
     "@types/react": ^18.2.45
     "@types/react-dom": ^18.2.18
     "@vitejs/plugin-react": ^4.2.1

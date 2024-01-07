@@ -182,7 +182,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     },
     async transform(inputCode, id) {
       if (!filter(id)) return
-      if (id.includes('node_modules') || id.startsWith('\0') || id.includes('virtaul:nuxt')) return
+      if (id.startsWith('\0') || id.includes('virtaul:nuxt')) return
       if (!importSources.some((stmt) => inputCode.includes(typeof stmt === 'string' ? stmt : stmt.from))) return
       // TODO for some reason stylex only process filename that contains `xx.style.ext` but vite will process all
       // of chunks in development mode. So we need hack it.

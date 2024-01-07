@@ -39,6 +39,7 @@ export function createPatchAlias(alias: AliasOptions & Alias[], opts: PatchAlias
     const withAliasPath: AliasPath[] = []
     for (const stmt of imports) {
       if (!stmt.n) continue
+      if (stmt.d > -1) continue
       if (path.isAbsolute(stmt.n) || relativeReg.test(stmt.n)) continue
 
       if (opts.tsconfigPaths) {
