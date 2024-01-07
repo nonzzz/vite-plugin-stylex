@@ -33,7 +33,7 @@ export default defineConfig({
 | --------------------------- | --------------------------------------------- | ---------------------------------------------- | ---------------------------------------------------------- |
 | `include`                   | `string \| RegExp \| Array<string \| RegExp>` | `/\.(mjs\|js\|ts\|vue\|jsx\|tsx)(\?.*\|)$/`    | Include all assets matching any of these conditions.       |
 | `exclude`                   | `string \| RegExp \| Array<string \| RegExp>` | `-`                                            | Exclude all assets matching any of these conditions.       |
-| `stylexImports`             | `string[]`                                    | `['stylex', '@stylexjs/stylex']`               | Only assets bigger than this size are processed (in bytes) |
+| `importSources`             | `string[]`                                    | `['stylex', '@stylexjs/stylex']`               | Only assets bigger than this size are processed (in bytes) |
 | `babelConfig`               | `object`                                      | `{}`                                           | Babel config for stylex                                    |
 | `unstable_moduleResolution` | `Record<string,any>`                          | `{ type: 'commonJS', rootDir: process.cwd() }` | See stylex document                                        |
 | `useCSSLayers`              | `boolean`                                     | `default`                                      | See stylex document                                        |
