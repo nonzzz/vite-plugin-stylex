@@ -10,9 +10,9 @@
 // import { kind } from './x.stylex'
 import path from 'path'
 import MagicString from 'magic-string'
-import type { ImportSpecifier, parseAsync as _parseAsync } from 'rs-module-lexer'
+import type { ImportSpecifier } from 'es-module-lexer'
 import type { Alias, AliasOptions, Plugin } from 'vite'
-import * as rsModuleLexer from 'rs-module-lexer'
+import { init, parse } from 'es-module-lexer'
 import type { RollupPluginContext } from './interface'
 
 interface PatchAliasOptions {
@@ -27,15 +27,15 @@ function handleRelativePath(from: string, to: string) {
   return relativePath
 }
 
-const { parseAsync } = ('default' in rsModuleLexer ? rsModuleLexer.default : rsModuleLexer) as { parseAsync: typeof _parseAsync } 
+// const { parseAsync } = ('default' in rsModuleLexer ? rsModuleLexer.default : rsModuleLexer) as { parseAsync: typeof _parseAsync } 
 
 export function createPatchAlias(alias: AliasOptions & Alias[], opts: PatchAliasOptions) {
   const relativeReg = /^\.\.?(\/|$)/
   const finds = Array.isArray(alias) ? alias.map((a) => a.find) : []
+  init.then()
   return async (code: string, id: string, rollupContext: RollupPluginContext) => {
     const str = new MagicString(code)
-    const { output } = await parseAsync({ input: [{ filename: id, code }] })
-    const { imports } = output[0]
+    const [imports] = parse(code)
     const withAliasPath: AliasPath[] = []
     for (const stmt of imports) {
       if (!stmt.n) continue

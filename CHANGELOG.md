@@ -1,3 +1,9 @@
+## 0.2.1
+
+# Patches
+
+- Remove `rs-module-lexer` using `es-module-lexer`.
+
 ## 0.2.0
 
 # Features & Improves
