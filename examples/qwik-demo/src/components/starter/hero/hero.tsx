@@ -11,8 +11,8 @@ const s = stylex.create({
 
 export default component$(() => {
   return (
-    <div className={['container']}>
-      <h1 className={stylex(s.h1)}>
+    <div className="container">
+      <h1 className={stylex.props(s.h1).className}>
         So 
         {' '}
         <span className="highlight">fantastic</span>
@@ -23,7 +23,7 @@ export default component$(() => {
         {' '}
         here
       </h1>
-      <p className={stylex(s.h1)}>Have fun building your App with Qwik.</p>
+      <p className={stylex.props(s.h1).className}>Have fun building your App with Qwik.</p>
     </div>
   )
 })

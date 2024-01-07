@@ -10,9 +10,9 @@
 // import { kind } from './x.stylex'
 import path from 'path'
 import MagicString from 'magic-string'
-import { parseAsync } from 'rs-module-lexer'
-import type { ImportSpecifier } from 'rs-module-lexer'
+import type { ImportSpecifier, parseAsync as _parseAsync } from 'rs-module-lexer'
 import type { Alias, AliasOptions, Plugin } from 'vite'
+import * as rsModuleLexer from 'rs-module-lexer'
 import type { RollupPluginContext } from './interface'
 
 interface PatchAliasOptions {
@@ -26,6 +26,8 @@ function handleRelativePath(from: string, to: string) {
   relativePath = `./${relativePath}`
   return relativePath
 }
+
+const { parseAsync } = ('default' in rsModuleLexer ? rsModuleLexer.default : rsModuleLexer) as { parseAsync: typeof _parseAsync } 
 
 export function createPatchAlias(alias: AliasOptions & Alias[], opts: PatchAliasOptions) {
   const relativeReg = /^\.\.?(\/|$)/

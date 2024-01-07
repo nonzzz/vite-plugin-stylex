@@ -8,7 +8,7 @@ import stylex from '@stylexjs/stylex'
 const btns = stylex.create({
   button: {
     transition: '.150s all',
-    border: '3px solid red',
+    border: '3px solid green',
     backgroundColor: 'HotPink'
   
   },
