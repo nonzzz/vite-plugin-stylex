@@ -7,6 +7,6 @@ export const tsup: Options = {
   splitting: true,
   clean: true,
   shims: false,
-  // minify: true,
+  minify: true,
   external: ['@rollup/pluginutils', 'vite']
 }

@@ -227,3 +227,5 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     }
   }
 }
+
+export { StylexPluginOptions }
