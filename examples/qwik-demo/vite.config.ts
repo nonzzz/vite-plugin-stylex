@@ -6,7 +6,7 @@ import { stylexPlugin } from 'vite-plugin-stylex-dev'
 
 export default defineConfig(() => {
   return {
-    plugins: [qwikCity(), qwikVite(), tsconfigPaths(), stylexPlugin()],
+    plugins: [qwikCity(), qwikVite(), tsconfigPaths({ root: __dirname }), stylexPlugin()],
     dev: {
       headers: {
         'Cache-Control': 'public, max-age=0'

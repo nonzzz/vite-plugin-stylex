@@ -5,10 +5,5 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import { stylexPlugin } from 'vite-plugin-stylex-dev'
 
 export default defineConfig({
-  // resolve: {
-  //   alias: {
-  //     '@': path.join(__dirname, 'src')
-  //   }
-  // },
   plugins: [tsconfigPaths({ root: __dirname }), react(), stylexPlugin()]
 })

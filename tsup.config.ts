@@ -8,5 +8,5 @@ export const tsup: Options = {
   clean: true,
   shims: false,
   minify: true,
-  external: ['@rollup/pluginutils']
+  external: ['@rollup/pluginutils', 'vite']
 }

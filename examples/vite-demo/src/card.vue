@@ -11,7 +11,8 @@ import * as stylex from '@stylexjs/stylex'
 const styles = stylex.create({
   card: {
     border: '1px solid red',
-    color: 'red'
+    color: 'red',
+    fontSize: '30px'
   }
 })
 

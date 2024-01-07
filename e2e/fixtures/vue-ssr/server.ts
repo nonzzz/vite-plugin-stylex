@@ -28,9 +28,9 @@ export async function createSSRServer(configFile = path.join(__dirname, 'vite.co
   const port = genRandomPort()
   app.listen(port)
   const { page } = await createChromeBrowser(port)
-  return { app, page }
+  return { app, page, port }
 }
 
 if (require.main === module) {
-  createSSRServer()
+  createSSRServer().then(({ port }) => console.log(`server listen on: http://127.0.0.1:${port}`))
 }

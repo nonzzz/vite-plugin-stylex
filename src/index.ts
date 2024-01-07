@@ -1,64 +1,29 @@
 import path from 'path'
+import { createFilter, searchForWorkspaceRoot } from 'vite'
 import stylexBabelPlugin from '@stylexjs/babel-plugin'
 import flowSyntaxPlugin from '@babel/plugin-syntax-flow'
 import jsxSyntaxPlugin from '@babel/plugin-syntax-jsx'
 import typescriptSyntaxPlugin from '@babel/plugin-syntax-typescript'
 import type { NextHandleFunction } from 'connect'
-import type { PluginItem } from '@babel/core'
 import * as babel from '@babel/core'
-import type { Plugin, ViteDevServer } from 'vite'
+import type { ModuleNode, Plugin, ViteDevServer } from 'vite'
 import type { Rule } from '@stylexjs/babel-plugin'
-import type { FilterPattern } from '@rollup/pluginutils'
-import { createFilter } from '@rollup/pluginutils'
+import type { StylexPluginOptions, TransformStylexOptions } from './interface'
+import { createPatchAlias } from './patch-alias'
 
-interface UnstableModuleResolution {
-  type: 'commonJS' | 'haste' | 'experimental_crossFileParsing',
-  rootDir: string
-}
-
-interface BabelConfig {
-  plugins: Array<PluginItem>
-  presets: Array<PluginItem>
-}
-
-export interface StylexPluginOptions {
-  useCSSLayers?: boolean,
-  include?: FilterPattern
-  exclude?: FilterPattern
-  unstable_moduleResolution?: UnstableModuleResolution
-  babelConfig?: BabelConfig
-  stylexImports?: string[]
-  [prop: string]: any
-}
-
-interface TransformWithStylexOptions extends Partial<BabelConfig> {
-  isProduction?: boolean
-  unstable_moduleResolution?: UnstableModuleResolution
-  [prop: string]: any
-}
-
-function transformWithStylex(code: string, id: string, transformOptions: TransformWithStylexOptions = {}) {
-  const { isProduction = false, presets = [], plugins = [], unstable_moduleResolution, ...options } = transformOptions
-  const isJSX = path.extname(id) === '.jsx' || path.extname(id) === '.tsx'
+function transformStylex(code: string, id: string, transformOptions: TransformStylexOptions) {
+  const { presets, plugins, ...rest } = transformOptions
   return babel.transformAsync(code, {
     babelrc: false,
     filename: id,
     presets,
-    plugins: [...plugins, 
-      /\.jsx?/.test(path.extname(id)) 
-        ? flowSyntaxPlugin
-        : typescriptSyntaxPlugin,
-      isJSX && jsxSyntaxPlugin,
-      [stylexBabelPlugin, { dev: !isProduction, unstable_moduleResolution, runtimeInjection: false, ...options }]
-    ].filter(Boolean)
+    plugins: [...plugins, /\.jsx?/.test(path.extname(id))
+      ? flowSyntaxPlugin
+      : [typescriptSyntaxPlugin, { isTSX: true }],
+    jsxSyntaxPlugin, stylexBabelPlugin.withOptions({ ...rest, runtimeInjection: false })]
   })
 }
 
-// stylex provide a dev runtime AFAK. 
-// But from a design principles. We won't need it. Only using virtual module is enough.
-// Judging from the previous experimental implementation of style9,It's worth to do it.
-
-// I don't understand why nuxt has to handle virtual module. so i had to change the name :(
 const VIRTUAL_STYLEX_MODULE = '\0vite-plugin:stylex'
 
 const VIRTUAL_STYLEX_CSS_MODULE = VIRTUAL_STYLEX_MODULE + '.css'
@@ -67,18 +32,61 @@ const VITE_INTERNAL_CSS_PLUGIN_NAMES = ['vite:css', 'vite:css-post']
 
 const VITE_TRANSFORM_MIDDLEWARE_NAME = 'viteTransformMiddleware'
 
-function createSSRMiddleware(processStylexRules: () => string): NextHandleFunction {
+interface StylexDevMiddlewareOptions {
+  processer: () => string,
+  viteServer: ViteDevServer,
+  custom: boolean
+}
+
+function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): NextHandleFunction {
+  const { processer, viteServer, custom } = options
+
+  const handleModule = (module: ModuleNode, pathName: string, accept = '') => {
+    const isAssets = accept.includes('text/css')
+    const paths = pathName.split('/')
+    paths.pop()
+    let base = ''
+    const filter = paths.filter(p => !['@id', '@fs'].includes(p))
+    base = filter.join('/')
+    if (!base) base = '/'
+    let code = ''
+    if (isAssets) {
+      code = processer()
+    } else {
+      if (custom) {
+        code = [
+          `import {createHotContext as __vite__createHotContext} from ${JSON.stringify(path.posix.join(base, '@vite/client'))};`,
+          'import.meta.hot = __vite__createHotContext("/@id/__x00__vite-plugin:stylex.css");',
+          `import {updateStyle as __vite__updateStyle,removeStyle as __vite__removeStyle} from ${JSON.stringify(path.posix.join(base, '@vite/client'))};`,
+          'const __vite__id = "\u0000vite-plugin:stylex.css"',
+          `const __vite__css = ${JSON.stringify(processer())}`,
+          '__vite__updateStyle(__vite__id, __vite__css)',
+          'import.meta.hot.accept()',
+          'import.meta.hot.prune(() => __vite__removeStyle(__vite__id))'
+        ].join('\n')
+      } else {
+        code = module.transformResult?.code 
+      }
+    }
+    return {
+      code,
+      isAssets
+    }
+  }
+ 
   return function stylexDevMiddleware(req, res, next) {
-    const protocol = 'encrypted' in req.connection ? 'https' : 'http'
+    const protocol = 'encrypted' in req.socket ? 'https' : 'http'
     const { host } = req.headers
     const url = new URL(req.originalUrl, `${protocol}://${host}`)
-    // Check style sheet is registered.
-    if (url.pathname.endsWith('.css') && url.pathname.includes('vite-plugin:stylex')) {
-      res.setHeader('Content-Type', 'text/css')
-      res.end(processStylexRules())
-      return
+    if (url.pathname.includes('vite-plugin:stylex')) {
+      const module = viteServer.moduleGraph.getModuleById(VIRTUAL_STYLEX_CSS_MODULE)
+      const { code, isAssets } = handleModule(module, url.pathname, req.headers?.accept ?? '')
+      res.setHeader('Content-Type', isAssets ? 'text/css' : 'application/javascript')
+      res.setHeader('x-powered-by', 'vite-plugin-stylex-dev')
+      res.end(code)
+    } else {
+      next()
     }
-    next()
   }
 }
 
@@ -91,13 +99,11 @@ function patchOptmizeDepsExcludeId(id: string) {
   return id
 }
 
-// TODO
 export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   const {
     useCSSLayers = false,
-    unstable_moduleResolution = { type: 'commonJS', rootDir: process.cwd() },
     babelConfig: { plugins = [], presets = [] } = {},
-    stylexImports = ['stylex', '@stylexjs/stylex'],
+    importSources = ['stylex', '@stylexjs/stylex'],
     include = /\.(mjs|js|ts|vue|jsx|tsx)(\?.*|)$/,
     exclude,
     ...options
@@ -105,6 +111,8 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   const filter = createFilter(include, exclude)
   let stylexRules: Record<string, Rule[]> = {}
   let isProd = false
+  // I think custom render in most of time is ssr so that we should disable stylex runtime inejct.
+  let isCustomRender = false
   let viteServer: ViteDevServer | null = null
   const viteCSSPlugins: Plugin[] = []
   const processStylexRules = () => {
@@ -112,6 +120,8 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     if (!rules.length) return
     return stylexBabelPlugin.processStylexRules(rules, useCSSLayers)
   }
+
+  let patchAlias: ReturnType<typeof createPatchAlias>
 
   return {
     name: 'vite-plugin-stylex',
@@ -131,27 +141,36 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       // Make sure the insert order
       // Reset the order of the middlewares
       return () => {
-        if (viteServer.config.appType === 'custom' || viteServer.config.server.middlewareMode) {
-          const stylexDevMiddleware = createSSRMiddleware(processStylexRules)
-          viteServer.middlewares.use(stylexDevMiddleware)
-          const order = viteServer.middlewares.stack.findIndex(m => {
-            if (typeof m.handle === 'function') return m.handle.name === VITE_TRANSFORM_MIDDLEWARE_NAME
-            return -1
-          })
-          const middleware = viteServer.middlewares.stack.pop()
-          if (order !== -1) {
-            viteServer.middlewares.stack.splice(order + 1, 0, middleware)
-          }
-        }
+        // I think the middleware won't be only at ssr or custom render
+        // It should be a normally middleware in development mode.
+        // Hijack the request and do hmr.
+        const stylexDevMiddleware = createStylexDevMiddleware({
+          processer: processStylexRules,
+          viteServer,
+          custom: isCustomRender
+        })
+        viteServer.middlewares.use(stylexDevMiddleware)
+        const order = viteServer.middlewares.stack.findIndex(m => {
+          if (typeof m.handle === 'function') return m.handle.name === VITE_TRANSFORM_MIDDLEWARE_NAME
+          return -1
+        })
+        const middleware = viteServer.middlewares.stack.pop()
+        viteServer.middlewares.stack.splice(order, 0, middleware)
       }
     },
     configResolved(conf) {
+      if (!options.unstable_moduleResolution) {
+        options.unstable_moduleResolution = { type: 'commonJS', rootDir: searchForWorkspaceRoot(conf.root) }
+      }
       isProd = conf.mode === 'production' || conf.env.mode === 'production'
+      isCustomRender = conf.appType === 'custom' || conf.server.middlewareMode
       if (!isProd) {
-        conf.optimizeDeps.exclude = ['@stylexjs/open-props']
+        conf.optimizeDeps.exclude = [...(conf.optimizeDeps.exclude ?? []), '@stylexjs/open-props']
       }
       viteCSSPlugins.push(...conf.plugins.filter(p => VITE_INTERNAL_CSS_PLUGIN_NAMES.includes(p.name)))
       viteCSSPlugins.sort((a, b) => a.name === 'vite:css' && b.name === 'vite:css-post' ? -1 : 1)
+      const tsconfigPaths = conf.plugins.find(p => p.name === 'vite-tsconfig-paths')
+      patchAlias = createPatchAlias(conf.resolve.alias, { tsconfigPaths })
     },
     load(id) {
       if (id === VIRTUAL_STYLEX_CSS_MODULE) {
@@ -163,10 +182,14 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     },
     async transform(inputCode, id) {
       if (!filter(id)) return
-      if (!stylexImports.some((importName) => inputCode.includes(importName))) return
-      // TODO
+      if (id.startsWith('\0') || id.includes('virtaul:nuxt')) return
+      if (!importSources.some((stmt) => inputCode.includes(typeof stmt === 'string' ? stmt : stmt.from))) return
+      // TODO for some reason stylex only process filename that contains `xx.style.ext` but vite will process all
+      // of chunks in development mode. So we need hack it.
       id = patchOptmizeDepsExcludeId(id)
-      const result = await transformWithStylex(inputCode, id, { isProduction: isProd, presets, plugins, unstable_moduleResolution, ...options })
+      inputCode = await patchAlias(inputCode, id, this)
+      
+      const result = await transformStylex(inputCode, id, { dev: isCustomRender ? false : !isProd, plugins, presets, ...options })
       if (!result) return
       if ('stylex' in result.metadata) {
         const rules = result.metadata.stylex as Rule[]
@@ -204,3 +227,5 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     }
   }
 }
+
+export { StylexPluginOptions }
