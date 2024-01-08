@@ -27,8 +27,6 @@ function handleRelativePath(from: string, to: string) {
   return relativePath
 }
 
-// const { parseAsync } = ('default' in rsModuleLexer ? rsModuleLexer.default : rsModuleLexer) as { parseAsync: typeof _parseAsync } 
-
 export function createPatchAlias(alias: AliasOptions & Alias[], opts: PatchAliasOptions) {
   const relativeReg = /^\.\.?(\/|$)/
   const finds = Array.isArray(alias) ? alias.map((a) => a.find) : []
@@ -58,7 +56,8 @@ export function createPatchAlias(alias: AliasOptions & Alias[], opts: PatchAlias
           if (typeof f === 'string') return stmt.n.includes(f)
           return f.test(stmt.n)
         })) continue
-        const resolved = await rollupContext.resolve(stmt.n)
+        // https://rollupjs.org/plugin-development/#plugin-context
+        const resolved = await rollupContext.resolve(stmt.n, id)
         if (resolved && resolved.id) {
           const relativePath = handleRelativePath(id, resolved.id)
           if (!relativePath.includes('node_modules')) {
