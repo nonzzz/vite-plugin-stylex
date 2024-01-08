@@ -28,6 +28,8 @@ const VIRTUAL_STYLEX_MODULE = '\0vite-plugin:stylex'
 
 const VIRTUAL_STYLEX_CSS_MODULE = VIRTUAL_STYLEX_MODULE + '.css'
 
+const VIRTUAL_STYLEX_CSS_MODULE_ALIAS = '@stylex-dev.css'
+
 const VITE_INTERNAL_CSS_PLUGIN_NAMES = ['vite:css', 'vite:css-post']
 
 const VITE_TRANSFORM_MIDDLEWARE_NAME = 'viteTransformMiddleware'
@@ -75,7 +77,7 @@ function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): NextHan
   }
  
   return function stylexDevMiddleware(req, res, next) {
-    const protocol = 'encrypted' in req.socket ? 'https' : 'http'
+    const protocol = 'encrypted' in (req?.socket ?? {}) ? 'https' : 'http'
     const { host } = req.headers
     const url = new URL(req.originalUrl, `${protocol}://${host}`)
     if (url.pathname.includes('vite-plugin:stylex')) {
@@ -179,6 +181,8 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     },
     resolveId(id) {
       if (id === VIRTUAL_STYLEX_MODULE) return VIRTUAL_STYLEX_CSS_MODULE
+      // For waku
+      if (id === VIRTUAL_STYLEX_CSS_MODULE_ALIAS) return VIRTUAL_STYLEX_CSS_MODULE
     },
     async transform(inputCode, id) {
       if (!filter(id)) return
