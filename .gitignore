@@ -5,6 +5,7 @@ types
 .tmpl
 coverage
 .DS_Store
+.svelte-kit
 
 yarn-debug.log*
 yarn-error.log*

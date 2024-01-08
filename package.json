@@ -71,7 +71,8 @@
     "magic-string": "^0.30.5"
   },
   "resolutions": {
-    "sharp": "0.32.6"
+    "sharp": "0.32.6",
+    "vite": "^5.0.11"
   },
   "ava": {
     "files": [
