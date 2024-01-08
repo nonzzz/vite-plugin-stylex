@@ -92,3 +92,34 @@ test('pxtorem suite should transform px to rem', async (t) => {
   await sleep()
   t.is(css, '.x1j61zf2{font-size:1rem}\n')
 })
+
+test('path-alias suite should be work', async (t) => {
+  const { js } = await mockBuild('path-alias', 
+    { vite: 
+      { 
+        resolve: {
+          alias: {
+            '@': '.'
+          }
+        },
+        build: {
+          minify: false
+        }
+      }
+    })
+  await sleep()
+  t.is(js, `import { defineVars, create, props } from "@stylexjs/stylex";
+const colors = defineVars({
+  black: "#000"
+});
+const styles = create({
+  black: {
+    color: colors.black
+  }
+});
+const { className } = props(styles.black);
+export {
+  className
+};
+`)
+})
