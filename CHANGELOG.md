@@ -1,3 +1,9 @@
+## 0.2.2
+
+# Patches
+
+- Fix if it's `https` or `http`.
+
 ## 0.2.1
 
 # Patches
