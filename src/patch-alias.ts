@@ -9,6 +9,7 @@
 // convert:
 // import { kind } from './x.stylex'
 import path from 'path'
+import { normalizePath } from 'vite'
 import MagicString from 'magic-string'
 import type { ImportSpecifier } from 'es-module-lexer'
 import type { Alias, AliasOptions, Plugin } from 'vite'
@@ -22,9 +23,8 @@ interface PatchAliasOptions {
 type AliasPath = ImportSpecifier & { relative: string }
 
 function handleRelativePath(from: string, to: string) {
-  let relativePath = path.relative(path.dirname(from), to).replace(/\.\w+$/, '')
-  relativePath = `./${relativePath}`
-  return relativePath
+  const relativePath = path.relative(path.dirname(from), to).replace(/\.\w+$/, '')
+  return `./${normalizePath(relativePath)}`
 }
 
 export function createPatchAlias(alias: AliasOptions & Alias[], opts: PatchAliasOptions) {

@@ -16,11 +16,6 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
-    "./url.js": {
-      "types": "./dist/url.d.ts",
-      "import": "./dist/url.mjs",
-      "require": "./dist/url.js"
-    },
     "./*": "./*"
   },
   "files": [

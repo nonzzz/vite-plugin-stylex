@@ -2,14 +2,15 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import * as stylex from '@stylexjs/stylex'
 import { useState } from 'react'
+import { colors } from '@/themes/color.stylex'
 
 const styles = stylex.create({
   text: { fontSize: '20px', cursor: 'pointer' },
   blue: {
-    color: 'blue'
+    color: colors.blue
   },
   red: {
-    color: 'red'
+    color: colors.red
   }
 })
 
