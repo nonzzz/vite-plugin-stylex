@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-stylex-dev",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "an unofficial stylex vite plugin",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -37,10 +37,19 @@
   "keywords": [
     "stylex",
     "experimental",
-    "css-in-js"
+    "css-in-js",
+    "vite-plugin"
   ],
   "author": "kanno",
   "license": "MIT",
+  "homepage": "https://github.com/nonzzz/vite-plugin-stylex",
+  "bugs": {
+    "url": "https://github.com/nonzzz/vite-plugin-stylex/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nonzzz/vite-plugin-stylex.git"
+  },
   "devDependencies": {
     "@stylexjs/stylex": "^0.4.1",
     "@types/babel__core": "^7.20.5",
