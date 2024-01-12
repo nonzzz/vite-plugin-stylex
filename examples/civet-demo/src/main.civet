@@ -1,0 +1,25 @@
+import * as stylex from '@stylexjs/stylex'
+import ReactDOM from 'react-dom/client'
+import React from 'react'
+
+styles := stylex.create
+  base:
+    margin: 0
+    padding: 0
+    color: 'red'
+    fontSize: '30px'
+    border: '1px solid green'
+
+
+export function App()
+  <div>
+    <p {...stylex.props(styles.base)}>
+      Hello, World!
+    </p>
+  </div>
+
+ReactDOM.createRoot(document.querySelector('#app')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)

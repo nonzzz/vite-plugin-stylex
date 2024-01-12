@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "strict": true,
+      "jsx": "preserve",
+      "lib": ["es2021","DOM"],
+      "moduleResolution":"Bundler",
+      "module": "ESNext",
+      "forceConsistentCasingInFileNames": true,
+      "resolveJsonModule": true,
+      "esModuleInterop": true
+    },
+  }
