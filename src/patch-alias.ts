@@ -59,6 +59,7 @@ export function createPatchAlias(alias: AliasOptions & Alias[], opts: PatchAlias
         // https://rollupjs.org/plugin-development/#plugin-context
         const resolved = await rollupContext.resolve(stmt.n, id)
         if (resolved && resolved.id) {
+          if (resolved.id === stmt.n) continue
           const relativePath = handleRelativePath(id, resolved.id)
           if (!relativePath.includes('node_modules')) {
             withAliasPath.push({ ...stmt, relative: relativePath })

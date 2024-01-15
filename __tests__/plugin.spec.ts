@@ -1,3 +1,5 @@
+import fsp from 'fs/promises'
+import fs from 'fs'
 import path from 'path'
 import test from 'ava'
 import type { UserConfig } from 'vite'
@@ -15,11 +17,12 @@ interface BuildOptions {
 
 async function mockBuild(taskName: string, opts: BuildOptions = {}) {
   const { stylex = {}, vite: viteOptions = {} } = opts
+  const basePath = path.join(__dirname, 'fixtures', taskName)
   const vite = await import('vite')
   const bundle = await vite.build(vite.mergeConfig({
     build: {
       lib: {
-        entry: path.join(__dirname, 'fixtures', taskName, 'main.ts'),
+        entry: path.join(basePath, 'main.ts'),
         formats: ['es'],
         fileName: 'bundle'
       },
@@ -45,7 +48,22 @@ async function mockBuild(taskName: string, opts: BuildOptions = {}) {
       js = chunkOrAsset.code
     }
   }
-  return { css, js }
+  const snaphotPaths = [path.join(basePath, 'output.css'), path.join(basePath, 'output.js')]
+  const snaphots = {
+    css: '',
+    js: ''
+  }
+  await Promise.all(snaphotPaths.map(async (p) => {
+    if (fs.existsSync(p)) {
+      const result = await fsp.readFile(p, 'utf8')
+      if (p.includes('.js')) {
+        snaphots.js = result
+      } else {
+        snaphots.css = result
+      }
+    }
+  }))
+  return { css, js, snaphots }
 }
 
 // Currently, i can't find a good way to write unit test case.
@@ -53,26 +71,10 @@ async function mockBuild(taskName: string, opts: BuildOptions = {}) {
 // I think most dev related scenarios should be executed in e2e.
 
 test('normal suit disable css minify', async (t) => {
-  const { css, js } = await mockBuild('normal', { vite: { build: { cssMinify: false } } })
+  const { css, js, snaphots } = await mockBuild('normal', { vite: { build: { cssMinify: false } } })
   await sleep()
-  t.is(css, `.xju2f9n{color:blue}
-.x1e2nbdu{color:red}`)
-  t.is(js, `import * as s from "@stylexjs/stylex";
-const e = {
-  blue: {
-    color: "xju2f9n",
-    $$css: !0
-  }
-}, o = {
-  red: {
-    color: "x1e2nbdu",
-    $$css: !0
-  }
-}, { className: r } = s.props(e.blue, o.red);
-export {
-  r as className
-};
-`)
+  t.is(css, snaphots.css)
+  t.is(js, snaphots.js)
 })
 
 test('normal suite enable css minify', async (t) => {
@@ -94,9 +96,9 @@ test('pxtorem suite should transform px to rem', async (t) => {
 })
 
 test('path-alias suite should be work', async (t) => {
-  const { js } = await mockBuild('path-alias', 
+  const { js, snaphots } = await mockBuild('path-alias', 
     { vite: 
-      { 
+      {
         resolve: {
           alias: {
             '@': '.'
@@ -108,18 +110,12 @@ test('path-alias suite should be work', async (t) => {
       }
     })
   await sleep()
-  t.is(js, `import { defineVars, create, props } from "@stylexjs/stylex";
-const colors = defineVars({
-  black: "#000"
-});
-const styles = create({
-  black: {
-    color: colors.black
-  }
-});
-const { className } = props(styles.black);
-export {
-  className
-};
-`)
+  t.is(js, snaphots.js)
+})
+
+test('empty style object should be work', async (t) => {
+  const { css, js, snaphots } = await mockBuild('empty')
+  await sleep()
+  t.is(css, snaphots.css)
+  t.is(js, snaphots.js)
 })

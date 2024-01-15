@@ -197,7 +197,8 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       if (!result) return
       if ('stylex' in result.metadata) {
         const rules = result.metadata.stylex as Rule[]
-        if (!rules.length) return
+        // #10 If user pass empty styles we should return the paased result.
+        if (!rules.length) return { code: result.code, map: result.map }
         // pipe to vite's internal plugin for processing.
         result.code = `import ${JSON.stringify(VIRTUAL_STYLEX_MODULE)};\n${result.code}`
         stylexRules[id] = rules
