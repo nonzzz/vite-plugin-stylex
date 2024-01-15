@@ -1,3 +1,10 @@
+## 0.2.4
+
+# Patches
+
+- Fix patchAlias can't work with windows system.
+- Fix input code include empty stylex object can't work. #10
+
 ## 0.2.2
 
 # Patches
