@@ -4,6 +4,7 @@ import stylexBabelPlugin from '@stylexjs/babel-plugin'
 import flowSyntaxPlugin from '@babel/plugin-syntax-flow'
 import jsxSyntaxPlugin from '@babel/plugin-syntax-jsx'
 import typescriptSyntaxPlugin from '@babel/plugin-syntax-typescript'
+import { init, parse } from 'es-module-lexer'
 import type { NextHandleFunction } from 'connect'
 import * as babel from '@babel/core'
 import type { ModuleNode, Plugin, ViteDevServer } from 'vite'
@@ -122,7 +123,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     if (!rules.length) return
     return stylexBabelPlugin.processStylexRules(rules, useCSSLayers)
   }
-
+  init.then()
   let patchAlias: ReturnType<typeof createPatchAlias>
 
   return {
@@ -172,7 +173,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       viteCSSPlugins.push(...conf.plugins.filter(p => VITE_INTERNAL_CSS_PLUGIN_NAMES.includes(p.name)))
       viteCSSPlugins.sort((a, b) => a.name === 'vite:css' && b.name === 'vite:css-post' ? -1 : 1)
       const tsconfigPaths = conf.plugins.find(p => p.name === 'vite-tsconfig-paths')
-      patchAlias = createPatchAlias(conf.resolve.alias, { tsconfigPaths })
+      patchAlias = createPatchAlias(conf.resolve.alias, { tsconfigPaths, parse })
     },
     load(id) {
       if (id === VIRTUAL_STYLEX_CSS_MODULE) {
@@ -186,8 +187,16 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     },
     async transform(inputCode, id) {
       if (!filter(id)) return
-      if (id.startsWith('\0') || id.includes('virtaul:nuxt')) return
-      if (!importSources.some((stmt) => inputCode.includes(typeof stmt === 'string' ? stmt : stmt.from))) return
+      if (id.startsWith('\0')) return
+      let skip = true
+      const [imports] = await parse(inputCode)
+      for (const stmt of imports) {
+        if (stmt.n && importSources.some(i => stmt.n.includes(typeof i === 'string' ? i : i.from))) {
+          skip = false
+          break
+        }
+      }
+      if (skip) return
       // TODO for some reason stylex only process filename that contains `xx.style.ext` but vite will process all
       // of chunks in development mode. So we need hack it.
       id = patchOptmizeDepsExcludeId(id)

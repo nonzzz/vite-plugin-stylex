@@ -16,12 +16,16 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
+    "./client": {
+      "types": "./client.d.ts"
+    },
     "./*": "./*"
   },
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "client.d.ts"
   ],
   "scripts": {
     "dev": "tsup --watch src",

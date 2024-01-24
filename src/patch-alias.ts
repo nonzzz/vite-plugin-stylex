@@ -13,11 +13,12 @@ import { normalizePath } from 'vite'
 import MagicString from 'magic-string'
 import type { ImportSpecifier } from 'es-module-lexer'
 import type { Alias, AliasOptions, Plugin } from 'vite'
-import { init, parse } from 'es-module-lexer'
+import { parse } from 'es-module-lexer'
 import type { RollupPluginContext } from './interface'
 
 interface PatchAliasOptions {
   tsconfigPaths?: Plugin,
+  parse: typeof parse
 }
 
 type AliasPath = ImportSpecifier & { relative: string }
@@ -30,10 +31,9 @@ function handleRelativePath(from: string, to: string) {
 export function createPatchAlias(alias: AliasOptions & Alias[], opts: PatchAliasOptions) {
   const relativeReg = /^\.\.?(\/|$)/
   const finds = Array.isArray(alias) ? alias.map((a) => a.find) : []
-  init.then()
   return async (code: string, id: string, rollupContext: RollupPluginContext) => {
     const str = new MagicString(code)
-    const [imports] = parse(code)
+    const [imports] = opts.parse(code)
     const withAliasPath: AliasPath[] = []
     for (const stmt of imports) {
       if (!stmt.n) continue
