@@ -1,3 +1,9 @@
+## 0.2.5
+
+# Patches
+
+- Fix transform filter don't work as expected. #1
+
 ## 0.2.4
 
 # Patches
