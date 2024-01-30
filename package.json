@@ -50,7 +50,7 @@
     "url": "https://github.com/nonzzz/vite-plugin-stylex.git"
   },
   "devDependencies": {
-    "@stylexjs/stylex": "^0.4.1",
+    "@stylexjs/stylex": "^0.5.1",
     "@types/babel__core": "^7.20.5",
     "@types/connect": "^3.4.38",
     "@types/node": "^20.10.4",
@@ -61,6 +61,7 @@
     "eslint": "^8.55.0",
     "eslint-config-kagura": "^2.1.1",
     "eslint-plugin-vue": "^9.19.2",
+    "get-tsconfig": "^4.7.2",
     "playwright": "~1.32.3",
     "postcss-pxtorem": "^6.0.0",
     "tsup": "^8.0.1",
@@ -70,18 +71,18 @@
     "vue-eslint-parser": "^9.3.2"
   },
   "dependencies": {
-    "@babel/core": "^7.23.6",
+    "@babel/core": "^7.23.9",
     "@babel/plugin-syntax-flow": "^7.23.3",
     "@babel/plugin-syntax-jsx": "^7.23.3",
     "@babel/plugin-syntax-typescript": "^7.23.3",
-    "@stylexjs/babel-plugin": "^0.4.1",
+    "@stylexjs/babel-plugin": "^0.5.1",
     "es-module-lexer": "^1.4.1",
     "magic-string": "^0.30.5"
   },
   "resolutions": {
     "sharp": "0.32.6",
     "vite": "^5.0.11",
-    "@stylexjs/stylex": "^0.4.1"
+    "@stylexjs/stylex": "^0.5.1"
   },
   "ava": {
     "files": [

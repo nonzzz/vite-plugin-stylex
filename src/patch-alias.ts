@@ -3,6 +3,9 @@
 // This patch does not change vite's behavior
 // It's should also work well with tsconfPaths plugin
 // https://github.com/facebook/stylex/issues/40
+// stylex Support path aliases at v0.5.0 (But is ts paths like)
+// but stylex can't convert all of scense.
+// So this patch should continue to be retained.
 
 // eg:
 // import { kind } from '@/x.stylex'
@@ -12,13 +15,12 @@ import path from 'path'
 import { normalizePath } from 'vite'
 import MagicString from 'magic-string'
 import type { ImportSpecifier } from 'es-module-lexer'
-import type { Alias, AliasOptions, Plugin } from 'vite'
 import { parse } from 'es-module-lexer'
-import type { RollupPluginContext } from './interface'
+import type { InternalOptions, RollupPluginContext } from './interface'
 
 interface PatchAliasOptions {
-  tsconfigPaths?: Plugin,
   parse: typeof parse
+  importSources: InternalOptions['importSources']
 }
 
 type AliasPath = ImportSpecifier & { relative: string }
@@ -28,9 +30,8 @@ function handleRelativePath(from: string, to: string) {
   return `./${normalizePath(relativePath)}`
 }
 
-export function createPatchAlias(alias: AliasOptions & Alias[], opts: PatchAliasOptions) {
+export function createPatchAlias(opts: PatchAliasOptions) {
   const relativeReg = /^\.\.?(\/|$)/
-  const finds = Array.isArray(alias) ? alias.map((a) => a.find) : []
   return async (code: string, id: string, rollupContext: RollupPluginContext) => {
     const str = new MagicString(code)
     const [imports] = opts.parse(code)
@@ -39,31 +40,13 @@ export function createPatchAlias(alias: AliasOptions & Alias[], opts: PatchAlias
       if (!stmt.n) continue
       if (stmt.d > -1) continue
       if (path.isAbsolute(stmt.n) || relativeReg.test(stmt.n)) continue
-
-      if (opts.tsconfigPaths) {
-        const fn = opts.tsconfigPaths.resolveId as Function
-        if (stmt.n.includes('stylex')) {
-          const result = await fn.call(rollupContext, stmt.n, id)
-          if (result) {
-            const relativePath = handleRelativePath(id, result)
-            if (!relativePath.includes('node_modules')) {
-              withAliasPath.push({ ...stmt, relative: relativePath })
-            }
-          }
-        }
-      } else {
-        if (!finds.some(f => {
-          if (typeof f === 'string') return stmt.n.includes(f)
-          return f.test(stmt.n)
-        })) continue
-        // https://rollupjs.org/plugin-development/#plugin-context
-        const resolved = await rollupContext.resolve(stmt.n, id)
-        if (resolved && resolved.id) {
-          if (resolved.id === stmt.n) continue
+      if (!opts.importSources.some(i => stmt.n.includes(typeof i === 'string' ? i : i.from))) continue
+      const resolved = await rollupContext.resolve(stmt.n, id)
+      if (resolved && resolved.id && !resolved.external) {
+        if (resolved.id === stmt.n) continue
+        if (!resolved.id.includes('node_modules')) {
           const relativePath = handleRelativePath(id, resolved.id)
-          if (!relativePath.includes('node_modules')) {
-            withAliasPath.push({ ...stmt, relative: relativePath })
-          }
+          withAliasPath.push({ ...stmt, relative: relativePath })
         }
       }
     }

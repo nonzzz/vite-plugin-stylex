@@ -38,11 +38,10 @@ const VITE_TRANSFORM_MIDDLEWARE_NAME = 'viteTransformMiddleware'
 interface StylexDevMiddlewareOptions {
   processer: () => string,
   viteServer: ViteDevServer,
-  custom: boolean
 }
 
 function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): NextHandleFunction {
-  const { processer, viteServer, custom } = options
+  const { processer, viteServer } = options
 
   const handleModule = (module: ModuleNode, pathName: string, accept = '') => {
     const isAssets = accept.includes('text/css')
@@ -56,20 +55,16 @@ function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): NextHan
     if (isAssets) {
       code = processer()
     } else {
-      if (custom) {
-        code = [
-          `import {createHotContext as __vite__createHotContext} from ${JSON.stringify(path.posix.join(base, '@vite/client'))};`,
-          'import.meta.hot = __vite__createHotContext("/@id/__x00__vite-plugin:stylex.css");',
-          `import {updateStyle as __vite__updateStyle,removeStyle as __vite__removeStyle} from ${JSON.stringify(path.posix.join(base, '@vite/client'))};`,
-          'const __vite__id = "\u0000vite-plugin:stylex.css"',
-          `const __vite__css = ${JSON.stringify(processer())}`,
-          '__vite__updateStyle(__vite__id, __vite__css)',
-          'import.meta.hot.accept()',
-          'import.meta.hot.prune(() => __vite__removeStyle(__vite__id))'
-        ].join('\n')
-      } else {
-        code = module.transformResult?.code 
-      }
+      code = [
+        `import {createHotContext as __vite__createHotContext} from ${JSON.stringify(path.posix.join(base, '@vite/client'))};`,
+        'import.meta.hot = __vite__createHotContext("/@id/__x00__vite-plugin:stylex.css");',
+        `import {updateStyle as __vite__updateStyle,removeStyle as __vite__removeStyle} from ${JSON.stringify(path.posix.join(base, '@vite/client'))};`,
+        'const __vite__id = "\u0000vite-plugin:stylex.css"',
+        `const __vite__css = ${JSON.stringify(processer())}`,
+        '__vite__updateStyle(__vite__id, __vite__css)',
+        'import.meta.hot.accept()',
+        'import.meta.hot.prune(() => __vite__removeStyle(__vite__id))'
+      ].join('\n')
     }
     return {
       code,
@@ -114,8 +109,6 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   const filter = createFilter(include, exclude)
   let stylexRules: Record<string, Rule[]> = {}
   let isProd = false
-  // I think custom render in most of time is ssr so that we should disable stylex runtime inejct.
-  let isCustomRender = false
   let viteServer: ViteDevServer | null = null
   const viteCSSPlugins: Plugin[] = []
   const processStylexRules = () => {
@@ -149,8 +142,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
         // Hijack the request and do hmr.
         const stylexDevMiddleware = createStylexDevMiddleware({
           processer: processStylexRules,
-          viteServer,
-          custom: isCustomRender
+          viteServer
         })
         viteServer.middlewares.use(stylexDevMiddleware)
         const order = viteServer.middlewares.stack.findIndex(m => {
@@ -166,14 +158,12 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
         options.unstable_moduleResolution = { type: 'commonJS', rootDir: searchForWorkspaceRoot(conf.root) }
       }
       isProd = conf.mode === 'production' || conf.env.mode === 'production'
-      isCustomRender = conf.appType === 'custom' || conf.server.middlewareMode
       if (!isProd) {
         conf.optimizeDeps.exclude = [...(conf.optimizeDeps.exclude ?? []), '@stylexjs/open-props']
       }
       viteCSSPlugins.push(...conf.plugins.filter(p => VITE_INTERNAL_CSS_PLUGIN_NAMES.includes(p.name)))
       viteCSSPlugins.sort((a, b) => a.name === 'vite:css' && b.name === 'vite:css-post' ? -1 : 1)
-      const tsconfigPaths = conf.plugins.find(p => p.name === 'vite-tsconfig-paths')
-      patchAlias = createPatchAlias(conf.resolve.alias, { tsconfigPaths, parse })
+      patchAlias = createPatchAlias({ parse, importSources })
     },
     load(id) {
       if (id === VIRTUAL_STYLEX_CSS_MODULE) {
@@ -191,7 +181,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       let skip = true
       const [imports] = await parse(inputCode)
       for (const stmt of imports) {
-        if (stmt.n && importSources.some(i => stmt.n.includes(typeof i === 'string' ? i : i.from))) {
+        if (stmt.n && importSources.some(i => !path.isAbsolute(stmt.n) && stmt.n.includes(typeof i === 'string' ? i : i.from))) {
           skip = false
           break
         }
@@ -201,8 +191,8 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       // of chunks in development mode. So we need hack it.
       id = patchOptmizeDepsExcludeId(id)
       inputCode = await patchAlias(inputCode, id, this)
-      
-      const result = await transformStylex(inputCode, id, { dev: isCustomRender ? false : !isProd, plugins, presets, ...options })
+      // stylex v0.5.0 respected dev
+      const result = await transformStylex(inputCode, id, { dev: !isProd, plugins, presets, ...options })
       if (!result) return
       if ('stylex' in result.metadata) {
         const rules = result.metadata.stylex as Rule[]
