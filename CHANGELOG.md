@@ -1,3 +1,15 @@
+## 0.3.0
+
+# Improve and Features
+
+- Upgrade stylex compiler.
+- Perf patchAlias logic.
+- Reduce package sizes.
+
+# Patches
+
+- Fix can't load `virtual:css` in watch mode. #5
+
 ## 0.2.5
 
 # Patches

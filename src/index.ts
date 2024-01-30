@@ -112,7 +112,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   let viteServer: ViteDevServer | null = null
   const viteCSSPlugins: Plugin[] = []
   const processStylexRules = () => {
-    const rules = Object.values(stylexRules).flat()
+    const rules = Object.values(stylexRules).flat().filter(Boolean)
     if (!rules.length) return
     return stylexBabelPlugin.processStylexRules(rules, useCSSLayers)
   }
