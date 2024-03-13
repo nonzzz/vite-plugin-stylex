@@ -8,7 +8,8 @@
   "packageManager": "yarn@3.6.3",
   "workspaces": [
     "examples/*",
-    "e2e/**/*"
+    "e2e/**/*",
+    "internal/*"
   ],
   "exports": {
     ".": {

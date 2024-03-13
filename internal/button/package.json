@@ -1,0 +1,10 @@
+{
+  "name": "@internal/button",
+  "type": "module",
+  "version": "0.0.0",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "devDependencies": {
+    "@stylexjs/stylex": "^0.5.1"
+  }
+}
