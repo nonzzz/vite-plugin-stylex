@@ -104,6 +104,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     importSources = ['stylex', '@stylexjs/stylex'],
     include = /\.(mjs|js|ts|vue|jsx|tsx)(\?.*|)$/,
     exclude,
+    optimizedDeps = [],
     ...options
   } = opts
   const filter = createFilter(include, exclude)
@@ -159,7 +160,13 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       }
       isProd = conf.mode === 'production' || conf.env.mode === 'production'
       if (!isProd) {
-        conf.optimizeDeps.exclude = [...(conf.optimizeDeps.exclude ?? []), '@stylexjs/open-props']
+        conf.optimizeDeps.exclude = [...optimizedDeps, ...(conf.optimizeDeps.exclude ?? []), '@stylexjs/open-props']
+      }
+      // we think custom always is ssr
+      if (conf.appType === 'custom') {
+        conf.ssr.noExternal = Array.isArray(conf.ssr.noExternal)
+          ? [...conf.ssr.noExternal, ...optimizedDeps, '@stylexjs/open-props']
+          : conf.ssr.noExternal
       }
       viteCSSPlugins.push(...conf.plugins.filter(p => VITE_INTERNAL_CSS_PLUGIN_NAMES.includes(p.name)))
       viteCSSPlugins.sort((a, b) => a.name === 'vite:css' && b.name === 'vite:css-post' ? -1 : 1)

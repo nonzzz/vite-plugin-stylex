@@ -12,6 +12,10 @@ export interface StylexPluginOptions extends Partial<InternalOptions> {
   useCSSLayers?: boolean,
   include?: FilterPattern
   exclude?: FilterPattern
+  /**
+   * @experimental
+   */
+  optimizedDeps?: Array<string>
   [prop: string]: unknown
 }
 

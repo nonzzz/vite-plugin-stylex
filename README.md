@@ -37,6 +37,11 @@ export default defineConfig({
 | `babelConfig`               | `object`                                      | `{}`                                           | Babel config for stylex                                    |
 | `unstable_moduleResolution` | `Record<string,any>`                          | `{ type: 'commonJS', rootDir: process.cwd() }` | See stylex document                                        |
 | `useCSSLayers`              | `boolean`                                     | `default`                                      | See stylex document                                        |
+| `optimizedDeps`             | `Array<string>`                               | `[]`                                           | Work with external stylex files or libraries               |
+
+## Q & A
+
+[Q&A](./Q&A.md)
 
 ## Author
 
