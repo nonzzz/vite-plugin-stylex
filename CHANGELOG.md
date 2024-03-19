@@ -1,3 +1,9 @@
+## 0.4.0
+
+# Features
+
+- Add new Option `optimizedDeps` #12
+
 ## 0.3.0
 
 # Improve and Features
