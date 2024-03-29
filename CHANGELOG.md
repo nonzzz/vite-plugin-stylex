@@ -1,3 +1,9 @@
+## 0.4.1
+
+# Patches
+
+- Fix no passing option `importSources` for stylex babel-plugin.
+
 ## 0.4.0
 
 # Features

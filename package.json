@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-stylex-dev",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "an unofficial stylex vite plugin",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
