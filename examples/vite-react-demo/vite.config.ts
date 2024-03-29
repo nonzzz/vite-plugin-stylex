@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { stylexPlugin } from 'vite-plugin-stylex-dev'
+import rsdPlugin from 'react-strict-dom/babel'
 
 export default defineConfig({
   // resolve: {
@@ -11,5 +12,17 @@ export default defineConfig({
   //     '~': path.join(__dirname, 'themes')
   //   }
   // },
-  plugins: [tsconfigPaths({ root: __dirname }), react(), stylexPlugin()]
+  plugins: [tsconfigPaths({ root: __dirname }), react(), 
+    stylexPlugin(
+      { babelConfig: {
+        plugins: [rsdPlugin]
+      },
+      importSources: [
+        '@stylexjs/stylex',
+        'stylex',
+        { from: 'react-strict-dom', as: 'css' }
+      ],
+      styleResolution: 'property-specificity'
+      }
+    )]
 })

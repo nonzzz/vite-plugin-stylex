@@ -159,6 +159,9 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
         options.unstable_moduleResolution = { type: 'commonJS', rootDir: searchForWorkspaceRoot(conf.root) }
       }
       isProd = conf.mode === 'production' || conf.env.mode === 'production'
+      if (Array.isArray(optimizedDeps)) {
+        optimizedDeps.push(...importSources.map(s => typeof s === 'object' ? s.from : s))
+      }
       if (!isProd) {
         conf.optimizeDeps.exclude = [...optimizedDeps, ...(conf.optimizeDeps.exclude ?? []), '@stylexjs/open-props']
       }
@@ -199,7 +202,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       id = patchOptmizeDepsExcludeId(id)
       inputCode = await patchAlias(inputCode, id, this)
       // stylex v0.5.0 respected dev
-      const result = await transformStylex(inputCode, id, { dev: !isProd, plugins, presets, ...options })
+      const result = await transformStylex(inputCode, id, { dev: !isProd, plugins, presets, importSources, ...options })
       if (!result) return
       if ('stylex' in result.metadata) {
         const rules = result.metadata.stylex as Rule[]

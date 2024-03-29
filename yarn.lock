@@ -5538,7 +5538,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css-mediaquery@npm:^0.1.2":
+"css-mediaquery@npm:0.1.2, css-mediaquery@npm:^0.1.2":
   version: 0.1.2
   resolution: "css-mediaquery@npm:0.1.2"
   checksum: 8e26ae52d8aaaa71893f82fc485363ff0fab494b7d3b3464572aaed50714b8b538d33dbdaa69f0c02cf7f80d1f4d9a77519306c0492223ce91b3987475031a69
@@ -13098,6 +13098,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-strict-dom@npm:^0.0.4":
+  version: 0.0.4
+  resolution: "react-strict-dom@npm:0.0.4"
+  dependencies:
+    "@stylexjs/stylex": 0.5.1
+    css-mediaquery: 0.1.2
+    postcss-value-parser: ^4.1.0
+  peerDependencies:
+    react: ">=18.2.0"
+    react-dom: ">=18.2.0"
+    react-native: ">=0.71.0"
+  checksum: 20824d6ee94f31600224407858751b84f0038ce409b5b242994138d461d72a3d404e2f48d501f013ba014ab57faa18a81d794f4d6da5be839a4d0b77ef48eb1c
+  languageName: node
+  linkType: hard
+
 "react@npm:18.3.0-canary-c5b937576-20231219":
   version: 18.3.0-canary-c5b937576-20231219
   resolution: "react@npm:18.3.0-canary-c5b937576-20231219"
@@ -16121,6 +16136,7 @@ __metadata:
     "@vitejs/plugin-react": ^4.2.1
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-strict-dom: ^0.0.4
     vite: ^5.0.10
     vite-plugin-stylex-dev: "workspace:*"
     vite-tsconfig-paths: ^4.2.3
