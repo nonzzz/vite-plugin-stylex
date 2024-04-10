@@ -4,5 +4,13 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 import { stylexPlugin } from 'vite-plugin-stylex-dev'
 
 export default defineConfig({
+  css: {
+    transformer: 'lightningcss',
+    lightningcss: {
+      drafts: {
+        customMedia: true
+      }
+    }
+  },
   plugins: [remix(), tsconfigPaths(), stylexPlugin()]
 })

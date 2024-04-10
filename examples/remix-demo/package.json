@@ -22,6 +22,7 @@
     "@remix-run/dev": "^2.8.1",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
+    "lightningcss": "^1.24.1",
     "typescript": "^5.1.6",
     "vite": "^5.0.6",
     "vite-plugin-stylex-dev": "workspace:*",

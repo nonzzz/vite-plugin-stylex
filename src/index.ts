@@ -7,9 +7,9 @@ import typescriptSyntaxPlugin from '@babel/plugin-syntax-typescript'
 import { init, parse } from 'es-module-lexer'
 import type { NextHandleFunction } from 'connect'
 import * as babel from '@babel/core'
-import type { ModuleNode, Plugin, ViteDevServer } from 'vite'
+import type { ModuleNode, Plugin, TransformResult, ViteDevServer } from 'vite'
 import type { Rule } from '@stylexjs/babel-plugin'
-import type { StylexPluginOptions, TransformStylexOptions } from './interface'
+import type { RollupPluginContext, StylexPluginOptions, TransformStylexOptions } from './interface'
 import { createPatchAlias } from './patch-alias'
 
 function transformStylex(code: string, id: string, transformOptions: TransformStylexOptions) {
@@ -36,12 +36,11 @@ const VITE_INTERNAL_CSS_PLUGIN_NAMES = ['vite:css', 'vite:css-post']
 const VITE_TRANSFORM_MIDDLEWARE_NAME = 'viteTransformMiddleware'
 
 interface StylexDevMiddlewareOptions {
-  processer: () => string,
   viteServer: ViteDevServer,
 }
 
 function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): NextHandleFunction {
-  const { processer, viteServer } = options
+  const { viteServer } = options
 
   const handleModule = (module: ModuleNode, pathName: string, accept = '') => {
     const isAssets = accept.includes('text/css')
@@ -52,15 +51,17 @@ function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): NextHan
     base = filter.join('/')
     if (!base) base = '/'
     let code = ''
+    // @ts-expect-error
+    const css = module.__stylex__
     if (isAssets) {
-      code = processer()
+      code = css
     } else {
       code = [
         `import {createHotContext as __vite__createHotContext} from ${JSON.stringify(path.posix.join(base, '@vite/client'))};`,
         'import.meta.hot = __vite__createHotContext("/@id/__x00__vite-plugin:stylex.css");',
         `import {updateStyle as __vite__updateStyle,removeStyle as __vite__removeStyle} from ${JSON.stringify(path.posix.join(base, '@vite/client'))};`,
         'const __vite__id = "\u0000vite-plugin:stylex.css"',
-        `const __vite__css = ${JSON.stringify(processer())}`,
+        `const __vite__css = ${JSON.stringify(css)}`,
         '__vite__updateStyle(__vite__id, __vite__css)',
         'import.meta.hot.accept()',
         'import.meta.hot.prune(() => __vite__removeStyle(__vite__id))'
@@ -95,6 +96,25 @@ function patchOptmizeDepsExcludeId(id: string) {
     return path.join(dir, name + extension)
   }
   return id
+}
+
+function hijackTransformHook(plugin: Plugin, handler: (ctx: RollupPluginContext, chunk: TransformResult) => Promise<void>) {
+  const hook = plugin.transform
+  if (typeof hook === 'object' && hook.handler) {
+    const fn = hook.handler
+    hook.handler = async function (this, ...args: any) {
+      const result = await fn.apply(args)
+      await handler(this, result)
+      return result
+    }
+  }
+  if (typeof hook === 'function') {
+    plugin.transform = async function (this, ...args: any) {
+      const result = await hook.apply(this, args)
+      await handler(this, result)
+      return result
+    }
+  }
 }
 
 export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
@@ -142,7 +162,6 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
         // It should be a normally middleware in development mode.
         // Hijack the request and do hmr.
         const stylexDevMiddleware = createStylexDevMiddleware({
-          processer: processStylexRules,
           viteServer
         })
         viteServer.middlewares.use(stylexDevMiddleware)
@@ -174,6 +193,19 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       viteCSSPlugins.push(...conf.plugins.filter(p => VITE_INTERNAL_CSS_PLUGIN_NAMES.includes(p.name)))
       viteCSSPlugins.sort((a, b) => a.name === 'vite:css' && b.name === 'vite:css-post' ? -1 : 1)
       patchAlias = createPatchAlias({ parse, importSources })
+      // hijack vite:css set the meta data for dev 
+      if (!isProd && viteCSSPlugins[0]) {
+        hijackTransformHook(viteCSSPlugins[0], async (ctx, chunk) => {
+          if (chunk?.code) {
+            const module = viteServer.moduleGraph.getModuleById(VIRTUAL_STYLEX_CSS_MODULE)
+            Object.defineProperty(module, '__stylex__', {
+              value: chunk.code,
+              writable: false,
+              configurable: true
+            })
+          }
+        })
+      }
     },
     load(id) {
       if (id === VIRTUAL_STYLEX_CSS_MODULE) {
