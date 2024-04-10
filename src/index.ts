@@ -98,20 +98,20 @@ function patchOptmizeDepsExcludeId(id: string) {
   return id
 }
 
-function hijackTransformHook(plugin: Plugin, handler: (ctx: RollupPluginContext, chunk: TransformResult) => Promise<void>) {
+function hijackTransformHook(plugin: Plugin, handler: (ctx: RollupPluginContext, id: string, chunk: TransformResult) => void) {
   const hook = plugin.transform
   if (typeof hook === 'object' && hook.handler) {
     const fn = hook.handler
     hook.handler = async function (this, ...args: any) {
       const result = await fn.apply(args)
-      await handler(this, result)
+      handler(this, args[1], result)
       return result
     }
   }
   if (typeof hook === 'function') {
     plugin.transform = async function (this, ...args: any) {
       const result = await hook.apply(this, args)
-      await handler(this, result)
+      handler(this, args[1], result)
       return result
     }
   }
@@ -195,14 +195,17 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       patchAlias = createPatchAlias({ parse, importSources })
       // hijack vite:css set the meta data for dev 
       if (!isProd && viteCSSPlugins[0]) {
-        hijackTransformHook(viteCSSPlugins[0], async (ctx, chunk) => {
+        hijackTransformHook(viteCSSPlugins[0], (ctx, id, chunk) => {
+          if (id !== VIRTUAL_STYLEX_CSS_MODULE) return
           if (chunk?.code) {
             const module = viteServer.moduleGraph.getModuleById(VIRTUAL_STYLEX_CSS_MODULE)
-            Object.defineProperty(module, '__stylex__', {
-              value: chunk.code,
-              writable: false,
-              configurable: true
-            })
+            if (module) {
+              Object.defineProperty(module, '__stylex__', {
+                value: chunk.code,
+                writable: false,
+                configurable: true
+              })
+            }
           }
         })
       }
