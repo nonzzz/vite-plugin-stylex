@@ -1,4 +1,5 @@
 import path from 'path'
+import fsp from 'fs/promises'
 import { createFilter, searchForWorkspaceRoot } from 'vite'
 import stylexBabelPlugin from '@stylexjs/babel-plugin'
 import flowSyntaxPlugin from '@babel/plugin-syntax-flow'
@@ -7,10 +8,11 @@ import typescriptSyntaxPlugin from '@babel/plugin-syntax-typescript'
 import { init, parse } from 'es-module-lexer'
 import type { NextHandleFunction } from 'connect'
 import * as babel from '@babel/core'
-import type { ModuleNode, Plugin, ViteDevServer } from 'vite'
+import type { ModuleNode, Plugin, TransformResult, ViteDevServer } from 'vite'
 import type { Rule } from '@stylexjs/babel-plugin'
-import type { StylexPluginOptions, TransformStylexOptions } from './interface'
+import type { ManuallyControlCssOrder, RollupPluginContext, StylexPluginOptions, TransformStylexOptions } from './interface'
 import { createPatchAlias } from './patch-alias'
+import { defaultControlCSSOptions, parseURLRequest } from './manullay-order'
 
 function transformStylex(code: string, id: string, transformOptions: TransformStylexOptions) {
   const { presets, plugins, ...rest } = transformOptions
@@ -36,12 +38,11 @@ const VITE_INTERNAL_CSS_PLUGIN_NAMES = ['vite:css', 'vite:css-post']
 const VITE_TRANSFORM_MIDDLEWARE_NAME = 'viteTransformMiddleware'
 
 interface StylexDevMiddlewareOptions {
-  processer: () => string,
   viteServer: ViteDevServer,
 }
 
 function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): NextHandleFunction {
-  const { processer, viteServer } = options
+  const { viteServer } = options
 
   const handleModule = (module: ModuleNode, pathName: string, accept = '') => {
     const isAssets = accept.includes('text/css')
@@ -52,15 +53,17 @@ function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): NextHan
     base = filter.join('/')
     if (!base) base = '/'
     let code = ''
+    // @ts-expect-error
+    const css = module.__stylex__
     if (isAssets) {
-      code = processer()
+      code = css
     } else {
       code = [
         `import {createHotContext as __vite__createHotContext} from ${JSON.stringify(path.posix.join(base, '@vite/client'))};`,
         'import.meta.hot = __vite__createHotContext("/@id/__x00__vite-plugin:stylex.css");',
         `import {updateStyle as __vite__updateStyle,removeStyle as __vite__removeStyle} from ${JSON.stringify(path.posix.join(base, '@vite/client'))};`,
         'const __vite__id = "\u0000vite-plugin:stylex.css"',
-        `const __vite__css = ${JSON.stringify(processer())}`,
+        `const __vite__css = ${JSON.stringify(css)}`,
         '__vite__updateStyle(__vite__id, __vite__css)',
         'import.meta.hot.accept()',
         'import.meta.hot.prune(() => __vite__removeStyle(__vite__id))'
@@ -97,6 +100,23 @@ function patchOptmizeDepsExcludeId(id: string) {
   return id
 }
 
+function hijackTransformHook(plugin: Plugin, 
+  before: (id: string) => Promise<string | void>,
+  handler: (ctx: RollupPluginContext, id: string, chunk: TransformResult) => void) {
+  const hook = plugin.transform
+  if (typeof hook === 'function') {
+    plugin.transform = async function (this, ...args: any) {
+      const code = await before(args[1])
+      if (code) {
+        args[0] = code
+      }
+      const result = await hook.apply(this, args)
+      handler(this, args[1], result)
+      return result
+    }
+  }
+}
+
 export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   const {
     useCSSLayers = false,
@@ -105,6 +125,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     include = /\.(mjs|js|ts|vue|jsx|tsx)(\?.*|)$/,
     exclude,
     optimizedDeps = [],
+    manullayControlCssOrder = false,
     ...options
   } = opts
   const filter = createFilter(include, exclude)
@@ -119,6 +140,8 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   }
   init.then()
   let patchAlias: ReturnType<typeof createPatchAlias>
+  const controlCSSByManually: ManuallyControlCssOrder = Object.create(null)
+  let isManuallyCSS = false
 
   return {
     name: 'vite-plugin-stylex',
@@ -142,7 +165,6 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
         // It should be a normally middleware in development mode.
         // Hijack the request and do hmr.
         const stylexDevMiddleware = createStylexDevMiddleware({
-          processer: processStylexRules,
           viteServer
         })
         viteServer.middlewares.use(stylexDevMiddleware)
@@ -155,8 +177,9 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       }
     },
     configResolved(conf) {
+      const root = searchForWorkspaceRoot(conf.root)
       if (!options.unstable_moduleResolution) {
-        options.unstable_moduleResolution = { type: 'commonJS', rootDir: searchForWorkspaceRoot(conf.root) }
+        options.unstable_moduleResolution = { type: 'commonJS', rootDir: root }
       }
       isProd = conf.mode === 'production' || conf.env.mode === 'production'
       if (Array.isArray(optimizedDeps)) {
@@ -174,6 +197,41 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       viteCSSPlugins.push(...conf.plugins.filter(p => VITE_INTERNAL_CSS_PLUGIN_NAMES.includes(p.name)))
       viteCSSPlugins.sort((a, b) => a.name === 'vite:css' && b.name === 'vite:css-post' ? -1 : 1)
       patchAlias = createPatchAlias({ parse, importSources })
+      // hijack vite:css set the meta data for dev 
+      if (!isProd && viteCSSPlugins[0]) {
+        hijackTransformHook(viteCSSPlugins[0], async (id) => {
+          const { original } = parseURLRequest(id)
+          if (isManuallyCSS && original === controlCSSByManually.id) {
+            let code = await fsp.readFile(original, 'utf8')
+            code = code.replace(controlCSSByManually.symbol, processStylexRules())
+            return code
+          }
+        }, (_, id, chunk) => {
+          if (id !== VIRTUAL_STYLEX_CSS_MODULE) return
+          if (chunk?.code) {
+            const module = viteServer.moduleGraph.getModuleById(VIRTUAL_STYLEX_CSS_MODULE)
+            if (module) {
+              Object.defineProperty(module, '__stylex__', {
+                value: chunk.code,
+                writable: false,
+                configurable: true
+              })
+            }
+          }
+        })
+      }
+      if (typeof manullayControlCssOrder === 'boolean' && manullayControlCssOrder) {
+        Object.assign(controlCSSByManually, defaultControlCSSOptions)
+      }
+      if (typeof manullayControlCssOrder === 'object') {
+        Object.assign(controlCSSByManually, defaultControlCSSOptions, manullayControlCssOrder)
+      }
+      if (controlCSSByManually?.id) {
+        isManuallyCSS = true
+        controlCSSByManually.id = path.isAbsolute(controlCSSByManually.id) 
+          ? controlCSSByManually.id
+          : path.join(root, controlCSSByManually.id)
+      }
     },
     load(id) {
       if (id === VIRTUAL_STYLEX_CSS_MODULE) {
@@ -209,7 +267,9 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
         // #10 If user pass empty styles we should return the paased result.
         if (!rules.length) return { code: result.code, map: result.map }
         // pipe to vite's internal plugin for processing.
-        result.code = `import ${JSON.stringify(VIRTUAL_STYLEX_MODULE)};\n${result.code}`
+        if (!isManuallyCSS) {
+          result.code = `import ${JSON.stringify(VIRTUAL_STYLEX_MODULE)};\n${result.code}`
+        }
         stylexRules[id] = rules
       }
       if (viteServer) {
@@ -219,6 +279,14 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
           moduleGraph.invalidateModule(virtualModule, new Set())
           virtualModule.lastHMRTimestamp = Date.now()
         }
+        if (isManuallyCSS) {
+          const cssModules = moduleGraph.getModulesByFile(controlCSSByManually.id)
+          if (cssModules) {
+            for (const module of cssModules) {
+              await viteServer.reloadModule(module)
+            }
+          }
+        }
       }
       return {
         code: result.code,
@@ -226,10 +294,34 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
         meta: result.metadata
       }
     },
-    async renderChunk(_, chunk) {
+    async renderChunk(chunkCode, chunk) {
       // plugin_1 is vite:css plugin using it we will re set the finally css (Vite using prost-css in here.)
       // plugin_2 is vite:css-post plugin. vite will compress css here.
       const [plugin_1, plugin_2] = viteCSSPlugins
+      if (isManuallyCSS) {
+        let moduleId = controlCSSByManually.id
+        for (const id of chunk.moduleIds) {
+          const { original } = parseURLRequest(id)
+          if (original === controlCSSByManually.id) {
+            moduleId = id
+            break
+          }
+        }
+        if (moduleId in chunk.modules) {
+          let code = await fsp.readFile(controlCSSByManually.id, 'utf8')
+          code = code.replace(controlCSSByManually.symbol, processStylexRules())
+          if (typeof plugin_1.transform === 'function' && typeof plugin_2.transform === 'function') {
+            const { code: css } = await plugin_1.transform.call(this, code, controlCSSByManually.id)
+            await plugin_2.transform.call(this, css, controlCSSByManually.id)
+          }
+          if (moduleId !== controlCSSByManually.id) {
+            chunk.modules[controlCSSByManually.id] = chunk.modules[moduleId]
+            delete chunk.modules[moduleId]
+          }
+        }
+        return
+      }
+
       for (const moudleId of chunk.moduleIds) {
         if (moudleId.includes(VIRTUAL_STYLEX_CSS_MODULE)) {
           if (typeof plugin_1.transform === 'function' && typeof plugin_2.transform === 'function') {

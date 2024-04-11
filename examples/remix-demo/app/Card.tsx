@@ -7,7 +7,10 @@ const styles = stylex.create({
     borderRadius: 8,
     padding: 16,
     boxShadow: '0 0 16px rgba(0, 0, 0, 0.1)',
-    color: tokens.primaryTextColor
+    color: {
+      default: tokens.primaryTextColor,
+      '@media (--mx-1)': 'purple'
+    }
   }
 })
 
