@@ -101,13 +101,15 @@ function patchOptmizeDepsExcludeId(id: string) {
 }
 
 function hijackTransformHook(plugin: Plugin, 
-  before: (id: string) => Promise<string>,
+  before: (id: string) => Promise<string | void>,
   handler: (ctx: RollupPluginContext, id: string, chunk: TransformResult) => void) {
   const hook = plugin.transform
   if (typeof hook === 'function') {
     plugin.transform = async function (this, ...args: any) {
       const code = await before(args[1])
-      args[0] = code
+      if (code) {
+        args[0] = code
+      }
       const result = await hook.apply(this, args)
       handler(this, args[1], result)
       return result
