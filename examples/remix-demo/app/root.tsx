@@ -6,7 +6,16 @@ import {
   Scripts,
   ScrollRestoration
 } from '@remix-run/react'
-  
+
+// @ts-expect-error
+import { LinksFunction } from '@remix-run/node'
+import $styles from './styles/index.css?raw'
+
+console.log($styles)
+export const links: LinksFunction = () => [
+  { rel: 'stylesheet', href: $styles }
+]
+
 export default function App() {
   return (
     <html lang="en">
