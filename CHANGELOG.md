@@ -1,3 +1,19 @@
+## 0.5.1
+
+# Patches
+
+- Fix option `manuallyControlCssOrder` typo.
+
+## 0.5.0
+
+# Features
+
+- Add `manuallyControlCssOrder` option
+
+# Patches
+
+- Fix development mode can't pass css with vite internal handle.
+
 ## 0.4.1
 
 # Patches

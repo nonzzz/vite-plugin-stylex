@@ -125,7 +125,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     include = /\.(mjs|js|ts|vue|jsx|tsx)(\?.*|)$/,
     exclude,
     optimizedDeps = [],
-    manullayControlCssOrder = false,
+    manuallyControlCssOrder = false,
     ...options
   } = opts
   const filter = createFilter(include, exclude)
@@ -197,7 +197,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       viteCSSPlugins.push(...conf.plugins.filter(p => VITE_INTERNAL_CSS_PLUGIN_NAMES.includes(p.name)))
       viteCSSPlugins.sort((a, b) => a.name === 'vite:css' && b.name === 'vite:css-post' ? -1 : 1)
       patchAlias = createPatchAlias({ parse, importSources })
-      // hijack vite:css set the meta data for dev 
+      // hijack vite:css set the meta data for dev
       if (!isProd && viteCSSPlugins[0]) {
         hijackTransformHook(viteCSSPlugins[0], async (id) => {
           const { original } = parseURLRequest(id)
@@ -220,12 +220,14 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
           }
         })
       }
-      if (typeof manullayControlCssOrder === 'boolean' && manullayControlCssOrder) {
+
+      if (typeof manuallyControlCssOrder === 'boolean' && manuallyControlCssOrder) {
         Object.assign(controlCSSByManually, defaultControlCSSOptions)
       }
-      if (typeof manullayControlCssOrder === 'object') {
-        Object.assign(controlCSSByManually, defaultControlCSSOptions, manullayControlCssOrder)
+      if (typeof manuallyControlCssOrder === 'object') {
+        Object.assign(controlCSSByManually, defaultControlCSSOptions, manuallyControlCssOrder)
       }
+
       if (controlCSSByManually?.id) {
         isManuallyCSS = true
         controlCSSByManually.id = path.isAbsolute(controlCSSByManually.id) 
