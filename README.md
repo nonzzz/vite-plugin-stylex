@@ -38,6 +38,7 @@ export default defineConfig({
 | `unstable_moduleResolution` | `Record<string,any>`                          | `{ type: 'commonJS', rootDir: process.cwd() }` | See stylex document                                        |
 | `useCSSLayers`              | `boolean`                                     | `default`                                      | See stylex document                                        |
 | `optimizedDeps`             | `Array<string>`                               | `[]`                                           | Work with external stylex files or libraries               |
+| `manuallyControlCssOrder`   | `boolean \|object`                            | `false`                                        | control css order by manually                              |
 
 ## Q & A
 

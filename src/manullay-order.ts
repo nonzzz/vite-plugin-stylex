@@ -9,13 +9,15 @@
 // <style data-vite-dev-id="index.css">...</style>
 // We should ensure the right order by manually.
 
-import type { RollupPluginContext } from './interface'
+import type { ManullayControlCssOrder } from './interface'
 
-export async function ensureStyleOrder(id: string, stylexProcesser: () => string, pluginContext: RollupPluginContext) {
-  // 
-  const stylex = stylexProcesser()
+export const defaultControlCSSOptions: ManullayControlCssOrder = {
+  id: 'stylex.css',
+  symbol: '@stylex-dev;'
+}
 
-  //   const r = await pluginContext.resolve(id)
-  //   console.log(r, id)
-  return stylex
+export function parseURLRequest(id: string) {
+  const [original, kind] = id.split('?')
+  if (!kind) return { original, kind: 'native' }
+  return { original, kind }
 }

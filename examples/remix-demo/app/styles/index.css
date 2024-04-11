@@ -1,10 +1,4 @@
 @custom-media --mx-1 (width <= 1024px);
 
-.primary {
-    color: lch(from pink calc(l + 10%) c h);
-    @media (--mx-1) {
-      color: blue;
-    }
-}
 
-@declare --styelx-raw;
+@stylex-dev;

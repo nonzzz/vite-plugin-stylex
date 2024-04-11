@@ -4,6 +4,11 @@ import type { PluginItem } from '@babel/core'
 
 export type InternalOptions = Omit<Options, 'dev' | 'runtimeInjection' | 'aliases'>
 
+export interface ManuallyControlCssOrder {
+  id?: string
+  symbol?: string
+}
+
 export interface StylexPluginOptions extends Partial<InternalOptions> {
   babelConfig?: {
     plugins?: Array<PluginItem>
@@ -16,6 +21,10 @@ export interface StylexPluginOptions extends Partial<InternalOptions> {
    * @experimental
    */
   optimizedDeps?: Array<string>
+  /**
+   * @experimental
+   */
+  manuallyControlCssOrder?: boolean | ManuallyControlCssOrder
   [prop: string]: unknown
 }
 
