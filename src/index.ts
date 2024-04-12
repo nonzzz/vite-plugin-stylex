@@ -1,6 +1,6 @@
 import path from 'path'
 import fsp from 'fs/promises'
-import { createFilter, searchForWorkspaceRoot } from 'vite'
+import { createFilter, normalizePath, searchForWorkspaceRoot } from 'vite'
 import stylexBabelPlugin from '@stylexjs/babel-plugin'
 import flowSyntaxPlugin from '@babel/plugin-syntax-flow'
 import jsxSyntaxPlugin from '@babel/plugin-syntax-jsx'
@@ -233,6 +233,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
         controlCSSByManually.id = path.isAbsolute(controlCSSByManually.id) 
           ? controlCSSByManually.id
           : path.join(root, controlCSSByManually.id)
+        controlCSSByManually.id = normalizePath(controlCSSByManually.id)
       }
     },
     load(id) {
