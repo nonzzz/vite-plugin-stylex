@@ -1,5 +1,7 @@
 # vite-plugin-stylex
 
+![vite-plugin-stylex](https://socialify.git.ci/nonzzz/vite-plugin-stylex/image?description=1&font=Jost&language=1&logo=https%3A%2F%2Fvitejs.dev%2Flogo-with-shadow.png&name=1&owner=1&theme=Auto)
+
 > [!WARNING]
 > This is a development branch for stylex vite plugin. Each feature will be pass in the repo.
 > This is an unofficial repo.
