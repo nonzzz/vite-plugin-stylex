@@ -1,5 +1,3 @@
-import fsp from 'fs/promises'
-import fs from 'fs'
 import path from 'path'
 import test from 'ava'
 import type { UserConfig } from 'vite'
@@ -48,22 +46,7 @@ async function mockBuild(taskName: string, opts: BuildOptions = {}) {
       js = chunkOrAsset.code
     }
   }
-  const snaphotPaths = [path.join(basePath, 'output.css'), path.join(basePath, 'output.js')]
-  const snaphots = {
-    css: '',
-    js: ''
-  }
-  await Promise.all(snaphotPaths.map(async (p) => {
-    if (fs.existsSync(p)) {
-      const result = await fsp.readFile(p, 'utf8')
-      if (p.includes('.js')) {
-        snaphots.js = result
-      } else {
-        snaphots.css = result
-      }
-    }
-  }))
-  return { css, js, snaphots }
+  return { css, js }
 }
 
 // Currently, i can't find a good way to write unit test case.
@@ -71,10 +54,10 @@ async function mockBuild(taskName: string, opts: BuildOptions = {}) {
 // I think most dev related scenarios should be executed in e2e.
 
 test('normal suit disable css minify', async (t) => {
-  const { css, js, snaphots } = await mockBuild('normal', { vite: { build: { cssMinify: false } } })
+  const { css, js } = await mockBuild('normal', { vite: { build: { cssMinify: false } } })
   await sleep()
-  t.is(css, snaphots.css)
-  t.is(js, snaphots.js)
+  t.snapshot(css)
+  t.snapshot(js)
 })
 
 test('normal suite enable css minify', async (t) => {
@@ -96,7 +79,7 @@ test('pxtorem suite should transform px to rem', async (t) => {
 })
 
 test('path-alias suite should be work', async (t) => {
-  const { js, snaphots } = await mockBuild('path-alias', 
+  const { js } = await mockBuild('path-alias', 
     { vite: 
       {
         resolve: {
@@ -110,12 +93,12 @@ test('path-alias suite should be work', async (t) => {
       }
     })
   await sleep()
-  t.is(js, snaphots.js)
+  t.snapshot(js)
 })
 
 test('empty style object should be work', async (t) => {
-  const { css, js, snaphots } = await mockBuild('empty')
+  const { css, js } = await mockBuild('empty')
   await sleep()
-  t.is(css, snaphots.css)
-  t.is(js, snaphots.js)
+  t.snapshot(css)
+  t.snapshot(js)
 })

@@ -1,3 +1,20 @@
+## 0.5.2
+
+# Improve
+
+- Remove unnecessary babel plugins.
+
+# Patches
+
+- Fix the id of `manuallyControlCssOrder` should be unix like.
+- Respect `isProduction`.
+
+# Chore
+
+- Remove `es-mdoule-lexer`.
+- Upgrade `@stylexjs/babel-plugin` version.
+
+
 ## 0.5.1
 
 # Patches

@@ -14,13 +14,17 @@
 import path from 'path'
 import { normalizePath } from 'vite'
 import MagicString from 'magic-string'
-import type { ImportSpecifier } from 'es-module-lexer'
-import { parse } from 'es-module-lexer'
 import type { InternalOptions, RollupPluginContext } from './interface'
 
 interface PatchAliasOptions {
-  parse: typeof parse
   importSources: InternalOptions['importSources']
+}
+
+interface ImportSpecifier {
+  n: string | undefined
+  s: number
+  e: number
+
 }
 
 type AliasPath = ImportSpecifier & { relative: string }
@@ -34,11 +38,10 @@ export function createPatchAlias(opts: PatchAliasOptions) {
   const relativeReg = /^\.\.?(\/|$)/
   return async (code: string, id: string, rollupContext: RollupPluginContext) => {
     const str = new MagicString(code)
-    const [imports] = opts.parse(code)
+    const imports = scanImportStmt(code, rollupContext)
     const withAliasPath: AliasPath[] = []
     for (const stmt of imports) {
       if (!stmt.n) continue
-      if (stmt.d > -1) continue
       if (path.isAbsolute(stmt.n) || relativeReg.test(stmt.n)) continue
       if (!opts.importSources.some(i => stmt.n.includes(typeof i === 'string' ? i : i.from))) continue
       const resolved = await rollupContext.resolve(stmt.n, id)
@@ -56,4 +59,19 @@ export function createPatchAlias(opts: PatchAliasOptions) {
     })
     return str.toString()
   }
+}
+
+export function scanImportStmt(code: string, rollupContext: RollupPluginContext) {
+  const ast = rollupContext.parse(code)
+  const imports: ImportSpecifier[] = []
+  for (const stmt of ast.body) {
+    if (stmt.type === 'ImportDeclaration') {
+      const n = stmt.source.value as string
+      if (!n) continue
+      // @ts-expect-error
+      const { start: s, end: e } = stmt.source
+      imports.push({ n, s: s + 1, e: e - 1 })
+    }
+  }
+  return imports
 }

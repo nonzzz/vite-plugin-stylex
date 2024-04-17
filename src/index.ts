@@ -2,28 +2,21 @@ import path from 'path'
 import fsp from 'fs/promises'
 import { createFilter, normalizePath, searchForWorkspaceRoot } from 'vite'
 import stylexBabelPlugin from '@stylexjs/babel-plugin'
-import flowSyntaxPlugin from '@babel/plugin-syntax-flow'
-import jsxSyntaxPlugin from '@babel/plugin-syntax-jsx'
-import typescriptSyntaxPlugin from '@babel/plugin-syntax-typescript'
-import { init, parse } from 'es-module-lexer'
 import type { NextHandleFunction } from 'connect'
-import * as babel from '@babel/core'
+import { transformAsync } from '@babel/core'
 import type { ModuleNode, Plugin, TransformResult, ViteDevServer } from 'vite'
 import type { Rule } from '@stylexjs/babel-plugin'
 import type { ManuallyControlCssOrder, RollupPluginContext, StylexPluginOptions, TransformStylexOptions } from './interface'
-import { createPatchAlias } from './patch-alias'
-import { defaultControlCSSOptions, parseURLRequest } from './manullay-order'
+import { createPatchAlias, scanImportStmt } from './patch-alias'
+import { defaultControlCSSOptions, parseURLRequest } from './manually-order'
 
 function transformStylex(code: string, id: string, transformOptions: TransformStylexOptions) {
   const { presets, plugins, ...rest } = transformOptions
-  return babel.transformAsync(code, {
+  return transformAsync(code, {
     babelrc: false,
     filename: id,
     presets,
-    plugins: [...plugins, /\.jsx?/.test(path.extname(id))
-      ? flowSyntaxPlugin
-      : [typescriptSyntaxPlugin, { isTSX: true }],
-    jsxSyntaxPlugin, stylexBabelPlugin.withOptions({ ...rest, runtimeInjection: false })]
+    plugins: [...plugins, stylexBabelPlugin.withOptions({ ...rest, runtimeInjection: false })]
   })
 }
 
@@ -138,7 +131,6 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
     if (!rules.length) return
     return stylexBabelPlugin.processStylexRules(rules, useCSSLayers)
   }
-  init.then()
   let patchAlias: ReturnType<typeof createPatchAlias>
   const controlCSSByManually: ManuallyControlCssOrder = Object.create(null)
   let isManuallyCSS = false
@@ -196,7 +188,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       }
       viteCSSPlugins.push(...conf.plugins.filter(p => VITE_INTERNAL_CSS_PLUGIN_NAMES.includes(p.name)))
       viteCSSPlugins.sort((a, b) => a.name === 'vite:css' && b.name === 'vite:css-post' ? -1 : 1)
-      patchAlias = createPatchAlias({ parse, importSources })
+      patchAlias = createPatchAlias({ importSources })
       // hijack vite:css set the meta data for dev
       if (!isProd && viteCSSPlugins[0]) {
         hijackTransformHook(viteCSSPlugins[0], async (id) => {
@@ -208,7 +200,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
           }
         }, (_, id, chunk) => {
           if (id !== VIRTUAL_STYLEX_CSS_MODULE) return
-          if (chunk?.code) {
+          if (chunk?.code && viteServer) {
             const module = viteServer.moduleGraph.getModuleById(VIRTUAL_STYLEX_CSS_MODULE)
             if (module) {
               Object.defineProperty(module, '__stylex__', {
@@ -250,7 +242,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       if (!filter(id)) return
       if (id.startsWith('\0')) return
       let skip = true
-      const [imports] = await parse(inputCode)
+      const imports = scanImportStmt(inputCode, this)
       for (const stmt of imports) {
         if (stmt.n && importSources.some(i => !path.isAbsolute(stmt.n) && stmt.n.includes(typeof i === 'string' ? i : i.from))) {
           skip = false
@@ -297,7 +289,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
         meta: result.metadata
       }
     },
-    async renderChunk(chunkCode, chunk) {
+    async renderChunk(_, chunk) {
       // plugin_1 is vite:css plugin using it we will re set the finally css (Vite using prost-css in here.)
       // plugin_2 is vite:css-post plugin. vite will compress css here.
       const [plugin_1, plugin_2] = viteCSSPlugins
@@ -337,4 +329,4 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
   }
 }
 
-export { StylexPluginOptions }
+export type { StylexPluginOptions }

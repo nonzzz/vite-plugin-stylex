@@ -1,16 +1,15 @@
-# vite-plugin-stylex
-
 ![vite-plugin-stylex](https://socialify.git.ci/nonzzz/vite-plugin-stylex/image?description=1&font=Jost&language=1&logo=https%3A%2F%2Fvitejs.dev%2Flogo-with-shadow.png&name=1&owner=1&theme=Auto)
 
 > [!WARNING]
-> This is a development branch for stylex vite plugin. Each feature will be pass in the repo.
 > This is an unofficial repo.
+> This plugin is dedicated to providing stable stylex integration.
 
 ## Features
 
-- [x] SSR
-- [x] automatic injection
-- [x] HMR
+- [x] CSS automatic injection
+- [x] Support HMR
+- [x] Control css order by manually
+- [x] Support Vite-based SSR framework
 
 ## Usage
 
