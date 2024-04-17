@@ -181,7 +181,7 @@ export function stylexPlugin(opts: StylexPluginOptions = {}): Plugin {
       if (!options.unstable_moduleResolution) {
         options.unstable_moduleResolution = { type: 'commonJS', rootDir: root }
       }
-      isProd = conf.mode === 'production' || conf.env.mode === 'production'
+      isProd = process.env.NODE_ENV === 'production'
       if (Array.isArray(optimizedDeps)) {
         optimizedDeps.push(...importSources.map(s => typeof s === 'object' ? s.from : s))
       }

@@ -9,3 +9,7 @@
 > Should i need config for path aliase?
 
 - No, you no need to config path alias for this plugin. all alias will be automatically set.
+
+> What's manuallyControlCssOrder?
+
+- For example, css variables are defined in the entry css file but the order of stylex injection can't read them. So you can using this option to ensure the behavior. Full details see [remix-demo](./examples/remix-demo)
