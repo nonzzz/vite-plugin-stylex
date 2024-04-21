@@ -29,8 +29,8 @@
     "client.d.ts"
   ],
   "scripts": {
-    "dev": "tsup --watch src",
-    "build": "tsup",
+    "dev": "rollup --config rollup.config.ts --configPlugin swc3 --watch",
+    "build": "rollup --config rollup.config.ts --configPlugin swc3",
     "test": "c8 -r=lcov ava __tests__/*.spec.ts",
     "e2e": "ava e2e/e2e.spec.ts"
   },
@@ -52,6 +52,8 @@
   },
   "devDependencies": {
     "@stylexjs/stylex": "^0.5.1",
+    "@swc-node/register": "^1.9.0",
+    "@swc/core": "^1.4.16",
     "@types/babel__core": "^7.20.5",
     "@types/connect": "^3.4.38",
     "@types/node": "^20.10.4",
@@ -60,13 +62,14 @@
     "ava": "^5.3.1",
     "c8": "^8.0.1",
     "eslint": "^8.55.0",
-    "eslint-config-kagura": "^2.1.1",
+    "eslint-config-kagura": "^2.2.1",
     "eslint-plugin-vue": "^9.19.2",
     "get-tsconfig": "^4.7.2",
     "playwright": "~1.32.3",
     "postcss-pxtorem": "^6.0.0",
-    "tsup": "^8.0.1",
-    "tsx": "^4.6.2",
+    "rollup": "^4.16.0",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-swc3": "^0.11.1",
     "typescript": "^5.3.3",
     "vite": "^^5.2.9",
     "vue-eslint-parser": "^9.3.2"
@@ -90,7 +93,7 @@
       "ts"
     ],
     "require": [
-      "tsx/cjs"
+      "@swc-node/register"
     ]
   }
 }
