@@ -1,6 +1,7 @@
 import type { FilterPattern, HookHandler, Plugin } from 'vite'
 import type { Options } from '@stylexjs/babel-plugin'
 import type { PluginItem } from '@babel/core'
+import { noop } from './shared'
 
 export type InternalOptions = Omit<Options, 'dev' | 'runtimeInjection' | 'aliases'>
 
@@ -34,4 +35,6 @@ export type TransformStylexOptions = Partial<InternalOptions > & {
   dev: boolean
 }
 
-export type RollupPluginContext = ThisParameterType<HookHandler<Plugin['transform']>>
+const transform: HookHandler<Plugin['transform']> = noop
+
+export type RollupPluginContext = ThisParameterType<typeof transform>

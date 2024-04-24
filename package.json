@@ -76,13 +76,15 @@
   },
   "dependencies": {
     "@babel/core": "^7.23.9",
-    "@stylexjs/babel-plugin": "^0.6.0",
+    "@rollup/pluginutils": "^5.1.0",
+    "@stylex-extend/babel-plugin": "^0.2.1",
+    "@stylexjs/babel-plugin": "^0.6.1",
     "magic-string": "^0.30.5"
   },
   "resolutions": {
     "sharp": "0.32.6",
     "vite": "^5.2.9",
-    "@stylexjs/stylex": "^0.6.0"
+    "@stylexjs/stylex": "^0.6.1"
   },
   "ava": {
     "files": [

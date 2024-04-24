@@ -10,7 +10,8 @@
       "resolveJsonModule": true,
       "module": "ESNext",
       "moduleResolution": "node",
-      "outDir": "dist"
+      "outDir": "dist",
+      "strict": true,
     }
   }
   
