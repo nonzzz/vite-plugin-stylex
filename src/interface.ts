@@ -3,7 +3,11 @@ import type { Options } from '@stylexjs/babel-plugin'
 import type { PluginItem } from '@babel/core'
 import { noop } from './shared'
 
-export type InternalOptions = Omit<Options, 'dev' | 'runtimeInjection' | 'aliases'>
+type Mutable<T> = {
+  -readonly [P in keyof T]: T[P];
+}
+
+export type InternalOptions = Mutable<Omit<Options, 'dev' | 'runtimeInjection' | 'aliases'>>
 
 export interface ManuallyControlCssOrder {
   id?: string

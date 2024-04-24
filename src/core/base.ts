@@ -12,7 +12,7 @@ const defaultBabelConfig: BabelConfig = {
   presets: []
 }
 
-const stateContext = createStateContext()
+export const stateContext = createStateContext()
 
 export const DEFINE = {
   MODULE_ID: '\0stylex-dev',

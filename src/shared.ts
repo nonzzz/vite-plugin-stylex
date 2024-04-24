@@ -1,9 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-export function noop() {
-  
-}
+export function noop() {}
 
 // MIT License
 // Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
