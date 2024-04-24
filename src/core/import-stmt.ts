@@ -17,7 +17,7 @@ export function scanImportStmt(code: string, rollupContext: RollupPluginContext)
       const v = n.source.value as string
       if (!v) continue
       // @ts-expect-error
-      const { start: s, end: e } = stmt.source
+      const { start: s, end: e } = n.source
       stmts.push({ n: v, s: s + 1, e: e - 1 })
     }
   }

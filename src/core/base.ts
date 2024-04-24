@@ -27,12 +27,13 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
     importSources = ['stylex', '@stylexjs/stylex'],
     include = /\.(mjs|js|ts|vue|jsx|tsx)(\?.*|)$/,
     exclude,
-    optimizedDeps = [],
+    // eslint-disable-next-line no-unused-vars
+    optimizedDeps: _ = [],
     manuallyControlCssOrder = false,
     ...options
   } = opts
 
-  stateContext.setupOptions({ useCSSLayers, importSources, include, exclude })
+  stateContext.setupOptions({ useCSSLayers, importSources, include, exclude, manuallyControlCssOrder })
 
   return {
     name: 'stylex',
@@ -47,6 +48,7 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
       stateContext.setupPluginContext(this)
       if (!stateContext.skipResolve(code, id)) return
       id = parseURLRequest(id).original
+      console.log(id)
       code = await stateContext.rewriteImportStmts(code, id)
       const result = await transformAsync(code, {
         babelrc: false,
@@ -61,7 +63,10 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
       })
       if (!result) return null
       if (result.metadata && 'stylex' in result.metadata) {
-        stateContext.styleRules.set(id, result.metadata.stylex as Rule[])
+        const rules = result.metadata.stylex as Rule[]
+        if (rules.length) {
+          stateContext.styleRules.set(id, rules)
+        }
       }
       return {
         code: result.code!,
