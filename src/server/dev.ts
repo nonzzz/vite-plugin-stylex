@@ -1,8 +1,7 @@
-// Notice is use for vite
 import path from 'path'
 import fs from 'fs'
-import type { Plugin, ViteDevServer } from 'vite'
-import { parseURLRequest } from 'src/manually-order'
+import type { Plugin, ResolvedConfig, ViteDevServer } from 'vite'
+import { parseURLRequest } from '../core/manually-order'
 import { DEFINE, stateContext, stylex } from '../core'
 import { searchForWorkspaceRoot, slash, unique } from '../shared'
 import type { StylexPluginOptions } from '../interface'
@@ -12,9 +11,13 @@ const fsp = fs.promises
 
 const WELL_KNOW_LIBRARIES = ['@stylexjs/open-props']
 
-function csr() {}
+function csr(config: ResolvedConfig) {
+  // 
+}
 
-function ssr() {}
+function ssr(config: ResolvedConfig) {
+  // 
+}
 
 export function stylexDev(opts: StylexPluginOptions = {}): Plugin {
   const hooks = stylex(opts)
@@ -34,7 +37,12 @@ export function stylexDev(opts: StylexPluginOptions = {}): Plugin {
       }
 
       if (viteDevServer) {
-        // 
+        const module = viteDevServer.moduleGraph.getModuleById(DEFINE.MODULE_CSS)
+        if (module) viteDevServer.moduleGraph.invalidateModule(module)
+        if (stateContext.isManuallyControlCSS) {
+          const cssModule = viteDevServer.moduleGraph.getModuleById(stateContext.controlCSSByManually.id!)
+          if (cssModule) viteDevServer.reloadModule(cssModule)
+        }
       }
 
       return { ...result, code }
@@ -52,11 +60,12 @@ export function stylexDev(opts: StylexPluginOptions = {}): Plugin {
     configResolved(config) {
       stateContext.env = 'dev'
       const root = searchForWorkspaceRoot(config.root)
-      if (!opts.unstable_moduleResolution) {
-        opts.unstable_moduleResolution = { type: 'commonJS', rootDir: root }
+      const { stylexOptions, importSources } = stateContext
+      if (!stylexOptions.unstable_moduleResolution) {
+        stylexOptions.unstable_moduleResolution = { type: 'commonJS', rootDir: root }
       }
-      opts.optimizedDeps = unique([...(Array.isArray(opts.optimizedDeps) ? opts.optimizedDeps : []), ...stateContext.importSources.map(s => typeof s === 'object' ? s.from : s)])
-      config.optimizeDeps.exclude = [...opts.optimizedDeps, ...(config.optimizeDeps.exclude ?? []), ...WELL_KNOW_LIBRARIES]
+      const optimizedDeps = unique([...(Array.isArray(opts.optimizedDeps) ? opts.optimizedDeps : []), ...importSources.map(s => typeof s === 'object' ? s.from : s)])
+      config.optimizeDeps.exclude = [...optimizedDeps, ...(config.optimizeDeps.exclude ?? []), ...WELL_KNOW_LIBRARIES]
       viteCSSPlugins.push(...config.plugins.filter(p => DEFINE.HIJACK_PLUGINS.includes(p.name)))
       viteCSSPlugins.sort((a) => a.name === 'vite:css' ? 1 : -1)
       if (stateContext.controlCSSByManually.id) {
@@ -66,7 +75,7 @@ export function stylexDev(opts: StylexPluginOptions = {}): Plugin {
         stateContext.controlCSSByManually.id = slash(stateContext.controlCSSByManually.id)
       }
       const handle = config.appType === 'custom' ? csr : ssr
-      handle()
+      handle(config)
       if (viteCSSPlugins.length) {
         const [plugin_1] = viteCSSPlugins
         hijackHook(plugin_1, 'transform', async (fn, context, args) => {
@@ -83,7 +92,7 @@ export function stylexDev(opts: StylexPluginOptions = {}): Plugin {
           const result = await fn.apply(context, args)
           if (id === DEFINE.MODULE_CSS && typeof result === 'object' && result?.code) {
             const module = viteDevServer?.moduleGraph.getModuleById(DEFINE.MODULE_CSS)
-            module && Object.defineProperty(module, '__stylex__', { value: result.code })
+            module && Object.defineProperty(module, '__stylex__', { value: result.code, configurable: true })
           }
           return result
         })

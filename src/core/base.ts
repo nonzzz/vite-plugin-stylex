@@ -2,7 +2,7 @@ import { transformAsync } from '@babel/core'
 import stylexBabelPlugin, { Rule } from '@stylexjs/babel-plugin'
 import type { Plugin } from 'vite'
 import type { StylexPluginOptions } from '../interface'
-import { parseURLRequest } from '../manually-order'
+import { parseURLRequest } from './manually-order'
 import { createStateContext } from './state-context'
 
 type BabelConfig = StylexPluginOptions['babelConfig']
@@ -33,7 +33,7 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
     ...options
   } = opts
 
-  stateContext.setupOptions({ useCSSLayers, importSources, include, exclude, manuallyControlCssOrder })
+  stateContext.setupOptions({ useCSSLayers, importSources, include, exclude, manuallyControlCssOrder }, options)
 
   return {
     name: 'stylex',
@@ -53,8 +53,8 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
         babelrc: false,
         filename: id,
         presets: babelConfig?.presets || [],
-        plugins: [...(babelConfig?.plugins || []), stylexBabelPlugin.withOptions({ 
-          ...options,
+        plugins: [...(babelConfig?.plugins || []), stylexBabelPlugin.withOptions({
+          ...stateContext.stylexOptions,
           dev: stateContext.env === 'dev',
           importSources,
           runtimeInjection: false

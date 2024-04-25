@@ -2,8 +2,8 @@ import path from 'path'
 import { createFilter } from '@rollup/pluginutils'
 import stylex from '@stylexjs/babel-plugin'
 import type { Rule } from '@stylexjs/babel-plugin'
-import { defaultControlCSSOptions } from '../manually-order'
-import type { ManuallyControlCssOrder, RollupPluginContext, StylexPluginOptions } from '../interface'
+import { defaultControlCSSOptions } from './manually-order'
+import type { ManuallyControlCssOrder, RollupPluginContext, StylexOptions, StylexPluginOptions } from '../interface'
 import { slash } from '../shared'
 import { scanImportStmt } from './import-stmt'
 import type { ImportSpecifier } from './import-stmt'
@@ -19,7 +19,8 @@ function handleRelativePath(from: string, to: string) {
 
 export class StateContext {
   styleRules: Map<string, Rule[]>
-  stylexOptions: Options
+  options: Options
+  stylexOptions: StylexOptions
   env: ENV
   #filter: ReturnType<typeof createFilter> | null
   #pluginContext: RollupPluginContext | null
@@ -28,6 +29,7 @@ export class StateContext {
     this.#filter = null
     this.#pluginContext = null
     this.styleRules = new Map()
+    this.options = Object.create(null)
     this.stylexOptions = Object.create(null)
     this.env = process.env.NODE_ENV === 'production' ? 'prod' : 'dev'
     this.stmts = []
@@ -41,8 +43,9 @@ export class StateContext {
 
   }
 
-  setupOptions(options: Options) {
-    this.stylexOptions = options
+  setupOptions(options: Options, stylexOptions: StylexOptions) {
+    this.options = options
+    this.stylexOptions = { ...this.stylexOptions, ...stylexOptions }
     this.#filter = createFilter(options.include, options.exclude)
   }
 
@@ -52,7 +55,7 @@ export class StateContext {
   }
 
   get controlCSSByManually() {
-    const { manuallyControlCssOrder } = this.stylexOptions
+    const { manuallyControlCssOrder } = this.options
     if (typeof manuallyControlCssOrder === 'boolean' && manuallyControlCssOrder) {
       return defaultControlCSSOptions
     }
@@ -63,7 +66,7 @@ export class StateContext {
   }
 
   set controlCSSByManually(next: ManuallyControlCssOrder) {
-    this.stylexOptions.manuallyControlCssOrder = { ...this.controlCSSByManually, ...next }
+    this.options.manuallyControlCssOrder = { ...this.controlCSSByManually, ...next }
   }
 
   get isManuallyControlCSS() {
@@ -71,8 +74,8 @@ export class StateContext {
   }
 
   get importSources() {
-    if (!this.stylexOptions.importSources) throw new Error('[vite-plugin-stylex-dev]: Missing "importSources" in options')
-    return this.stylexOptions.importSources
+    if (!this.options.importSources) throw new Error('[vite-plugin-stylex-dev]: Missing "importSources" in options')
+    return this.options.importSources
   }
 
   skipResolve(code: string, id: string): boolean {
@@ -109,7 +112,7 @@ export class StateContext {
 
   processCSS(): string {
     if (!this.styleRules.size) return ''
-    const { useCSSLayers } = this.stylexOptions
+    const { useCSSLayers } = this.options
     return stylex.processStylexRules([...this.styleRules.values()].flat().filter(Boolean), useCSSLayers)
   }
 

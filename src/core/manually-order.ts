@@ -9,7 +9,7 @@
 // <style data-vite-dev-id="index.css">...</style>
 // We should ensure the right order by manually.
 
-import type { ManuallyControlCssOrder } from './interface'
+import type { ManuallyControlCssOrder } from '../interface'
 
 export const defaultControlCSSOptions: ManuallyControlCssOrder = {
   id: 'stylex.css',

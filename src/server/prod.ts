@@ -4,7 +4,7 @@ import type { Plugin, TransformResult } from 'vite'
 import { DEFINE, stateContext, stylex } from '../core'
 import type { StylexPluginOptions } from '../interface'
 import { searchForWorkspaceRoot, slash } from '../shared'
-import { parseURLRequest } from '../manually-order'
+import { parseURLRequest } from '../core/manually-order'
 import { hijackHook } from './hijack'
 
 const fsp = fs.promises

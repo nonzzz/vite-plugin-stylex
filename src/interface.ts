@@ -9,6 +9,8 @@ type Mutable<T> = {
 
 export type InternalOptions = Mutable<Omit<Options, 'dev' | 'runtimeInjection' | 'aliases'>>
 
+export type StylexOptions = Partial<Mutable<Options>>
+
 export interface ManuallyControlCssOrder {
   id?: string
   symbol?: string
