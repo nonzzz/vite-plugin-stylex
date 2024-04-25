@@ -48,15 +48,15 @@ export function stylexProd(opts: StylexPluginOptions = {}): Plugin {
         code = code.replace(stateContext.controlCSSByManually.symbol!, stateContext.processCSS())
       }
       const compileResult = await new Promise<TransformResult>((resolve, reject) => {
-        hijackHook(plugin_1, 'transform', async (fn, context) => {
-          Promise.resolve(fn.apply(context, [code, moduleId]))
+        hijackHook(plugin_1, 'transform', async (fn, context, args) => {
+          Promise.resolve(fn.apply(context, [code, moduleId, args[2]]))
           // @ts-expect-error
             .then(resolve).catch(reject)
         })
       })
-      hijackHook(plugin_2, 'transform', async (fn, context) => {
+      hijackHook(plugin_2, 'transform', async (fn, context, args) => {
         if (typeof compileResult === 'object' && compileResult) {
-          await fn.apply(context, [compileResult.code, moduleId])
+          await fn.apply(context, [compileResult.code, moduleId, args[2]])
         }
       })
     }

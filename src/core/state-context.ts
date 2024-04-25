@@ -56,7 +56,10 @@ export class StateContext {
     if (typeof manuallyControlCssOrder === 'boolean' && manuallyControlCssOrder) {
       return defaultControlCSSOptions
     }
-    return { ...defaultControlCSSOptions, ...manuallyControlCssOrder }
+    if (typeof manuallyControlCssOrder === 'object' && manuallyControlCssOrder) {
+      return { ...defaultControlCSSOptions, ...manuallyControlCssOrder }
+    }
+    return {}
   }
 
   set controlCSSByManually(next: ManuallyControlCssOrder) {

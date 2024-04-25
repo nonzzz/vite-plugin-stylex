@@ -72,6 +72,7 @@
     "rollup-plugin-swc3": "^0.11.1",
     "typescript": "^5.3.3",
     "vite": "^^5.2.9",
+    "vite-plugin-inspect": "^0.8.4",
     "vue-eslint-parser": "^9.3.2"
   },
   "dependencies": {

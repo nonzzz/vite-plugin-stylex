@@ -43,6 +43,12 @@ export function stylexDev(opts: StylexPluginOptions = {}): Plugin {
 
   return {
     ...hooks,
+    load(id) {
+      if (id === DEFINE.MODULE_CSS) return stateContext.processCSS()
+    },
+    resolveId(id) {
+      if (id === DEFINE.MODULE_ID) return DEFINE.MODULE_CSS
+    },
     configResolved(config) {
       stateContext.env = 'dev'
       const root = searchForWorkspaceRoot(config.root)
