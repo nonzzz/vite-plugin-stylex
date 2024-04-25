@@ -2,9 +2,9 @@ import path from 'path'
 import { createFilter } from '@rollup/pluginutils'
 import stylex from '@stylexjs/babel-plugin'
 import type { Rule } from '@stylexjs/babel-plugin'
-import { defaultControlCSSOptions } from './manually-order'
 import type { ManuallyControlCssOrder, RollupPluginContext, StylexOptions, StylexPluginOptions } from '../interface'
 import { slash } from '../shared'
+import { defaultControlCSSOptions } from './manually-order'
 import { scanImportStmt } from './import-stmt'
 import type { ImportSpecifier } from './import-stmt'
 
@@ -33,14 +33,6 @@ export class StateContext {
     this.stylexOptions = Object.create(null)
     this.env = process.env.NODE_ENV === 'production' ? 'prod' : 'dev'
     this.stmts = []
-  }
-
-  send() {
-
-  }
-
-  recover() {
-
   }
 
   setupOptions(options: Options, stylexOptions: StylexOptions) {

@@ -2,8 +2,9 @@ import type { Plugin } from 'vite'
 import { stylexDev, stylexProd } from './server'
 import type { StylexPluginOptions } from './interface'
 
-function stylex(opts: StylexPluginOptions): Plugin[] {
-  return [{ ...stylexDev(opts), apply: 'serve' }, { ...stylexProd(opts), apply: 'build' }]
+function stylex(opts: StylexPluginOptions): Plugin {
+  if (process.env.NODE_ENV === 'production') return stylexProd(opts)
+  return stylexDev(opts)
 }
 
 /**

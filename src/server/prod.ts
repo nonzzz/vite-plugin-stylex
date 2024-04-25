@@ -2,15 +2,15 @@ import fs from 'fs'
 import path from 'path'
 import type { Plugin } from 'vite'
 import { DEFINE, stateContext, stylex } from '../core'
-import type { StylexPluginOptions } from '../interface'
-import { searchForWorkspaceRoot, slash } from '../shared'
 import { parseURLRequest } from '../core/manually-order'
+import type { StylexPluginOptions } from '../interface'
+import { searchForWorkspaceRoot, slash, unique } from '../shared'
 import { hijackHook } from './hijack'
 
 const fsp = fs.promises
 
 export function stylexProd(opts: StylexPluginOptions = {}): Plugin {
-  const hooks = stylex(opts)
+  const { closeBundle: _, ...hooks } = stylex(opts)
   const viteCSSPlugins: Plugin[] = []
 
   return {
@@ -18,7 +18,7 @@ export function stylexProd(opts: StylexPluginOptions = {}): Plugin {
     configResolved(config) {
       stateContext.env = 'prod'
       const root = searchForWorkspaceRoot(config.root)
-      const { stylexOptions } = stateContext
+      const { stylexOptions, importSources } = stateContext
       if (!stylexOptions.unstable_moduleResolution) {
         stylexOptions.unstable_moduleResolution = { type: 'commonJS', rootDir: root }
       }
@@ -30,16 +30,24 @@ export function stylexProd(opts: StylexPluginOptions = {}): Plugin {
           : path.join(root, stateContext.controlCSSByManually.id)
         stateContext.controlCSSByManually.id = slash(stateContext.controlCSSByManually.id)
       }
+      const optimizedDeps = unique([...(Array.isArray(opts.optimizedDeps) 
+        ? opts.optimizedDeps
+        : []), ...importSources.map(s => typeof s === 'object' ? s.from : s)])
+      if (config.appType === 'custom') {
+        config.ssr.noExternal = Array.isArray(config.ssr.noExternal)
+          ? [...config.ssr.noExternal, ...optimizedDeps, '@stylexjs/open-props']
+          : config.ssr.noExternal
+      }
     },
     async renderChunk(_, chunk) {
       const [plugin_1, plugin_2] = viteCSSPlugins
       
-      let moduleId = DEFINE.MODULE_CSS
+      const moduleId = stateContext.isManuallyControlCSS ? stateContext.controlCSSByManually.id! : DEFINE.MODULE_CSS
       if (stateContext.isManuallyControlCSS) {
         for (const id of chunk.moduleIds) {
           const { original } = parseURLRequest(id)
           if (original === stateContext.controlCSSByManually.id) {
-            moduleId = id
+            delete chunk.modules[id]
           }
         }
       }
