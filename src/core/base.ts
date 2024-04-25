@@ -12,8 +12,6 @@ const defaultBabelConfig: BabelConfig = {
   presets: []
 }
 
-export const stateContext = createStateContext()
-
 export const DEFINE = {
   MODULE_ID: '\0stylex-dev',
   MODULE_CSS: '\0@stylex-dev.css',
@@ -33,6 +31,8 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
     manuallyControlCssOrder = false,
     ...options
   } = opts
+
+  const stateContext = createStateContext()
 
   stateContext.setupOptions({ useCSSLayers, importSources, include, exclude, manuallyControlCssOrder }, options)
 
@@ -76,6 +76,9 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
     },
     closeBundle() {
       stateContext.destroy()
+    },
+    api: {
+      stateContext
     }
   }
 }

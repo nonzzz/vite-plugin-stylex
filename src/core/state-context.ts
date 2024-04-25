@@ -46,6 +46,10 @@ export class StateContext {
     this.#pluginContext = pluginContext
   }
 
+  get rollupTransformContext() {
+    return this.#pluginContext
+  }
+
   get controlCSSByManually() {
     const { manuallyControlCssOrder } = this.options
     if (typeof manuallyControlCssOrder === 'boolean' && manuallyControlCssOrder) {

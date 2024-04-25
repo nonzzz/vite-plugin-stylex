@@ -6,9 +6,6 @@ type Next<K extends keyof Plugin> = (
   args: NonNullable<Parameters<HookHandler<Plugin[K]>>>,
 ) => ReturnType<HookHandler<Plugin[K]>>
 
-type ExcutableHook<K extends keyof Plugin> = (
-  args: NonNullable<Parameters<HookHandler<Plugin[K]>>>) => ReturnType<HookHandler<Plugin[K]>>
-
 export function hijackHook<K extends keyof Plugin>(plugin: Plugin, name: K, next: Next<K>, executable = false) {
   if (!plugin[name]) throw new Error(`[vite-plugin-stylex-dev]: ${name} haven't implement yet.`)
   const hook = plugin[name] as any
@@ -17,12 +14,12 @@ export function hijackHook<K extends keyof Plugin>(plugin: Plugin, name: K, next
     hook.handler = function (this, ...args: any) {
       return next(fn, this, args)
     }
-    if (executable) return hook.handler as ExcutableHook<K>
+    if (executable) return hook as Plugin[K]
   } else {
     const fn = hook
     plugin[name] = function (this: any, ...args: any) {
       return next(fn, this, args)
     }
-    if (executable) return plugin[name] as ExcutableHook<K>
+    if (executable) return plugin[name] as Plugin[K]
   }
 }
