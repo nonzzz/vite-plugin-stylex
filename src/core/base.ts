@@ -54,7 +54,7 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
         babelrc: false,
         filename: id,
         presets: babelConfig?.presets || [],
-        plugins: [...[babelConfig?.plugins || []], stylexBabelPlugin.withOptions({ 
+        plugins: [...(babelConfig?.plugins || []), stylexBabelPlugin.withOptions({ 
           ...options,
           dev: stateContext.env === 'dev',
           importSources,

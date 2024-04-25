@@ -3,7 +3,7 @@ import { stylexDev, stylexProd } from './server'
 import type { StylexPluginOptions } from './interface'
 
 function stylex(opts: StylexPluginOptions): Plugin[] {
-  return [{ ...stylexDev(opts), apply: 'serve' }, { ...stylexProd(), apply: 'build' }]
+  return [{ ...stylexDev(opts), apply: 'serve' }, { ...stylexProd(opts), apply: 'build' }]
 }
 
 /**
