@@ -3,6 +3,10 @@ import path from 'path'
 
 export function noop() {}
 
+export function unique<T>(data: T[]) {
+  return Array.from(new Set(data))
+}
+
 // MIT License
 // Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)
 export function slash(path: string) {

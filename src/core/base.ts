@@ -60,7 +60,7 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
           runtimeInjection: false
         })]
       })
-      if (!result) return null
+      if (!result) return
       if (result.metadata && 'stylex' in result.metadata) {
         const rules = result.metadata.stylex as Rule[]
         if (rules.length) {

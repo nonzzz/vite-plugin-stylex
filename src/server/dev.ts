@@ -4,7 +4,7 @@ import fs from 'fs'
 import type { Plugin, ViteDevServer } from 'vite'
 import { parseURLRequest } from 'src/manually-order'
 import { DEFINE, stateContext, stylex } from '../core'
-import { searchForWorkspaceRoot, slash } from '../shared'
+import { searchForWorkspaceRoot, slash, unique } from '../shared'
 import type { StylexPluginOptions } from '../interface'
 import { hijackHook } from './hijack'
 
@@ -55,9 +55,7 @@ export function stylexDev(opts: StylexPluginOptions = {}): Plugin {
       if (!opts.unstable_moduleResolution) {
         opts.unstable_moduleResolution = { type: 'commonJS', rootDir: root }
       }
-      opts.optimizedDeps = Array.isArray(opts.optimizedDeps)
-        ? [...opts.optimizedDeps, ...stateContext.importSources.map(s => typeof s === 'object' ? s.from : s)]
-        : []
+      opts.optimizedDeps = unique([...(Array.isArray(opts.optimizedDeps) ? opts.optimizedDeps : []), ...stateContext.importSources.map(s => typeof s === 'object' ? s.from : s)])
       config.optimizeDeps.exclude = [...opts.optimizedDeps, ...(config.optimizeDeps.exclude ?? []), ...WELL_KNOW_LIBRARIES]
       viteCSSPlugins.push(...config.plugins.filter(p => DEFINE.HIJACK_PLUGINS.includes(p.name)))
       viteCSSPlugins.sort((a) => a.name === 'vite:css' ? 1 : -1)
