@@ -17,7 +17,7 @@ export const stateContext = createStateContext()
 export const DEFINE = {
   MODULE_ID: '\0stylex-dev',
   MODULE_CSS: '@stylex-dev.css',
-  HIJACK_PLUGINS: ['vite:css', 'vite:csspost']
+  HIJACK_PLUGINS: ['vite:css', 'vite:css-post']
 }
 
 export function stylex(opts: StylexPluginOptions = {}): Plugin {
