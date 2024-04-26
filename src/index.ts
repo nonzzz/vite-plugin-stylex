@@ -63,3 +63,5 @@ const stylexPlugin = stylex
 export { stylex, stylexPlugin, stylex as edfault }
 
 export type { StylexPluginOptions } from './interface'
+
+export { adapter } from './core'
