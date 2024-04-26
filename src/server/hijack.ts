@@ -8,7 +8,7 @@ type Next<K extends keyof Plugin> = (
 
 export function hijackHook<K extends keyof Plugin>(plugin: Plugin, name: K, next: Next<K>): undefined
 export function hijackHook<K extends keyof Plugin>(plugin: Plugin, name: K, next: Next<K>, executable: false): undefined
-export function hijackHook<K extends keyof Plugin>(plugin: Plugin, name: K, next: Next<K>, executable: true): (this: any, ...args: any[]) => ReturnType<Next<K>>
+export function hijackHook<K extends keyof Plugin>(plugin: Plugin, name: K, next: Next<K>, executable: true): Plugin[K]
 export function hijackHook<K extends keyof Plugin>(plugin: Plugin, name: K, next: Next<K>, executable = false) {
   if (!plugin[name]) throw new Error(`[vite-plugin-stylex-dev]: ${name} haven't implement yet.`)
   const hook = plugin[name] as any
