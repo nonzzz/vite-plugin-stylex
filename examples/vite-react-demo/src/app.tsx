@@ -1,6 +1,14 @@
 import { css, html } from 'react-strict-dom'
 import { Fragment } from 'react'
+import { injectGlobalStyle } from '@stylex-extend/core'
 import Button from './button'
+import { colors } from './tokens.stylex'
+
+injectGlobalStyle({
+  p: {
+    color: colors.purple
+  }
+})
 
 const egStyles = css.create({
   container: { borderTopWidth: 1 },
@@ -25,6 +33,7 @@ function ExampleBlock() {
 function App() {
   return (
     <Fragment>
+      <p>Hello Stylex Extend</p>
       <Button>123</Button>
       <ExampleBlock />
     </Fragment>

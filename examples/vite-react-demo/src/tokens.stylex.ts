@@ -7,5 +7,6 @@ export const colors = stylex.defineVars({
   primaryDark: { default: '#ccc', [DARK]: '#333' },
   bg: { default: '#fff', [DARK]: '#000' },
   white: { default: '#fff', [DARK]: '#000' },
-  black: { default: '#000', [DARK]: '#fff' }
+  black: { default: '#000', [DARK]: '#fff' },
+  purple: 'purple'
 })

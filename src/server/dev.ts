@@ -47,7 +47,7 @@ export function stylexDev(plugin: Plugin, context: StateContext, cssPlugins: Plu
       }
       if (viteDevServer) {
         const module = viteDevServer.moduleGraph.getModuleById(DEFINE.MODULE_CSS)
-        if (module) viteDevServer.moduleGraph.invalidateModule(module)
+        if (module) await viteDevServer.reloadModule(module)
         if (isManuallyControlCSS) {
           const cssModules = viteDevServer.moduleGraph.getModulesByFile(controlCSSByManually.id!)
           if (cssModules) {
