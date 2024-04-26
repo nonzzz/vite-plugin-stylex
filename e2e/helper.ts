@@ -9,11 +9,16 @@ export async function createChromeBrowser(port: number) {
   return { page }
 }
 
+const ports: Set<number> = new Set()
+
 // I don't know why vite don't accept port 0 
-export function genRandomPort() {
+export function genRandomPort(): number {
   const minPort = 5173
   const maxPort = 49151
-  return Math.floor(Math.random() * (maxPort - minPort + 1)) + minPort
+  const port = Math.floor(Math.random() * (maxPort - minPort + 1)) + minPort
+  if (ports.has(port)) return genRandomPort()
+  ports.add(port)
+  return port
 }
 
 export async function createE2EServer(taskName: string) {

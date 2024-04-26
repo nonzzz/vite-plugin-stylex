@@ -28,9 +28,9 @@ export function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): 
     } else {
       code = [
         `import {createHotContext as __vite__createHotContext} from ${JSON.stringify(path.posix.join(base, '@vite/client'))};`,
-        'import.meta.hot = __vite__createHotContext("/@id/__x00__vite-plugin:stylex.css");',
+        'import.meta.hot = __vite__createHotContext("/@id/@stylex-dev.css");',
         `import {updateStyle as __vite__updateStyle,removeStyle as __vite__removeStyle} from ${JSON.stringify(path.posix.join(base, '@vite/client'))};`,
-        'const __vite__id = "\u0000@stylex-dev.css"',
+        'const __vite__id = "@stylex-dev.css"',
         `const __vite__css = ${JSON.stringify(css)}`,
         '__vite__updateStyle(__vite__id, __vite__css)',
         'import.meta.hot.accept()',

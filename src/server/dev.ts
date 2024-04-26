@@ -79,6 +79,7 @@ export function stylexDev(plugin: Plugin, context: StateContext, cssPlugins: Plu
         const module = viteDevServer?.moduleGraph.getModuleById(DEFINE.MODULE_CSS)
         module && Object.defineProperty(module, '__stylex__', { value: result.code, configurable: true })
       }
+      return result
     }
   })
 }

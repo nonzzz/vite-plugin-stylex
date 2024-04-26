@@ -29,17 +29,15 @@ export function stylexProd(plugin: Plugin, context: StateContext, cssPlugins: Pl
     }
     const hook = hijackHook(plugin_1, 'transform', (fn, context, args) => fn.apply(context, args), true)!
     const postHook = hijackHook(plugin_2, 'transform', (fn, context, args) => fn.apply(context, args), true)!
-    if (typeof hook === 'function' && typeof postHook === 'function') {
-      const result = await hook.apply(rollupTransformContext!, [code, moduleId])
-      if (typeof result === 'object' && result?.code) {
-        await postHook.apply(rollupTransformContext!, [result.code, moduleId])
-        chunk.modules[moduleId] = {
-          code: 'export default "__STYLEX__DEV__"',
-          originalLength: 0,
-          renderedLength: 0,
-          removedExports: [],
-          renderedExports: []
-        }
+    const result = await hook.apply(rollupTransformContext!, [code, moduleId])
+    if (typeof result === 'object' && result?.code) {
+      await postHook.apply(rollupTransformContext!, [result.code, moduleId])
+      chunk.modules[moduleId] = {
+        code: 'export default "__STYLEX__DEV__"',
+        originalLength: 0,
+        renderedLength: 0,
+        removedExports: [],
+        renderedExports: []
       }
     }
   }
