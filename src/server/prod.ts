@@ -21,11 +21,11 @@ export function stylexProd(plugin: Plugin, context: StateContext, cssPlugins: Pl
         }
       }
     }
-    let code = isManuallyControlCSS
-      ? await fsp.readFile(controlCSSByManually.id!, 'utf8') 
-      : context.processCSS()
+    const css = context.processCSS()
+    let code = css
     if (isManuallyControlCSS) {
-      code = code.replace(controlCSSByManually.symbol!, context.processCSS())
+      await fsp.readFile(controlCSSByManually.id!, 'utf8') 
+      code = code.replace(controlCSSByManually.symbol!, css)
     }
     const hook = hijackHook(plugin_1, 'transform', (fn, context, args) => fn.apply(context, args), true)!
     const postHook = hijackHook(plugin_2, 'transform', (fn, context, args) => fn.apply(context, args), true)!
