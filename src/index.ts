@@ -7,7 +7,7 @@ import type { StylexPluginOptions } from './interface'
 import { searchForPackageRoot, slash, unique } from './shared'
 import { WELL_KNOW_LIBRARIES } from './core/approve'
 
-function stylex(opts: StylexPluginOptions) {
+function stylex(opts: StylexPluginOptions = {}) {
   const { api, ...hooks } = _stylex(opts)
   const context = api.stateContext as StateContext
   const viteCSSPlugins: Plugin[] = []

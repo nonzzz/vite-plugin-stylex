@@ -16,7 +16,7 @@ export function stylexDev(plugin: Plugin, context: StateContext, cssPlugins: Plu
   plugin.configureServer = function (server) {
     viteDevServer = server
     return () => {
-      const middleware = createStylexDevMiddleware({ viteServer: server })
+      const middleware = createStylexDevMiddleware({ viteServer: server, context })
       server.middlewares.use(middleware)
       const order = server.middlewares.stack.findIndex(m => {
         if (typeof m.handle === 'function') return m.handle.name === DEFINE.HIJACK_MIDDLEWARE

@@ -14,7 +14,7 @@ const defaultBabelConfig: BabelConfig = {
 
 export const DEFINE = {
   MODULE_ID: '\0stylex-dev',
-  MODULE_CSS: '\0@stylex-dev.css',
+  MODULE_CSS: '@stylex-dev.css',
   HIJACK_PLUGINS: ['vite:css', 'vite:css-post'],
   HIJACK_MIDDLEWARE: 'viteTransformMiddleware'
 }

@@ -20,7 +20,7 @@ export async function createSSRServer(configFile = path.join(__dirname, 'vite.co
         .replace('<!--app-head-->', rendered.head ?? '')
         .replace('<!--app-html-->', rendered.html ?? '')
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
-    } catch (error) {
+    } catch (error: any) {
       viteServer.ssrFixStacktrace(error)
       res.status(500).end(error.stack)
     }

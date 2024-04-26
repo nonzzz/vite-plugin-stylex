@@ -2,13 +2,15 @@ import path from 'path'
 import type { ModuleNode, ViteDevServer } from 'vite'
 import type { NextHandleFunction } from 'connect'
 import { DEFINE } from 'src/core'
+import { StateContext } from '../core/state-context'
 
 interface StylexDevMiddlewareOptions {
   viteServer: ViteDevServer,
+  context: StateContext
 }
 
 export function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): NextHandleFunction {
-  const { viteServer } = options
+  const { viteServer, context } = options
 
   const handleModule = (module: ModuleNode, pathName: string, accept = '') => {
     const isAssets = accept.includes('text/css')
@@ -20,7 +22,7 @@ export function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): 
     if (!base) base = '/'
     let code = ''
     // @ts-expect-error
-    const css = module.__stylex__
+    const css = module.__stylex__ || context.processCSS()
     if (isAssets) {
       code = css
     } else {
@@ -46,7 +48,7 @@ export function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): 
     const { host } = req.headers
     // @ts-ignore
     const url = new URL(req.originalUrl, `${protocol}://${host}`)
-    if (url.pathname.includes('vite-plugin:stylex')) {
+    if (url.pathname.includes(DEFINE.MODULE_CSS)) {
       const module = viteServer.moduleGraph.getModuleById(DEFINE.MODULE_CSS)!
       const { code, isAssets } = handleModule(module, url.pathname, req.headers?.accept ?? '')
       res.setHeader('Content-Type', isAssets ? 'text/css' : 'application/javascript')

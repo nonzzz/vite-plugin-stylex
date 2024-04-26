@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { stylexPlugin } from 'vite-plugin-stylex-dev'
+import { stylex } from 'vite-plugin-stylex-dev'
 
 export default defineConfig({
-  plugins: [vue(), stylexPlugin()]
+  plugins: [vue(), stylex()]
 })

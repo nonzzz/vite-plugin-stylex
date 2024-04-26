@@ -27,6 +27,6 @@ export async function createE2EServer(taskName: string) {
     root: path.join(__dirname, 'fixtures', taskName)
   })
   await server.listen()
-  const { page } = await createChromeBrowser(server.config.server.port)
+  const { page } = await createChromeBrowser(server.config.server.port!)
   return { page, server }
 }
