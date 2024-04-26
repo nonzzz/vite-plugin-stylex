@@ -2,7 +2,7 @@ import * as stylex from '@stylexjs/stylex'
 
 const styles = stylex.create({
   foo: {
-    fontSize: 16
+    fontSize: '16px'
   }
 })
 

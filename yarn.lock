@@ -3892,6 +3892,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/postcss-pxtorem@npm:^6.0.3":
+  version: 6.0.3
+  resolution: "@types/postcss-pxtorem@npm:6.0.3"
+  dependencies:
+    postcss: ^8.2.6
+  checksum: fbbb060ac573c42567d537c2879ebe884f1122d5fe9ffe499c53a5895c42105411bda1ec6b9c5583ff3b08abaaa601bf088619b7f341d446826f9c20bdc69bc7
+  languageName: node
+  linkType: hard
+
 "@types/prop-types@npm:*":
   version: 15.7.11
   resolution: "@types/prop-types@npm:15.7.11"
@@ -13688,6 +13697,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postcss@npm:^8.2.6, postcss@npm:^8.4.38":
+  version: 8.4.38
+  resolution: "postcss@npm:8.4.38"
+  dependencies:
+    nanoid: ^3.3.7
+    picocolors: ^1.0.0
+    source-map-js: ^1.2.0
+  checksum: 649f9e60a763ca4b5a7bbec446a069edf07f057f6d780a5a0070576b841538d1ecf7dd888f2fbfd1f76200e26c969e405aeeae66332e6927dbdc8bdcb90b9451
+  languageName: node
+  linkType: hard
+
 "postcss@npm:^8.4.19, postcss@npm:^8.4.31, postcss@npm:^8.4.32":
   version: 8.4.32
   resolution: "postcss@npm:8.4.32"
@@ -13696,17 +13716,6 @@ __metadata:
     picocolors: ^1.0.0
     source-map-js: ^1.0.2
   checksum: 220d9d0bf5d65be7ed31006c523bfb11619461d296245c1231831f90150aeb4a31eab9983ac9c5c89759a3ca8b60b3e0d098574964e1691673c3ce5c494305ae
-  languageName: node
-  linkType: hard
-
-"postcss@npm:^8.4.38":
-  version: 8.4.38
-  resolution: "postcss@npm:8.4.38"
-  dependencies:
-    nanoid: ^3.3.7
-    picocolors: ^1.0.0
-    source-map-js: ^1.2.0
-  checksum: 649f9e60a763ca4b5a7bbec446a069edf07f057f6d780a5a0070576b841538d1ecf7dd888f2fbfd1f76200e26c969e405aeeae66332e6927dbdc8bdcb90b9451
   languageName: node
   linkType: hard
 
@@ -16100,6 +16109,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tsconfck@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "tsconfck@npm:3.0.3"
+  peerDependencies:
+    typescript: ^5.0.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  bin:
+    tsconfck: bin/tsconfck.js
+  checksum: 8ee0d73f730c0747d4bfe569b1931e1b3848f2adfb86ee8f3dc9aedd123f155b363dec7f51dc165fc7938ce592af753aa513adf7753ffcbee1baf97017d919dd
+  languageName: node
+  linkType: hard
+
 "tsconfig-paths@npm:^4.0.0":
   version: 4.2.0
   resolution: "tsconfig-paths@npm:4.2.0"
@@ -17109,6 +17132,7 @@ __metadata:
     "@types/babel__core": ^7.20.5
     "@types/connect": ^3.4.38
     "@types/node": ^20.10.4
+    "@types/postcss-pxtorem": ^6.0.3
     "@typescript-eslint/parser": ^6.14.0
     "@typescript-eslint/utils": ^6.14.0
     ava: ^5.3.1
@@ -17117,6 +17141,7 @@ __metadata:
     eslint-config-kagura: ^2.2.1
     eslint-plugin-vue: ^9.19.2
     get-tsconfig: ^4.7.2
+    lightningcss: ^1.24.1
     magic-string: ^0.30.5
     playwright: ~1.32.3
     postcss-pxtorem: ^6.0.0
@@ -17126,6 +17151,7 @@ __metadata:
     typescript: ^5.3.3
     vite: ^^5.2.9
     vite-plugin-inspect: ^0.8.4
+    vite-tsconfig-paths: ^4.3.2
     vue-eslint-parser: ^9.3.2
   languageName: unknown
   linkType: soft
@@ -17297,6 +17323,22 @@ __metadata:
     vite:
       optional: true
   checksum: d8a837eded390ea03c56eb97c8e35fbb8a1073c97e3c8119adab5e8c8a3f8b6dc610c5a9236c6dc3f778ea1650e72d7f5a39b82df20feec0e546f23feac74b8e
+  languageName: node
+  linkType: hard
+
+"vite-tsconfig-paths@npm:^4.3.2":
+  version: 4.3.2
+  resolution: "vite-tsconfig-paths@npm:4.3.2"
+  dependencies:
+    debug: ^4.1.1
+    globrex: ^0.1.2
+    tsconfck: ^3.0.3
+  peerDependencies:
+    vite: "*"
+  peerDependenciesMeta:
+    vite:
+      optional: true
+  checksum: 7105ff641379f9f7055110f33067b236c8ee71b1390c0e6482412cdcc7a98c2e139c1c2a483d14fe9045d1977c14dc931e1ff302d6257ec919c70379db9d2419
   languageName: node
   linkType: hard
 

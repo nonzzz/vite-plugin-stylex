@@ -24,7 +24,7 @@ export function stylexProd(plugin: Plugin, context: StateContext, cssPlugins: Pl
     const css = context.processCSS()
     let code = css
     if (isManuallyControlCSS) {
-      await fsp.readFile(controlCSSByManually.id!, 'utf8') 
+      code = await fsp.readFile(controlCSSByManually.id!, 'utf8') 
       code = code.replace(controlCSSByManually.symbol!, css)
     }
     const hook = hijackHook(plugin_1, 'transform', (fn, context, args) => fn.apply(context, args), true)!

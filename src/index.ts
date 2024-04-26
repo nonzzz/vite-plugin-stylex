@@ -14,9 +14,9 @@ function stylex(opts: StylexPluginOptions) {
   const plugin = <Plugin>{ 
     ...hooks,
     configResolved(conf) {
-      context.env = process.env.NODE_ENV === 'production' 
-        ? 'prod'
-        : 'dev'
+      context.env = process.env.NODE_ENV === 'development'
+        ? 'dev'
+        : 'prod'
 
       const root = searchForPackageRoot(conf.root)
       const { stylexOptions, importSources } = context
@@ -25,7 +25,7 @@ function stylex(opts: StylexPluginOptions) {
       }
 
       viteCSSPlugins.push(...conf.plugins.filter(p => DEFINE.HIJACK_PLUGINS.includes(p.name)))
-      viteCSSPlugins.sort((a) => a.name === 'vite:css' ? 1 : 0)
+      viteCSSPlugins.sort((a, b) => a.name.length < b.name.length ? -1 : 1)
 
       const optimizedDeps = unique([...(Array.isArray(opts.optimizedDeps) ? opts.optimizedDeps : []),
         ...importSources.map(s => typeof s === 'object' ? s.from : s), ...WELL_KNOW_LIBRARIES])
@@ -61,3 +61,5 @@ function stylex(opts: StylexPluginOptions) {
 const stylexPlugin = stylex
 
 export { stylex, stylexPlugin, stylex as edfault }
+
+export type { StylexPluginOptions } from './interface'
