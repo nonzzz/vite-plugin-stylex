@@ -2,7 +2,8 @@ import path from 'path'
 import { createFilter } from '@rollup/pluginutils'
 import stylex from '@stylexjs/babel-plugin'
 import type { Rule } from '@stylexjs/babel-plugin'
-import type { ManuallyControlCssOrder, RollupPluginContext, StylexOptions, StylexPluginOptions } from '../interface'
+import type { StylexExtendBabelPluginOptions } from '@stylex-extend/babel-plugin'
+import type { ManuallyControlCssOrder, RollupPluginContext, StylexExtendOptions, StylexOptions, StylexPluginOptions } from '../interface'
 import { slash } from '../shared'
 import { defaultControlCSSOptions } from './manually-order'
 import { scanImportStmt } from './import-stmt'
@@ -17,10 +18,17 @@ function handleRelativePath(from: string, to: string) {
   return `./${slash(relativePath)}`
 }
 
+const defaultExtendOptions: StylexExtendOptions = {
+  enableInjectGlobalStyle: true,
+  stylex: { helper: 'props' }
+}
+
 export class StateContext {
   styleRules: Map<string, Rule[]>
+  globalStyleRules: Map<string, string>
   options: Options
   stylexOptions: StylexOptions
+  extendOptions: StylexExtendBabelPluginOptions
   env: ENV
   #filter: ReturnType<typeof createFilter> | null
   #pluginContext: RollupPluginContext | null
@@ -31,14 +39,22 @@ export class StateContext {
     this.styleRules = new Map()
     this.options = Object.create(null)
     this.stylexOptions = Object.create(null)
+    this.extendOptions = Object.create(null)
     this.env = process.env.NODE_ENV === 'production' ? 'prod' : 'dev'
     this.stmts = []
+    this.globalStyleRules = new Map()
   }
 
-  setupOptions(options: Options, stylexOptions: StylexOptions) {
+  setupOptions(options: Options, stylexOptions: StylexOptions, extendOptions: StylexExtendOptions | boolean) {
     this.options = options
     this.stylexOptions = { ...this.stylexOptions, ...stylexOptions }
     this.#filter = createFilter(options.include, options.exclude)
+    if (typeof extendOptions === 'boolean' && extendOptions) {
+      this.extendOptions = { ...defaultExtendOptions }
+    }
+    if (typeof extendOptions === 'object') {
+      this.extendOptions = { ...defaultExtendOptions, ...extendOptions }
+    }
   }
 
   setupPluginContext(pluginContext: RollupPluginContext) {
@@ -76,7 +92,7 @@ export class StateContext {
 
   skipResolve(code: string, id: string): boolean {
     if (!this.#filter!(id) || id.startsWith('\0')) return false
-    const stmts = scanImportStmt(code, this.#pluginContext!)
+    const stmts = scanImportStmt(code, id)
     let pass = false
     for (const stmt of stmts) {
       const { n } = stmt
@@ -109,13 +125,15 @@ export class StateContext {
   processCSS(): string {
     if (!this.styleRules.size) return ''
     const { useCSSLayers } = this.options
-    return stylex.processStylexRules([...this.styleRules.values()].flat().filter(Boolean), useCSSLayers)
+    return stylex.processStylexRules([...this.styleRules.values()].flat().filter(Boolean), useCSSLayers) + '\n' +
+    [...this.globalStyleRules.values()].join('\n')
   }
 
   destroy() {
     this.#filter = null
     this.#pluginContext = null
     this.styleRules.clear()
+    this.globalStyleRules.clear()
   }
 }
 

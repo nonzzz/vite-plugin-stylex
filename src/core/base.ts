@@ -29,12 +29,13 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
     // eslint-disable-next-line no-unused-vars
     optimizedDeps: _ = [],
     manuallyControlCssOrder = false,
+    enableStylexExtend = false,
     ...options
   } = opts
 
   const stateContext = createStateContext()
 
-  stateContext.setupOptions({ useCSSLayers, importSources, include, exclude, manuallyControlCssOrder }, options)
+  stateContext.setupOptions({ useCSSLayers, importSources, include, exclude, manuallyControlCssOrder }, options, enableStylexExtend)
 
   return {
     name: 'stylex',
@@ -48,11 +49,11 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
     async transform(code, id) {
       stateContext.setupPluginContext(this)
       if (!stateContext.skipResolve(code, id)) return
-      id = parseURLRequest(id).original
-      code = await stateContext.rewriteImportStmts(code, id)
+      const { original } = parseURLRequest(id)
+      code = await stateContext.rewriteImportStmts(code, original)
       const result = await transformAsync(code, {
         babelrc: false,
-        filename: id,
+        filename: original,
         presets: babelConfig?.presets || [],
         plugins: [...(babelConfig?.plugins || []), stylexBabelPlugin.withOptions({
           ...stateContext.stylexOptions,

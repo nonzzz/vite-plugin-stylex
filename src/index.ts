@@ -6,6 +6,7 @@ import { StateContext } from './core/state-context'
 import type { StylexPluginOptions } from './interface'
 import { searchForPackageRoot, slash, unique } from './shared'
 import { WELL_KNOW_LIBRARIES } from './core/approve'
+import { stylexExtend } from './core/extend'
 
 function stylex(opts: StylexPluginOptions = {}) {
   const { api, ...hooks } = _stylex(opts)
@@ -14,7 +15,7 @@ function stylex(opts: StylexPluginOptions = {}) {
   const plugin = <Plugin>{ 
     ...hooks,
     configResolved(conf) {
-      context.env = process.env.NODE_ENV === 'development'
+      context.env = conf.command === 'serve'
         ? 'dev'
         : 'prod'
 
@@ -23,6 +24,11 @@ function stylex(opts: StylexPluginOptions = {}) {
       if (!stylexOptions.unstable_moduleResolution) {
         stylexOptions.unstable_moduleResolution = { type: 'commonJS', rootDir: root }
       }
+
+      // sync stylex extend options
+
+      context.extendOptions.unstable_moduleResolution = stylexOptions.unstable_moduleResolution || {}
+      context.extendOptions.classNamePrefix = stylexOptions.classNamePrefix || 'x'
 
       viteCSSPlugins.push(...conf.plugins.filter(p => DEFINE.HIJACK_PLUGINS.includes(p.name)))
       viteCSSPlugins.sort((a, b) => a.name.length < b.name.length ? -1 : 1)
@@ -49,6 +55,9 @@ function stylex(opts: StylexPluginOptions = {}) {
           : path.join(root, context.controlCSSByManually.id)
         context.controlCSSByManually.id = slash(context.controlCSSByManually.id)
       }
+      const fork = conf.plugins as Plugin[]
+      const pos = fork.findIndex(p => p.name === 'stylex')
+      fork.splice(pos, 0, stylexExtend(context))
     }
   }
 

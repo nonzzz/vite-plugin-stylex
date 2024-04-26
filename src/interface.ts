@@ -1,6 +1,7 @@
 import type { FilterPattern, HookHandler, Plugin } from 'vite'
 import type { Options } from '@stylexjs/babel-plugin'
 import type { PluginItem } from '@babel/core'
+import type { StylexExtendBabelPluginOptions } from '@stylex-extend/babel-plugin'
 import { noop } from './shared'
 
 type Mutable<T> = {
@@ -10,6 +11,8 @@ type Mutable<T> = {
 export type InternalOptions = Mutable<Omit<Options, 'dev' | 'runtimeInjection' | 'aliases'>>
 
 export type StylexOptions = Partial<Mutable<Options>>
+
+export type StylexExtendOptions = Omit<StylexExtendBabelPluginOptions, 'unstable_moduleResolution' | 'classNamePrefix'>
 
 export interface ManuallyControlCssOrder {
   id?: string
@@ -32,6 +35,10 @@ export interface StylexPluginOptions extends Partial<InternalOptions> {
    * @experimental
    */
   manuallyControlCssOrder?: boolean | ManuallyControlCssOrder
+  /**
+   * @experimental
+   */
+  enableStylexExtend?: boolean | StylexExtendOptions
   [prop: string]: unknown
 }
 
