@@ -1,3 +1,11 @@
+## 0.6.0
+
+# Features & Improves
+
+- Add new option `enableStylexExtend`.
+- Split project layout.
+- Provide rollup adapter.
+
 ## 0.5.2
 
 # Improve
@@ -13,7 +21,6 @@
 
 - Remove `es-mdoule-lexer`.
 - Upgrade `@stylexjs/babel-plugin` version.
-
 
 ## 0.5.1
 
