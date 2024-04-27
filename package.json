@@ -7,8 +7,7 @@
   "module": "dist/index.mjs",
   "packageManager": "yarn@3.6.3",
   "workspaces": [
-    "examples/*",
-    "e2e/**/*"
+    "examples/*"
   ],
   "exports": {
     ".": {
