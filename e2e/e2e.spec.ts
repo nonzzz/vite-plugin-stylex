@@ -26,3 +26,8 @@ test('vue ssr', async (t) => {
   const { page } = await createSSRServer(path.join(__dirname, 'fixtures', 'vue-ssr', 'vite.config.mts'))
   await fixtureSwitchColor(page, t)
 })
+
+test('remix', async (t) => {
+  const { page } = await createE2EServer('remix')
+  await fixtureSwitchColor(page, t)
+})
