@@ -1,15 +1,10 @@
 {
   "name": "vite-demo",
   "devDependencies": {
-    "@vitejs/plugin-vue": "4.5.1",
+    "@vitejs/plugin-vue": "^5.0.4",
     "vite": "^5.0.6",
-    "vite-plugin-commonjs": "^0.10.1",
     "vite-plugin-stylex-dev": "workspace:*",
     "vue": "^3.3.10"
-  },
-  "dependencies": {
-    "@internal/button": "workspace:*",
-    "@internal/text": "workspace:*"
   },
   "scripts": {
     "dev": "vite",

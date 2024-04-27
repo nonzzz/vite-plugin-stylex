@@ -1,6 +1,5 @@
 {
   "name": "vite-react-demo",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

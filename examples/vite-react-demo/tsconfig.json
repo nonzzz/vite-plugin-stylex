@@ -1,11 +1,17 @@
 {
-    "compilerOptions": {
-        "baseUrl": ".",
-        "jsx": "react-jsx",
-        "esModuleInterop": true,
-        "paths": {
-            "@/*": ["src/*"],
-            "~/*":["themes/*"]
-        }
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "types": ["vite/client", "react", "react-dom"],
+    "jsxImportSource": "@stylex-extend/react",
+    "paths": {
+      "#/*": ["src/*"],
+      "~/*": ["themes/*"]
     }
+  }
 }

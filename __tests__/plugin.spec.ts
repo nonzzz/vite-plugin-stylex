@@ -1,23 +1,19 @@
 import path from 'path'
 import test from 'ava'
 import type { UserConfig } from 'vite'
-import { stylexPlugin } from '../src'
+import { stylex } from '../src'
 import type { StylexPluginOptions } from '../src'
-
-function sleep(delay = 1000) {
-  return new Promise((resolve) => setTimeout(resolve, delay))
-}
 
 interface BuildOptions {
   stylex?: StylexPluginOptions
   vite?: UserConfig
 }
 
-async function mockBuild(taskName: string, opts: BuildOptions = {}) {
-  const { stylex = {}, vite: viteOptions = {} } = opts
-  const basePath = path.join(__dirname, 'fixtures', taskName)
-  const vite = await import('vite')
-  const bundle = await vite.build(vite.mergeConfig({
+async function build(fixture: string, opts: BuildOptions = {}) {
+  const { stylex: stylexOptions = {}, vite: viteOptions = {} } = opts
+  const basePath = path.join(__dirname, 'fixtures', fixture)
+  const { build, mergeConfig } = await import('vite')
+  const bundle = await build(mergeConfig({
     build: {
       lib: {
         entry: path.join(basePath, 'main.ts'),
@@ -34,71 +30,83 @@ async function mockBuild(taskName: string, opts: BuildOptions = {}) {
       ...viteOptions?.build,
       write: false
     },
-    plugins: [stylexPlugin(stylex)],
-    logLevel: 'silent'
+    plugins: [...(viteOptions.plugins ?? []), stylex(stylexOptions)],
+    logeLevel: 'silent'
   }, viteOptions))
-  let css = ''
-  let js = ''
-  for (const chunkOrAsset of bundle[0].output) {
-    if (chunkOrAsset.fileName === 'style.css') {
-      css = chunkOrAsset.source
-    } else if (chunkOrAsset.fileName === 'bundle.mjs') {
-      js = chunkOrAsset.code
-    }
+  if (Array.isArray(bundle)) {
+    const chunks = bundle[0].output.filter(s => s.fileName === 'style.css' || s.fileName === 'bundle.mjs')
+    chunks.sort((a, b) => a.fileName.endsWith('.css') && !b.fileName.endsWith('.css') ? -1 : 1)
+    return chunks.map(s => s.type === 'asset' ? s.source : s.code)
   }
-  return { css, js }
+  throw new Error(`Build failed with ${fixture}`)
 }
 
-// Currently, i can't find a good way to write unit test case.
-// So this test file only test build case
-// I think most dev related scenarios should be executed in e2e.
-
-test('normal suit disable css minify', async (t) => {
-  const { css, js } = await mockBuild('normal', { vite: { build: { cssMinify: false } } })
-  await sleep()
+test('normal', async (t) => {
+  const [css, js] = await build('normal', { vite: { build: { cssMinify: false } } })
   t.snapshot(css)
   t.snapshot(js)
+  const [css_1] = await build('normal')
+  t.snapshot(css_1)
 })
 
-test('normal suite enable css minify', async (t) => {
-  const { css } = await mockBuild('normal')
-  await sleep()
-  t.is(css, '.xju2f9n{color:#00f}.x1e2nbdu{color:red}\n')
-})
-
-test('pxtorem suite should transform px to rem', async (t) => {
-  const { css } = await mockBuild('pxtorem', { vite: {
-    css: { 
+test('postcss', async (t) => {
+  const [css] = await build('pxtorem', { vite: {
+    css: {
       postcss: {
         plugins: [(await import('postcss-pxtorem')).default]
-      } 
+      }
     }
   } })
-  await sleep()
-  t.is(css, '.x1j61zf2{font-size:1rem}\n')
+  t.snapshot(css)
 })
 
-test('path-alias suite should be work', async (t) => {
-  const { js } = await mockBuild('path-alias', 
-    { vite: 
-      {
-        resolve: {
-          alias: {
-            '@': '.'
+test('lightning css', async (t) => {
+  const [css] = await build('lightning-css', {
+    vite: {
+      css: {
+        transformer: 'lightningcss',
+        lightningcss: {
+          drafts: {
+            customMedia: true
           }
-        },
-        build: {
-          minify: false
         }
       }
-    })
-  await sleep()
-  t.snapshot(js)
+    },
+    stylex: {
+      manuallyControlCssOrder: {
+        id: path.join(__dirname, 'fixtures', 'lightning-css', 'style.css')
+      }
+    }
+  })
+  t.snapshot(css)
 })
 
-test('empty style object should be work', async (t) => {
-  const { css, js } = await mockBuild('empty')
-  await sleep()
+test('aliases', async (t) => {
+  const [css] = await build('path-alias', {
+    vite: {
+      plugins: [(await import('vite-tsconfig-paths')).default({ root: path.join(__dirname, 'fixtures', 'path-alias') })]
+    }
+  })
   t.snapshot(css)
-  t.snapshot(js)
+})
+
+test('ts config paths', async (t) => {
+  const [css] = await build('path-alias', {
+    vite: {
+      resolve: {
+        alias: {
+          '@': './'
+        }
+      },
+      build: {
+        minify: false
+      }
+    }
+  })
+  t.snapshot(css)
+})
+
+test('empty', async (t) => {
+  const [css] = await build('empty')
+  t.snapshot(css)
 })

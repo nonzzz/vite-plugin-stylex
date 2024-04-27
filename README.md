@@ -24,7 +24,7 @@ import { defineConfig } from "vite";
 import { stylexPlugin } from "vite-plugin-stylex-dev";
 
 export default defineConfig({
-  plugins: [stylexPlugin()],
+  plugins: [stylex()],
 });
 ```
 
@@ -40,6 +40,7 @@ export default defineConfig({
 | `useCSSLayers`              | `boolean`                                     | `default`                                      | See stylex document                                        |
 | `optimizedDeps`             | `Array<string>`                               | `[]`                                           | Work with external stylex files or libraries               |
 | `manuallyControlCssOrder`   | `boolean \|object`                            | `false`                                        | control css order by manually                              |
+| `enableStylexExtend`        | `boolean \| StylexExtendOptions`              | `false`                                        | see `@stylex-extend/babel-plugin` docss                    |
 
 ## Q & A
 
