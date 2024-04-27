@@ -7,14 +7,19 @@ import { createE2EServer } from './helper'
 import { createSSRServer } from './fixtures/vue-ssr/server'
 
 async function fixtureSwitchColor(page: Page, t: ExecutionContext<unknown>) {
-  await page.waitForLoadState('domcontentloaded')
-  const element = await page.waitForSelector('div[role="button"]')
-  const before = await element.getAttribute('class')
-  await element.click()
-  const after = await element.getAttribute('class')
-  t.not(before, after)
-  await element.click()
-  t.is(before, await element.getAttribute('class'))
+  await page.waitForSelector('div[role="button"]')
+  const elementHandle = await page.$('div[role="button"]')
+  const windowHandle = await page.evaluateHandle(() => Promise.resolve(window))
+  const red = await page.evaluate(([window, el]) => {
+    return (window as Window).getComputedStyle(el as Element).color
+  }, [windowHandle, elementHandle])
+  t.is(red, 'rgb(255, 0, 0)')
+  await elementHandle?.click()
+  await new Promise((resolve) => setTimeout(resolve, 2000))
+  const blue = await page.evaluate(([window, el]) => {
+    return (window as Window).getComputedStyle(el as Element).color
+  }, [windowHandle, elementHandle])
+  t.is(blue, 'rgb(0, 0, 255)')
 }
 
 test('spa', async (t) => {
