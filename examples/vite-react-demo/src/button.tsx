@@ -1,5 +1,5 @@
-import { colors } from '@/tokens.stylex'
-import { fonts } from '@/tokens/nested.stylex'
+import { colors } from '#/tokens.stylex'
+import { fonts } from '#/tokens/nested.stylex'
 import { others } from '~/other.stylex'
 
 const Button = (props: any) => (
@@ -15,7 +15,9 @@ const Button = (props: any) => (
       fontSize: fonts.font,
       backgroundColor: {
         default: colors.primary,
-        ':hover': colors.primaryDark
+        ':hover': colors.primaryDark,
+        ':active': colors.primaryDark,
+        ':focus': colors.primaryDark
       }
     }}
   >

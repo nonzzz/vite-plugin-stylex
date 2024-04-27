@@ -8,8 +8,9 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "types": ["vite/client", "react", "react-dom"],
+    "jsxImportSource": "@stylex-extend/react",
     "paths": {
-      "@/*": ["src/*"],
+      "#/*": ["src/*"],
       "~/*": ["themes/*"]
     }
   }

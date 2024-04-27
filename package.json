@@ -8,8 +8,7 @@
   "packageManager": "yarn@3.6.3",
   "workspaces": [
     "examples/*",
-    "e2e/**/*",
-    "internal/*"
+    "e2e/**/*"
   ],
   "exports": {
     ".": {
@@ -51,7 +50,8 @@
     "url": "https://github.com/nonzzz/vite-plugin-stylex.git"
   },
   "devDependencies": {
-    "@stylex-extend/core": "^0.2.1",
+    "@stylex-extend/core": "^0.2.2",
+    "@stylex-extend/react": "^0.2.2",
     "@stylexjs/stylex": "^0.5.1",
     "@swc-node/register": "^1.9.0",
     "@swc/core": "^1.4.16",
@@ -82,7 +82,7 @@
   "dependencies": {
     "@babel/core": "^7.23.9",
     "@rollup/pluginutils": "^5.1.0",
-    "@stylex-extend/babel-plugin": "^0.2.1",
+    "@stylex-extend/babel-plugin": "^0.2.2",
     "@stylexjs/babel-plugin": "^0.6.1",
     "magic-string": "^0.30.5"
   },

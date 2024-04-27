@@ -1449,22 +1449,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@internal/button@workspace:*, @internal/button@workspace:internal/button":
-  version: 0.0.0-use.local
-  resolution: "@internal/button@workspace:internal/button"
-  dependencies:
-    "@stylexjs/stylex": ^0.5.1
-  languageName: unknown
-  linkType: soft
-
-"@internal/text@workspace:*, @internal/text@workspace:internal/text":
-  version: 0.0.0-use.local
-  resolution: "@internal/text@workspace:internal/text"
-  dependencies:
-    "@stylexjs/stylex": ^0.5.1
-  languageName: unknown
-  linkType: soft
-
 "@ioredis/commands@npm:^1.1.1":
   version: 1.2.0
   resolution: "@ioredis/commands@npm:1.2.0"
@@ -2915,41 +2899,41 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stylex-extend/babel-plugin@npm:^0.2.1":
-  version: 0.2.1
-  resolution: "@stylex-extend/babel-plugin@npm:0.2.1"
+"@stylex-extend/babel-plugin@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "@stylex-extend/babel-plugin@npm:0.2.2"
   dependencies:
     "@babel/core": ^7.23.9
     "@stylexjs/shared": ^0.5.1
     stylis: ^4.3.1
-  checksum: 31f24ccb3455da74f2823ebe4e6bc8e5e939a8364b2ddfb44287e73a71c21a84cf428b5940e2b337a70cb5e65a92c31f22ce15f134d162f8e062b820dc05721d
+  checksum: f7c64b4c334fabe041b5a0180547f159f5f9694b86b04c05a8f7bc0ae42d032549c5b83fbea8baa5548e978f5a309fd990ed305943b9231fd434d1e5c55379f3
   languageName: node
   linkType: hard
 
-"@stylex-extend/core@npm:^0.2.1":
-  version: 0.2.1
-  resolution: "@stylex-extend/core@npm:0.2.1"
+"@stylex-extend/core@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "@stylex-extend/core@npm:0.2.2"
   dependencies:
-    "@stylex-extend/shared": 0.2.1
-  checksum: 9f714ec533a670c1474fef0804bcf670729690d9fac0736ebfe0c89d2b7cd6825bcfb1490f6ef25e3dd4badb94b0dd7505933c36d41823d9a303dd3d2a12c7f5
+    "@stylex-extend/shared": 0.2.2
+  checksum: e864dcce13de343ca9cf4ce67a2ee5f1b631dedef2cf3cdcf0d27fdd6b4b785ed0e329e26a1126298753a7027c663e92ef1ecce9d92f8732ef4da900962539df
   languageName: node
   linkType: hard
 
-"@stylex-extend/react@npm:^0.2.1":
-  version: 0.2.1
-  resolution: "@stylex-extend/react@npm:0.2.1"
+"@stylex-extend/react@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "@stylex-extend/react@npm:0.2.2"
   dependencies:
-    "@stylex-extend/shared": 0.2.1
-  checksum: aa2e358c9a631fbef2dd65b9d708dac3f43b87cc1c2763eee05a55e652daed9321440c84578bf90fb5a94fd3e18933bd0efbe97cf6f412b5e074dfb0c4ce39d6
+    "@stylex-extend/shared": 0.2.2
+  checksum: 62d2f01c5502f4da71ec62f531b684acccfdbcfe022f8d0c3ace80a32c3fa3f5213e3e8f846a0c1889d5144ff07c3ac78ffa87b6e04a5efd429b5e94ee568c7c
   languageName: node
   linkType: hard
 
-"@stylex-extend/shared@npm:0.2.1":
-  version: 0.2.1
-  resolution: "@stylex-extend/shared@npm:0.2.1"
+"@stylex-extend/shared@npm:0.2.2":
+  version: 0.2.2
+  resolution: "@stylex-extend/shared@npm:0.2.2"
   dependencies:
     csstype: ^3.1.3
-  checksum: bfd96e06f20ff13937df0402df48964dbf8f08a81907bfda4d5c73fe5a96038410a4756019fcfbcf4dff334ff614ebb872377f64bd058eddef10e6b3d74e4f1c
+  checksum: b5c4474c54e99fb3779642a9e54acee29eeae287e58e2da22ab5213f5de6b056278a265ad145a53b14ce12102414f66b6d9015372783e3fc84600f1f16ff16ac
   languageName: node
   linkType: hard
 
@@ -6819,7 +6803,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"es-module-lexer@npm:^1.2.1, es-module-lexer@npm:^1.3.1, es-module-lexer@npm:^1.4.1":
+"es-module-lexer@npm:^1.3.1, es-module-lexer@npm:^1.4.1":
   version: 1.4.1
   resolution: "es-module-lexer@npm:1.4.1"
   checksum: a11b5a256d4e8e9c7d94c2fd87415ccd1591617b6edd847e064503f8eaece2d25e2e9078a02c5ce3ed5e83bb748f5b4820efbe78072c8beb07ac619c2edec35d
@@ -7778,7 +7762,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.12, fast-glob@npm:^3.2.7, fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.0, fast-glob@npm:^3.3.1, fast-glob@npm:^3.3.2":
+"fast-glob@npm:^3.2.7, fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.0, fast-glob@npm:^3.3.1, fast-glob@npm:^3.3.2":
   version: 3.3.2
   resolution: "fast-glob@npm:3.3.2"
   dependencies:
@@ -10286,15 +10270,6 @@ __metadata:
   dependencies:
     "@jridgewell/sourcemap-codec": ^1.4.15
   checksum: da10fecff0c0a7d3faf756913ce62bd6d5e7b0402be48c3b27bfd651b90e29677e279069a63b764bcdc1b8ecdcdb898f29a5c5ec510f2323e8d62ee057a6eb18
-  languageName: node
-  linkType: hard
-
-"magic-string@npm:^0.30.1":
-  version: 0.30.8
-  resolution: "magic-string@npm:0.30.8"
-  dependencies:
-    "@jridgewell/sourcemap-codec": ^1.4.15
-  checksum: 79922f4500d3932bb587a04440d98d040170decf432edc0f91c0bf8d41db16d364189bf800e334170ac740918feda62cd39dcc170c337dc18050cfcf00a5f232
   languageName: node
   linkType: hard
 
@@ -16709,11 +16684,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "vite-demo@workspace:examples/vite-demo"
   dependencies:
-    "@internal/button": "workspace:*"
-    "@internal/text": "workspace:*"
     "@vitejs/plugin-vue": ^5.0.4
     vite: ^5.0.6
-    vite-plugin-commonjs: ^0.10.1
     vite-plugin-stylex-dev: "workspace:*"
     vue: ^3.3.10
   languageName: unknown
@@ -16815,30 +16787,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite-plugin-commonjs@npm:^0.10.1":
-  version: 0.10.1
-  resolution: "vite-plugin-commonjs@npm:0.10.1"
-  dependencies:
-    acorn: ^8.8.2
-    fast-glob: ^3.2.12
-    magic-string: ^0.30.1
-    vite-plugin-dynamic-import: ^1.5.0
-  checksum: 64e4a995bcf598d443e484bb3063251ba6c1ca4a45b383fe8c303ad5a35cd480632d74eb1e1107a4ecb90afb6b7ce28fa90817a63447736c336442cb49605c40
-  languageName: node
-  linkType: hard
-
-"vite-plugin-dynamic-import@npm:^1.5.0":
-  version: 1.5.0
-  resolution: "vite-plugin-dynamic-import@npm:1.5.0"
-  dependencies:
-    acorn: ^8.8.2
-    es-module-lexer: ^1.2.1
-    fast-glob: ^3.2.12
-    magic-string: ^0.30.1
-  checksum: 68efd897daa0c72a9f9d3481095dd3f7ec9a822be5a15eef60413734a4c894c5bbd1c1762f02daeef5df59cef212c9f1e7e056315e2a7780816ccafe5c74da6e
-  languageName: node
-  linkType: hard
-
 "vite-plugin-inspect@npm:^0.8.1":
   version: 0.8.1
   resolution: "vite-plugin-inspect@npm:0.8.1"
@@ -16888,8 +16836,9 @@ __metadata:
   dependencies:
     "@babel/core": ^7.23.9
     "@rollup/pluginutils": ^5.1.0
-    "@stylex-extend/babel-plugin": ^0.2.1
-    "@stylex-extend/core": ^0.2.1
+    "@stylex-extend/babel-plugin": ^0.2.2
+    "@stylex-extend/core": ^0.2.2
+    "@stylex-extend/react": ^0.2.2
     "@stylexjs/babel-plugin": ^0.6.1
     "@stylexjs/stylex": ^0.5.1
     "@swc-node/register": ^1.9.0
@@ -17002,7 +16951,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "vite-react-demo@workspace:examples/vite-react-demo"
   dependencies:
-    "@stylex-extend/react": ^0.2.1
     "@stylexjs/open-props": ^0.3.0
     "@types/react": ^18.2.45
     "@types/react-dom": ^18.2.18
