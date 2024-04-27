@@ -1,3 +1,9 @@
+## 0.6.1
+
+# Patches
+
+- Fix missing sync byte offset.
+
 ## 0.6.0
 
 # Features & Improves

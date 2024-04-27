@@ -13,7 +13,7 @@ export interface ParserOptions {
 }
 
 export function scanImportStmt(code: string, filename: string, parserOptions?: ParserOptions) {
-  const ast = parseSync(code, { parserOpts: { plugins: parserOptions?.plugins || [] }, babelrc: false })!
+  const ast = parseSync(code, { parserOpts: { plugins: parserOptions?.plugins || [] }, babelrc: false, filename })!
   const stmts: ImportSpecifier[] = []
   for (const n of ast!.program.body) {
     if (n.type === 'ImportDeclaration') {

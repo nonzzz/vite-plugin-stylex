@@ -8,7 +8,7 @@ import { parseURLRequest } from './manually-order'
 import { scanImportStmt } from './import-stmt'
 
 export function stylexExtend(context: StateContext) {
-  const filter = createFilter(/\.[jt]sx$/, [])
+  const filter = createFilter(/\.[jt]sx?$/, [])
   let extend: StylexExtendTransformObject | null = null
   return <Plugin>{
     name: 'stylex-extend',

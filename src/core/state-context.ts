@@ -104,7 +104,9 @@ export class StateContext {
     return pass
   }
 
+  // Don't forget to sync offsets
   async rewriteImportStmts(code: string, id: string) {
+    let byteOffset = 0
     for (const stmt of this.stmts) {
       if (!stmt.n) continue
       if (path.isAbsolute(stmt.n) || stmt.n[0] === '.') continue
@@ -114,7 +116,10 @@ export class StateContext {
         if (resolved.id === stmt.n) continue
         if (!resolved.id.includes('node_modules')) {
           const next = handleRelativePath(id, resolved.id)
-          code = code.substring(0, stmt.s) + next + code.substring(stmt.e)
+          const start = stmt.s + byteOffset
+          const end = stmt.e + byteOffset
+          code = code.substring(0, start) + next + code.substring(end)
+          byteOffset += next.length - (stmt.e - stmt.s)
         }
       }
     }
