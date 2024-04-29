@@ -1,3 +1,9 @@
+## 0.6.2
+
+# Patches
+
+- Fix side effect of bunding phase can't handle import with raw suffix.
+
 ## 0.6.1
 
 # Patches
