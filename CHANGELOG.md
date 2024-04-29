@@ -1,3 +1,9 @@
+## 0.6.3
+
+# Patches
+
+- Respect `enableStylexExtend` option.
+
 ## 0.6.2
 
 # Patches

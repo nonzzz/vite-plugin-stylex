@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-stylex-dev",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "an unofficial stylex vite plugin",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -49,8 +49,8 @@
     "url": "https://github.com/nonzzz/vite-plugin-stylex.git"
   },
   "devDependencies": {
-    "@stylex-extend/core": "^0.2.2",
-    "@stylex-extend/react": "^0.2.2",
+    "@stylex-extend/core": "^0.2.3",
+    "@stylex-extend/react": "^0.2.3",
     "@stylexjs/stylex": "^0.5.1",
     "@swc-node/register": "^1.9.0",
     "@swc/core": "^1.4.16",

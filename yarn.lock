@@ -2910,30 +2910,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stylex-extend/core@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "@stylex-extend/core@npm:0.2.2"
+"@stylex-extend/core@npm:^0.2.3":
+  version: 0.2.3
+  resolution: "@stylex-extend/core@npm:0.2.3"
   dependencies:
-    "@stylex-extend/shared": 0.2.2
-  checksum: e864dcce13de343ca9cf4ce67a2ee5f1b631dedef2cf3cdcf0d27fdd6b4b785ed0e329e26a1126298753a7027c663e92ef1ecce9d92f8732ef4da900962539df
+    "@stylex-extend/shared": 0.2.3
+  checksum: 5eeb379128c179acb07ab665a4f9d25154c4d88f45e0f760e1c1fcec8090e081dfb6a60582b12419eb9a042d110217bd35088ef119c500c023a23623c32414f5
   languageName: node
   linkType: hard
 
-"@stylex-extend/react@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "@stylex-extend/react@npm:0.2.2"
+"@stylex-extend/react@npm:^0.2.3":
+  version: 0.2.3
+  resolution: "@stylex-extend/react@npm:0.2.3"
   dependencies:
-    "@stylex-extend/shared": 0.2.2
-  checksum: 62d2f01c5502f4da71ec62f531b684acccfdbcfe022f8d0c3ace80a32c3fa3f5213e3e8f846a0c1889d5144ff07c3ac78ffa87b6e04a5efd429b5e94ee568c7c
+    "@stylex-extend/shared": 0.2.3
+  checksum: 03027456e48f600f79aa7d5f937c33e66cc047cb54fc142b3ac21a32ed3cff498ca30c826beeb46a859a5cd0c7b386f6017af418968d315806a316359d055d37
   languageName: node
   linkType: hard
 
-"@stylex-extend/shared@npm:0.2.2":
-  version: 0.2.2
-  resolution: "@stylex-extend/shared@npm:0.2.2"
+"@stylex-extend/shared@npm:0.2.3":
+  version: 0.2.3
+  resolution: "@stylex-extend/shared@npm:0.2.3"
   dependencies:
     csstype: ^3.1.3
-  checksum: b5c4474c54e99fb3779642a9e54acee29eeae287e58e2da22ab5213f5de6b056278a265ad145a53b14ce12102414f66b6d9015372783e3fc84600f1f16ff16ac
+  checksum: a02ab8c2089bcdede5152de3aac0f2f3114b04a7d66775a3abdf2ba43cdce29651e816ad4fbc0f043138199b5ce3b9809ef31798c65627f78c61611296befe72
   languageName: node
   linkType: hard
 
@@ -16721,8 +16721,8 @@ __metadata:
     "@babel/core": ^7.23.9
     "@rollup/pluginutils": ^5.1.0
     "@stylex-extend/babel-plugin": ^0.2.2
-    "@stylex-extend/core": ^0.2.2
-    "@stylex-extend/react": ^0.2.2
+    "@stylex-extend/core": ^0.2.3
+    "@stylex-extend/react": ^0.2.3
     "@stylexjs/babel-plugin": ^0.6.1
     "@stylexjs/stylex": ^0.5.1
     "@swc-node/register": ^1.9.0

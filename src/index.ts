@@ -25,11 +25,6 @@ function stylex(opts: StylexPluginOptions = {}) {
         stylexOptions.unstable_moduleResolution = { type: 'commonJS', rootDir: root }
       }
 
-      // sync stylex extend options
-
-      context.extendOptions.unstable_moduleResolution = stylexOptions.unstable_moduleResolution || {}
-      context.extendOptions.classNamePrefix = stylexOptions.classNamePrefix || 'x'
-
       viteCSSPlugins.push(...conf.plugins.filter(p => DEFINE.HIJACK_PLUGINS.includes(p.name)))
       viteCSSPlugins.sort((a, b) => a.name.length < b.name.length ? -1 : 1)
 
@@ -55,9 +50,14 @@ function stylex(opts: StylexPluginOptions = {}) {
           : path.join(root, context.controlCSSByManually.id)
         context.controlCSSByManually.id = slash(context.controlCSSByManually.id)
       }
-      const fork = conf.plugins as Plugin[]
-      const pos = fork.findIndex(p => p.name === 'stylex')
-      fork.splice(pos, 0, stylexExtend(context))
+      if (typeof context.extendOptions === 'object' && Object.keys(context.extendOptions).length) {
+      // sync stylex extend options
+        context.extendOptions.unstable_moduleResolution = stylexOptions.unstable_moduleResolution || {}
+        context.extendOptions.classNamePrefix = stylexOptions.classNamePrefix || 'x'
+        const fork = conf.plugins as Plugin[]
+        const pos = fork.findIndex(p => p.name === 'stylex')
+        fork.splice(pos, 0, stylexExtend(context))
+      }
     }
   }
 
