@@ -26,7 +26,7 @@ function extractCssFromExportDefault(s: string) {
 }
 
 export function stylexProd(plugin: Plugin, context: StateContext, cssPlugins: Plugin[]) {
-  const { isManuallyControlCSS, controlCSSByManually, rollupTransformContext } = context
+  const { isManuallyControlCSS, controlCSSByManually } = context
   const [plugin_1, plugin_2] = cssPlugins
   let finallyCSS = ''
   // hijack vite:css-post logic
@@ -57,10 +57,14 @@ export function stylexProd(plugin: Plugin, context: StateContext, cssPlugins: Pl
         delete chunk.modules[id]
       }
       if (isManuallyControlCSS && original !== controlCSSByManually.id) continue
-      const moduleId = kind === 'native' ? DEFINE.MODULE_CSS : DEFINE.MODULE_CSS + '?inline'
-      const result = await hook.apply(rollupTransformContext!, [code, moduleId])
+      // For some reason, when postcss or lightining-css transformed the css import stmt
+      // It need the real path of the css file, so we need respect the original path
+      const moduleId = kind === 'native'
+        ? DEFINE.MODULE_CSS
+        : (isManuallyControlCSS ? controlCSSByManually.id : DEFINE.MODULE_CSS) + '?inline'
+      const result = await hook.apply(this, [code, moduleId])
       if (typeof result === 'object' && result?.code) {
-        const res = await postHook.apply(rollupTransformContext!, [result.code, moduleId])
+        const res = await postHook.apply(this, [result.code, moduleId])
         if (isManuallyControlCSS && typeof res === 'object' && res.code && kind !== 'native') {
           finallyCSS = extractCssFromExportDefault(res.code)
         } else {

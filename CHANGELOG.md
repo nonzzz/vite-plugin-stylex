@@ -1,3 +1,10 @@
+## 0.6.4
+
+# Patches
+
+- Fix windows system can't match virtual file id.
+- Fix hijack vite's css plugin missing plugin context.
+
 ## 0.6.3
 
 # Patches

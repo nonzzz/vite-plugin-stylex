@@ -25,31 +25,30 @@ function stylex(opts: StylexPluginOptions = {}) {
         stylexOptions.unstable_moduleResolution = { type: 'commonJS', rootDir: root }
       }
 
-      viteCSSPlugins.push(...conf.plugins.filter(p => DEFINE.HIJACK_PLUGINS.includes(p.name)))
-      viteCSSPlugins.sort((a, b) => a.name.length < b.name.length ? -1 : 1)
-
-      const optimizedDeps = unique([...(Array.isArray(opts.optimizedDeps) ? opts.optimizedDeps : []),
-        ...importSources.map(s => typeof s === 'object' ? s.from : s), ...WELL_KNOW_LIBRARIES])
-      
-      if (context.env === 'dev') {
-        conf.optimizeDeps.exclude = [...optimizedDeps, ...(conf.optimizeDeps.exclude ?? [])]
-        stylexDev(plugin, context, viteCSSPlugins)
-      } else {
-        stylexProd(plugin, context, viteCSSPlugins)
-      }
-      
-      if (conf.appType === 'custom') {
-        conf.ssr.noExternal = Array.isArray(conf.ssr.noExternal)
-          ? [...conf.ssr.noExternal, ...optimizedDeps]
-          : conf.ssr.noExternal
-      }
-    
       if (context.controlCSSByManually.id) {
         context.controlCSSByManually.id = path.isAbsolute(context.controlCSSByManually.id)
           ? context.controlCSSByManually.id
           : path.join(root, context.controlCSSByManually.id)
         context.controlCSSByManually.id = slash(context.controlCSSByManually.id)
       }
+
+      viteCSSPlugins.push(...conf.plugins.filter(p => DEFINE.HIJACK_PLUGINS.includes(p.name)))
+      viteCSSPlugins.sort((a, b) => a.name.length < b.name.length ? -1 : 1)
+
+      const optimizedDeps = unique([...(Array.isArray(opts.optimizedDeps) ? opts.optimizedDeps : []),
+        ...importSources.map(s => typeof s === 'object' ? s.from : s), ...WELL_KNOW_LIBRARIES])
+      if (context.env === 'dev') {
+        conf.optimizeDeps.exclude = [...optimizedDeps, ...(conf.optimizeDeps.exclude ?? [])]
+        stylexDev(plugin, context, viteCSSPlugins)
+      } else {
+        stylexProd(plugin, context, viteCSSPlugins)
+      }
+      if (conf.appType === 'custom') {
+        conf.ssr.noExternal = Array.isArray(conf.ssr.noExternal)
+          ? [...conf.ssr.noExternal, ...optimizedDeps]
+          : conf.ssr.noExternal
+      }
+      
       if (typeof context.extendOptions === 'object' && Object.keys(context.extendOptions).length) {
       // sync stylex extend options
         context.extendOptions.unstable_moduleResolution = stylexOptions.unstable_moduleResolution || {}
