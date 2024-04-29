@@ -5,6 +5,9 @@ import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { stylex } from 'vite-plugin-stylex-dev'
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 export default defineConfig({
   css: {
     transformer: 'lightningcss',
@@ -14,10 +17,10 @@ export default defineConfig({
       }
     }
   },
-  plugins: [remix(), tsconfigPaths(), stylex(
+  plugins: [remix(), tsconfigPaths({ root: __dirname }), stylex(
     {
       manuallyControlCssOrder: {
-        id: path.join(path.dirname(fileURLToPath(import.meta.url)), 'app/styles/index.css')
+        id: path.join(__dirname, 'app/styles/index.css')
       }
     }
   )]

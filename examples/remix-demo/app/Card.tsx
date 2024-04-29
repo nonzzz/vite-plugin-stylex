@@ -1,3 +1,4 @@
+// eslint-disable-next-line @eslint-react/naming-convention/filename
 import * as stylex from '@stylexjs/stylex'
 import { tokens } from './theme.stylex'
 
