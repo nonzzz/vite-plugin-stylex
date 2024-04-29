@@ -82,8 +82,7 @@
     "@babel/core": "^7.23.9",
     "@rollup/pluginutils": "^5.1.0",
     "@stylex-extend/babel-plugin": "^0.2.2",
-    "@stylexjs/babel-plugin": "^0.6.1",
-    "magic-string": "^0.30.5"
+    "@stylexjs/babel-plugin": "^0.6.1"
   },
   "resolutions": {
     "sharp": "0.32.6",

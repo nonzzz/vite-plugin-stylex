@@ -16740,7 +16740,6 @@ __metadata:
     eslint-plugin-vue: ^9.19.2
     get-tsconfig: ^4.7.2
     lightningcss: ^1.24.1
-    magic-string: ^0.30.5
     playwright: ~1.32.3
     postcss-pxtorem: ^6.0.0
     rollup: ^4.16.0

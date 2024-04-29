@@ -1,3 +1,4 @@
+// eslint-disable-next-line @eslint-react/naming-convention/filename
 import type { MetaFunction } from '@remix-run/node'
 import { create, props } from '@stylexjs/stylex'
 import { useState } from 'react'
