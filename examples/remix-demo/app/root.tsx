@@ -9,8 +9,10 @@ import {
 import type { LinksFunction } from '@remix-run/node'
 import * as stylex from '@stylexjs/stylex'
 
-import $styles from './styles/index.css?url'
 import { colors } from './styles/color.stylex'
+import $styles from './styles/index.css?url'
+
+// import './styles/index.css'
 
 export const links: LinksFunction = () => [
   { rel: 'preload', href: $styles, as: 'style' },
@@ -19,7 +21,7 @@ export const links: LinksFunction = () => [
 
 export const styles = stylex.create({
   body: {
-    color: colors.foreground
+    color: colors.accentA2
   }
 })
 

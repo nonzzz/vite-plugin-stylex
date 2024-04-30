@@ -1,3 +1,9 @@
+## 0.7.0
+
+# Improve
+
+This version uses vite's internal css plugin to generate css.
+
 ## 0.6.4
 
 # Patches
