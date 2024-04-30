@@ -40,7 +40,7 @@ export function stylexProd(plugin: Plugin, context: StateContext, cssPlugins: Pl
     return fn.apply(c, args)
   }, true)
 
-  const hook_2 = hijackHook(plugin_2, 'transform', (fn, c, args) => fn.apply(c, args), true)
+  const postHook = hijackHook(plugin_2, 'transform', (fn, c, args) => fn.apply(c, args), true)
 
   const transform = hijackHook(plugin, 'transform', async (fn, c, args) => {
     const result = await fn.apply(c, args)
@@ -62,7 +62,7 @@ export function stylexProd(plugin: Plugin, context: StateContext, cssPlugins: Pl
       }
       for (const id of pass) {
         const res = await hook.apply(c, [css, id, args[2]])
-        await hook_2.apply(res.code, [res?.code || '', id, args[2]])
+        await postHook.apply(c, [res?.code || '', id, args[2]])
       }
     }
     return result
