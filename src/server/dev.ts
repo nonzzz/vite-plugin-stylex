@@ -33,6 +33,25 @@ export function stylexDev(plugin: Plugin, context: StateContext, cssPlugins: Plu
   plugin.resolveId = function (id) {
     if (id === DEFINE.MODULE_ID) return DEFINE.MODULE_CSS
   }
+
+  hijackHook(plugin_1, 'transform', async (fn, c, args) => {
+    // eslint-disable-next-line no-unused-vars
+    const [_, id] = args
+    if (isManuallyControlCSS) {
+      const { original } = parseURLRequest(id)
+      if (original === controlCSSByManually.id) {
+        let code = await fsp.readFile(controlCSSByManually.id, 'utf-8')
+        code = code.replace(controlCSSByManually.symbol!, context.processCSS())
+        args[0] = code
+      }
+    }
+    const result = await fn.apply(c, args)
+    if (id === DEFINE.MODULE_CSS && typeof result === 'object' && result?.code) {
+      const module = viteDevServer?.moduleGraph.getModuleById(DEFINE.MODULE_CSS)
+      module && Object.defineProperty(module, '__stylex__', { value: result.code, configurable: true })
+    }
+    return result
+  })
  
   const transform = hijackHook(plugin, 'transform', async (fn, c, args) => {
     const result = await fn.apply(c, args)
@@ -52,7 +71,7 @@ export function stylexDev(plugin: Plugin, context: StateContext, cssPlugins: Plu
           const cssModules = viteDevServer.moduleGraph.getModulesByFile(controlCSSByManually.id!)
           if (cssModules) {
             for (const m of cssModules) {
-              await viteDevServer.reloadModule(m)
+              await viteDevServer.moduleGraph.invalidateModule(m, new Set(), Date.now())
             }
           }
         }
@@ -63,23 +82,4 @@ export function stylexDev(plugin: Plugin, context: StateContext, cssPlugins: Plu
 
   // rewrite 
   plugin.transform = transform
-
-  hijackHook(plugin_1, 'transform', async (fn, c, args) => {
-    // eslint-disable-next-line no-unused-vars
-    const [_, id] = args
-    if (context.isManuallyControlCSS) {
-      const { original } = parseURLRequest(id)
-      if (original === controlCSSByManually.id) {
-        let code = await fsp.readFile(controlCSSByManually.id, 'utf-8')
-        code = code.replace(controlCSSByManually.symbol!, context.processCSS())
-        args[0] = code
-      }
-      const result = await fn.apply(c, args)
-      if (id === DEFINE.MODULE_CSS && typeof result === 'object' && result?.code) {
-        const module = viteDevServer?.moduleGraph.getModuleById(DEFINE.MODULE_CSS)
-        module && Object.defineProperty(module, '__stylex__', { value: result.code, configurable: true })
-      }
-      return result
-    }
-  })
 }
