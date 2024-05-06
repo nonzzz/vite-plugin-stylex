@@ -1,3 +1,9 @@
+## 0.7.1
+
+# Patches
+
+- Fix build mode resolveId don't allowed manually.
+
 ## 0.7.0
 
 # Improve
