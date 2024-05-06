@@ -32,8 +32,6 @@ export function stylexDev(plugin: Plugin, context: StateContext, cssPlugins: Plu
 
   plugin.resolveId = function (id) {
     if (id === DEFINE.MODULE_ID) return DEFINE.MODULE_CSS
-    // For waku
-    if (id === DEFINE.MODULE_CSS) return DEFINE.MODULE_CSS
   }
 
   hijackHook(plugin_1, 'transform', async (fn, c, args) => {
@@ -73,7 +71,7 @@ export function stylexDev(plugin: Plugin, context: StateContext, cssPlugins: Plu
           const cssModules = viteDevServer.moduleGraph.getModulesByFile(controlCSSByManually.id!)
           if (cssModules) {
             for (const m of cssModules) {
-              await viteDevServer.moduleGraph.invalidateModule(m, new Set(), Date.now())
+              await viteDevServer.reloadModule(m)
             }
           }
         }
