@@ -30,6 +30,8 @@ export function stylexProd(plugin: Plugin, context: StateContext, cssPlugins: Pl
 
   plugin.resolveId = function (id) {
     if (id === DEFINE.MODULE_ID) return DEFINE.MODULE_CSS
+    // For waku
+    if (id === DEFINE.MODULE_CSS) return DEFINE.MODULE_CSS
   }
   
   const hook = hijackHook(plugin_1, 'transform', (fn, c, args) => {
