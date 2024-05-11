@@ -6,80 +6,58 @@ import { parseURLRequest } from '../core/manually-order'
 import { hijackHook } from './hijack'
 import { createStylexDevMiddleware } from './middleware'
 
-const fsp = fs.promises
+// HMR is a black box for me and i don't have enough time to analyze it.
+// Alough i know how HMR works.
+// If someone know how to desgin better HMR for stylex, please PR welcome.
+// I'm glad someone to refactor this part.
+// TODO: nonzzz
 
 export function stylexDev(plugin: Plugin, context: StateContext, cssPlugins: Plugin[]) {
   const { isManuallyControlCSS, controlCSSByManually } = context
   let viteDevServer: ViteDevServer | null = null
   const [plugin_1] = cssPlugins
-  
-  plugin.configureServer = function (server) {
-    viteDevServer = server
-    return () => {
-      const middleware = createStylexDevMiddleware({ viteServer: server, context })
-      server.middlewares.use(middleware)
-      const order = server.middlewares.stack.findIndex(m => {
-        if (typeof m.handle === 'function') return m.handle.name === DEFINE.HIJACK_MIDDLEWARE
-        return -1
-      })
-      const current = server.middlewares.stack.pop()!
-      server.middlewares.stack.splice(order, 0, current)
-    }
-  }
-  plugin.load = function (id) {
-    if (id === DEFINE.MODULE_CSS) return context.processCSS()
-  }
+  const cssId = isManuallyControlCSS ? controlCSSByManually.id + '?transform-only' : DEFINE.MODULE_CSS
 
-  plugin.resolveId = function (id) {
-    if (id === DEFINE.MODULE_ID) return DEFINE.MODULE_CSS
-  }
-
-  hijackHook(plugin_1, 'transform', async (fn, c, args) => {
-    // eslint-disable-next-line no-unused-vars
-    const [_, id] = args
-    if (isManuallyControlCSS) {
-      const { original } = parseURLRequest(id)
-      if (original === controlCSSByManually.id) {
-        let code = await fsp.readFile(controlCSSByManually.id, 'utf-8')
-        code = code.replace(controlCSSByManually.symbol!, context.processCSS())
-        args[0] = code
-      }
-    }
+  const transformHook = hijackHook(plugin_1, 'transform', async (fn, c, args) => {
     const result = await fn.apply(c, args)
-    if (id === DEFINE.MODULE_CSS && typeof result === 'object' && result?.code) {
-      const module = viteDevServer?.moduleGraph.getModuleById(DEFINE.MODULE_CSS)
+    if (args[1] === cssId && typeof result === 'object' && result?.code) {
+      const module = viteDevServer?.moduleGraph.getModuleById(cssId)
       module && Object.defineProperty(module, '__stylex__', { value: result.code, configurable: true })
     }
     return result
-  })
- 
-  const transform = hijackHook(plugin, 'transform', async (fn, c, args) => {
-    const result = await fn.apply(c, args)
-    if (typeof result === 'object' && result) {
-      // eslint-disable-next-line no-unused-vars
-      const [_, id] = args
-      let { code } = result
-      if (context.styleRules.has(id)) {
-        if (!isManuallyControlCSS) {
-          code = `import ${JSON.stringify(DEFINE.MODULE_ID)};\n${code}`
-        }
-      }
-      if (viteDevServer) {
-        const module = viteDevServer.moduleGraph.getModuleById(DEFINE.MODULE_CSS)
-        if (module) await viteDevServer.reloadModule(module)
-        if (isManuallyControlCSS) {
-          const cssModules = viteDevServer.moduleGraph.getModulesByFile(controlCSSByManually.id!)
-          if (cssModules) {
-            for (const m of cssModules) {
-              await viteDevServer.reloadModule(m)
-            }
-          }
-        }
-      }
-      return { ...result, code }
-    }
   }, true)
 
-  // rewrite 
-  plugin.transform = transform
+  plugin.resolveId = function (id) {
+    console.log(id, 'cn')
+  }
+
+  plugin.transform = hijackHook(plugin, 'transform', async (fn, c, args) => {
+    const res = await fn.apply(c, args)
+    if (typeof res === 'object' && res?.code) {
+      const id = args[1]
+      if (!context.styleRules.has(id)) return res
+      const css = context.processCSS()
+      let raw = css
+      if (isManuallyControlCSS) {
+        raw = fs.readFileSync(controlCSSByManually.id!, 'utf8')
+        raw = raw.replace(controlCSSByManually.symbol!, css)
+      }
+      await transformHook.apply(c, [raw, cssId, args[2]])
+    }
+    return res
+  }, true)
+  
+  plugin.configureServer = function (server) {
+    viteDevServer = server
+    // return () => {
+    //   const middleware = createStylexDevMiddleware({ viteServer: server, context })
+    //   server.middlewares.use(middleware)
+    //   const order = server.middlewares.stack.findIndex(m => {
+    //     if (typeof m.handle === 'function') return m.handle.name === DEFINE.HIJACK_MIDDLEWARE
+    //     return -1
+    //   })
+    //   const current = server.middlewares.stack.pop()!
+    //   server.middlewares.stack.splice(order, 0, current)
+    // }
+  }
 }

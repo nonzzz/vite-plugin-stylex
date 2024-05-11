@@ -1,6 +1,7 @@
 import { transformAsync } from '@babel/core'
-import stylexBabelPlugin, { Rule } from '@stylexjs/babel-plugin'
+import stylexBabelPlugin from '@stylexjs/babel-plugin'
 import type { Plugin } from 'vite'
+import type { Rule } from '@stylexjs/babel-plugin'
 import type { StylexPluginOptions } from '../interface'
 import { parseURLRequest } from './manually-order'
 import { createStateContext } from './state-context'
