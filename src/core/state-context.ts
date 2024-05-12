@@ -30,10 +30,12 @@ export class StateContext {
   stylexOptions: StylexOptions
   extendOptions: StylexExtendBabelPluginOptions
   env: ENV
+  root: string
   #filter: ReturnType<typeof createFilter> | null
   #pluginContext: RollupPluginContext | null
   stmts: ImportSpecifier[]
   constructor() {
+    this.root = process.cwd()
     this.#filter = null
     this.#pluginContext = null
     this.styleRules = new Map()
@@ -136,6 +138,7 @@ export class StateContext {
 
   destroy() {
     this.#filter = null
+    this.root = ''
     this.#pluginContext = null
     this.styleRules.clear()
     this.globalStyleRules.clear()
