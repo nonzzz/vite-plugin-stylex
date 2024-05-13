@@ -5,7 +5,7 @@ import type { Rule } from '@stylexjs/babel-plugin'
 import type { StylexExtendBabelPluginOptions } from '@stylex-extend/babel-plugin'
 import type { ManuallyControlCssOrder, RollupPluginContext, StylexExtendOptions, StylexOptions, StylexPluginOptions } from '../interface'
 import { slash } from '../shared'
-import { defaultControlCSSOptions } from './manually-order'
+import { defaultControlCSSOptions, parseURLRequest } from './manually-order'
 import { scanImportStmt } from './import-stmt'
 import type { ImportSpecifier } from './import-stmt'
 
@@ -30,10 +30,12 @@ export class StateContext {
   stylexOptions: StylexOptions
   extendOptions: StylexExtendBabelPluginOptions
   env: ENV
+  root: string
   #filter: ReturnType<typeof createFilter> | null
   #pluginContext: RollupPluginContext | null
   stmts: ImportSpecifier[]
   constructor() {
+    this.root = process.cwd()
     this.#filter = null
     this.#pluginContext = null
     this.styleRules = new Map()
@@ -92,6 +94,8 @@ export class StateContext {
 
   skipResolve(code: string, id: string): boolean {
     if (!this.#filter!(id) || id.startsWith('\0')) return false
+    const { kind } = parseURLRequest(id)
+    if (kind.includes('.css')) return false 
     const stmts = scanImportStmt(code, id)
     let pass = false
     for (const stmt of stmts) {
@@ -136,6 +140,7 @@ export class StateContext {
 
   destroy() {
     this.#filter = null
+    this.root = ''
     this.#pluginContext = null
     this.styleRules.clear()
     this.globalStyleRules.clear()

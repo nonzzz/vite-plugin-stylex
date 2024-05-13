@@ -7,8 +7,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Node",
-    "types": ["vite/client", "react", "react-dom"],
-    "jsxImportSource": "@stylex-extend/react",
+    "types": ["vite/client", "react", "react-dom","@stylex-extend/react"],
     "paths": {
       "#/*": ["src/*"],
       "~/*": ["themes/*"]

@@ -1426,10 +1426,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hono/node-server@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@hono/node-server@npm:1.4.0"
-  checksum: 9656261ce4e47286f8f0ab6142f04746db1c7d7d8da826749ab21547cb363367f6c4c0ff0d0bf1930ada48037869f1630d29424c55c3d96dcae1203a2cc4bf79
+"@hono/node-server@npm:1.9.1":
+  version: 1.9.1
+  resolution: "@hono/node-server@npm:1.9.1"
+  checksum: cefab8e4f812b263e2ab044321693b2ef028f88b7c21266fda1f81385827bad8ee48702b3621f8bd0e0b11d20a363b5df054a7dbcae58741304df77a4ee9c5e7
   languageName: node
   linkType: hard
 
@@ -2908,41 +2908,41 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stylex-extend/babel-plugin@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "@stylex-extend/babel-plugin@npm:0.2.2"
+"@stylex-extend/babel-plugin@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@stylex-extend/babel-plugin@npm:0.3.0"
   dependencies:
     "@babel/core": ^7.23.9
     "@stylexjs/shared": ^0.5.1
     stylis: ^4.3.1
-  checksum: f7c64b4c334fabe041b5a0180547f159f5f9694b86b04c05a8f7bc0ae42d032549c5b83fbea8baa5548e978f5a309fd990ed305943b9231fd434d1e5c55379f3
+  checksum: 9fcbdcb5965f8d9ab7ce552260522239defd943da75f4b9aa7f493a7e53bcb2555c7be9aebe7f1160e7715892f376acfaf31895235dfd3153139cc1e51738f1c
   languageName: node
   linkType: hard
 
-"@stylex-extend/core@npm:^0.2.3":
-  version: 0.2.3
-  resolution: "@stylex-extend/core@npm:0.2.3"
+"@stylex-extend/core@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@stylex-extend/core@npm:0.3.0"
   dependencies:
-    "@stylex-extend/shared": 0.2.3
-  checksum: 5eeb379128c179acb07ab665a4f9d25154c4d88f45e0f760e1c1fcec8090e081dfb6a60582b12419eb9a042d110217bd35088ef119c500c023a23623c32414f5
+    "@stylex-extend/shared": 0.3.0
+  checksum: f3dc7edfcba4c25537b68a5a1357f845777128c3aba85b633f3b686de918117819ba362cbe8d869b56854bc537354beac32cd927d74c902ec58ec9bdd7e3d036
   languageName: node
   linkType: hard
 
-"@stylex-extend/react@npm:^0.2.3":
-  version: 0.2.3
-  resolution: "@stylex-extend/react@npm:0.2.3"
+"@stylex-extend/react@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@stylex-extend/react@npm:0.3.0"
   dependencies:
-    "@stylex-extend/shared": 0.2.3
-  checksum: 03027456e48f600f79aa7d5f937c33e66cc047cb54fc142b3ac21a32ed3cff498ca30c826beeb46a859a5cd0c7b386f6017af418968d315806a316359d055d37
+    "@stylex-extend/shared": 0.3.0
+  checksum: 12e2adf460ccb2ce5beeb8f45f688bcb1ec62f55759cbe9c125646d2ba2a5157e637d2e880c703c83c166ab070b65294b705b08c78467c2e6e3cb1626b3c6e0f
   languageName: node
   linkType: hard
 
-"@stylex-extend/shared@npm:0.2.3":
-  version: 0.2.3
-  resolution: "@stylex-extend/shared@npm:0.2.3"
+"@stylex-extend/shared@npm:0.3.0":
+  version: 0.3.0
+  resolution: "@stylex-extend/shared@npm:0.3.0"
   dependencies:
     csstype: ^3.1.3
-  checksum: a02ab8c2089bcdede5152de3aac0f2f3114b04a7d66775a3abdf2ba43cdce29651e816ad4fbc0f043138199b5ce3b9809ef31798c65627f78c61611296befe72
+  checksum: fb39f30bd72a7253f661587aff922b802522a90ca11f8c822c93be0029cef64faa3ddad87ebe9a3b5c3ce550784a1d020dcab02ad7492e5ab73d02435bbddb4b
   languageName: node
   linkType: hard
 
@@ -3159,9 +3159,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-arm64@npm:1.3.102":
-  version: 1.3.102
-  resolution: "@swc/core-darwin-arm64@npm:1.3.102"
+"@swc/core-darwin-arm64@npm:1.4.12":
+  version: 1.4.12
+  resolution: "@swc/core-darwin-arm64@npm:1.4.12"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
@@ -3173,9 +3173,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-x64@npm:1.3.102":
-  version: 1.3.102
-  resolution: "@swc/core-darwin-x64@npm:1.3.102"
+"@swc/core-darwin-x64@npm:1.4.12":
+  version: 1.4.12
+  resolution: "@swc/core-darwin-x64@npm:1.4.12"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
@@ -3187,9 +3187,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm-gnueabihf@npm:1.3.102":
-  version: 1.3.102
-  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.3.102"
+"@swc/core-linux-arm-gnueabihf@npm:1.4.12":
+  version: 1.4.12
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.4.12"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
@@ -3201,9 +3201,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-gnu@npm:1.3.102":
-  version: 1.3.102
-  resolution: "@swc/core-linux-arm64-gnu@npm:1.3.102"
+"@swc/core-linux-arm64-gnu@npm:1.4.12":
+  version: 1.4.12
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.4.12"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
@@ -3215,9 +3215,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-musl@npm:1.3.102":
-  version: 1.3.102
-  resolution: "@swc/core-linux-arm64-musl@npm:1.3.102"
+"@swc/core-linux-arm64-musl@npm:1.4.12":
+  version: 1.4.12
+  resolution: "@swc/core-linux-arm64-musl@npm:1.4.12"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
@@ -3229,9 +3229,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-gnu@npm:1.3.102":
-  version: 1.3.102
-  resolution: "@swc/core-linux-x64-gnu@npm:1.3.102"
+"@swc/core-linux-x64-gnu@npm:1.4.12":
+  version: 1.4.12
+  resolution: "@swc/core-linux-x64-gnu@npm:1.4.12"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
@@ -3243,9 +3243,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-musl@npm:1.3.102":
-  version: 1.3.102
-  resolution: "@swc/core-linux-x64-musl@npm:1.3.102"
+"@swc/core-linux-x64-musl@npm:1.4.12":
+  version: 1.4.12
+  resolution: "@swc/core-linux-x64-musl@npm:1.4.12"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
@@ -3257,9 +3257,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-win32-arm64-msvc@npm:1.3.102":
-  version: 1.3.102
-  resolution: "@swc/core-win32-arm64-msvc@npm:1.3.102"
+"@swc/core-win32-arm64-msvc@npm:1.4.12":
+  version: 1.4.12
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.4.12"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
@@ -3271,9 +3271,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-win32-ia32-msvc@npm:1.3.102":
-  version: 1.3.102
-  resolution: "@swc/core-win32-ia32-msvc@npm:1.3.102"
+"@swc/core-win32-ia32-msvc@npm:1.4.12":
+  version: 1.4.12
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.4.12"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
@@ -3285,9 +3285,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-win32-x64-msvc@npm:1.3.102":
-  version: 1.3.102
-  resolution: "@swc/core-win32-x64-msvc@npm:1.3.102"
+"@swc/core-win32-x64-msvc@npm:1.4.12":
+  version: 1.4.12
+  resolution: "@swc/core-win32-x64-msvc@npm:1.4.12"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -3299,21 +3299,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core@npm:1.3.102":
-  version: 1.3.102
-  resolution: "@swc/core@npm:1.3.102"
+"@swc/core@npm:1.4.12":
+  version: 1.4.12
+  resolution: "@swc/core@npm:1.4.12"
   dependencies:
-    "@swc/core-darwin-arm64": 1.3.102
-    "@swc/core-darwin-x64": 1.3.102
-    "@swc/core-linux-arm-gnueabihf": 1.3.102
-    "@swc/core-linux-arm64-gnu": 1.3.102
-    "@swc/core-linux-arm64-musl": 1.3.102
-    "@swc/core-linux-x64-gnu": 1.3.102
-    "@swc/core-linux-x64-musl": 1.3.102
-    "@swc/core-win32-arm64-msvc": 1.3.102
-    "@swc/core-win32-ia32-msvc": 1.3.102
-    "@swc/core-win32-x64-msvc": 1.3.102
-    "@swc/counter": ^0.1.1
+    "@swc/core-darwin-arm64": 1.4.12
+    "@swc/core-darwin-x64": 1.4.12
+    "@swc/core-linux-arm-gnueabihf": 1.4.12
+    "@swc/core-linux-arm64-gnu": 1.4.12
+    "@swc/core-linux-arm64-musl": 1.4.12
+    "@swc/core-linux-x64-gnu": 1.4.12
+    "@swc/core-linux-x64-musl": 1.4.12
+    "@swc/core-win32-arm64-msvc": 1.4.12
+    "@swc/core-win32-ia32-msvc": 1.4.12
+    "@swc/core-win32-x64-msvc": 1.4.12
+    "@swc/counter": ^0.1.2
     "@swc/types": ^0.1.5
   peerDependencies:
     "@swc/helpers": ^0.5.0
@@ -3341,7 +3341,7 @@ __metadata:
   peerDependenciesMeta:
     "@swc/helpers":
       optional: true
-  checksum: 45c0edb06f87a811e28fb3ed587fbe6b7ca67ff2440fe15666d43729788903a4af61e3b57842aecc0b2b70e3c9981b698d8233746ba94dfb5a19e1c62eea33ad
+  checksum: 53f81173eb3f5a4b9fe651091de485379f4e298d2b24f321dd4c08dfc05976556241b0ec1a91d979c6bdb8c1a9ac7a751b50fb9062d8a3071b7acb3db6e6b7c1
   languageName: node
   linkType: hard
 
@@ -3388,13 +3388,6 @@ __metadata:
     "@swc/helpers":
       optional: true
   checksum: 67b72646a70c7b5967b0e2f3511bab9451285c7c24f107347ff92cea04ae61c76eb6e8c688f04d1bff2541134519f4a625005811be3b0f7670d1dad1167cc1fc
-  languageName: node
-  linkType: hard
-
-"@swc/counter@npm:^0.1.1":
-  version: 0.1.2
-  resolution: "@swc/counter@npm:0.1.2"
-  checksum: 8427c594f1f0cf44b83885e9c8fe1e370c9db44ae96e07a37c117a6260ee97797d0709483efbcc244e77bac578690215f45b23254c4cd8a70fb25ddbb50bf33e
   languageName: node
   linkType: hard
 
@@ -6555,6 +6548,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:16.4.5":
+  version: 16.4.5
+  resolution: "dotenv@npm:16.4.5"
+  checksum: 301a12c3d44fd49888b74eb9ccf9f07a1f5df43f489e7fcb89647a2edcd84c42d6bc349dc8df099cd18f07c35c7b04685c1a4f3e6a6a9e6b30f8d48c15b7f49c
+  languageName: node
+  linkType: hard
+
 "dotenv@npm:^16.0.0, dotenv@npm:^16.3.1":
   version: 16.3.1
   resolution: "dotenv@npm:16.3.1"
@@ -8674,10 +8674,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hono@npm:3.11.12":
-  version: 3.11.12
-  resolution: "hono@npm:3.11.12"
-  checksum: 01e5c86d695eac6d1caeab9ed7c4edc1f5f06452eccde853cd1eef555d05bf3d5d7d6f9683a42cc3f10f78fd27ff88b9c56d0feb8e1831c9b907b8f2d921b1bc
+"hono@npm:4.2.2":
+  version: 4.2.2
+  resolution: "hono@npm:4.2.2"
+  checksum: db6a91f114153d6cf77e996e5d1560979654b7b5862f8d1c02e84385d2bbd68606c6b93b5bbe30c23f869d6e4cf4332ba67325c16a8cac3c313d56bdcfee4d41
   languageName: node
   linkType: hard
 
@@ -13810,21 +13810,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-server-dom-webpack@npm:18.3.0-canary-c5b937576-20231219":
-  version: 18.3.0-canary-c5b937576-20231219
-  resolution: "react-server-dom-webpack@npm:18.3.0-canary-c5b937576-20231219"
-  dependencies:
-    acorn-loose: ^8.3.0
-    loose-envify: ^1.1.0
-    neo-async: ^2.6.1
-  peerDependencies:
-    react: 18.3.0-canary-c5b937576-20231219
-    react-dom: 18.3.0-canary-c5b937576-20231219
-    webpack: ^5.59.0
-  checksum: 6c9de22cc9d499e2ec6ee579aeff8b6d98ca6eff25135e20506379e1781ebae588cdc8d4ec976e9ec4facb9d020e801e4f16fc112254fac156a315f5ad19877b
-  languageName: node
-  linkType: hard
-
 "react-server-dom-webpack@npm:18.3.0-canary-f1039be4a-20240107":
   version: 18.3.0-canary-f1039be4a-20240107
   resolution: "react-server-dom-webpack@npm:18.3.0-canary-f1039be4a-20240107"
@@ -14578,6 +14563,13 @@ __metadata:
   bin:
     rollup: dist/bin/rollup
   checksum: 70917da16960d52d6747bd7b8eb884157a0e9b4966f5f40d788782b92e7eeaf556a98bb477e17ec94ed12a20378403aa2a392b6d2fe425bb2e1bb37d55474714
+  languageName: node
+  linkType: hard
+
+"rsc-html-stream@npm:0.0.3":
+  version: 0.0.3
+  resolution: "rsc-html-stream@npm:0.0.3"
+  checksum: 9c1e4091df5163fe8bf9bd295ee152953019bfd1c40000095339ae7bd207888b04c2c1ce2cf06af6add85c462881f201b93408fd940c685cc5d989602996c8cf
   languageName: node
   linkType: hard
 
@@ -16795,11 +16787,11 @@ __metadata:
   dependencies:
     "@babel/core": ^7.23.9
     "@rollup/pluginutils": ^5.1.0
-    "@stylex-extend/babel-plugin": ^0.2.2
-    "@stylex-extend/core": ^0.2.3
-    "@stylex-extend/react": ^0.2.3
+    "@stylex-extend/babel-plugin": ^0.3.0
+    "@stylex-extend/core": ^0.3.0
+    "@stylex-extend/react": ^0.3.0
     "@stylexjs/babel-plugin": ^0.6.1
-    "@stylexjs/stylex": ^0.5.1
+    "@stylexjs/stylex": ^0.6.1
     "@swc-node/register": ^1.9.0
     "@swc/core": ^1.4.16
     "@types/babel__core": ^7.20.5
@@ -17090,7 +17082,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "waku-demo@workspace:examples/waku-demo"
   dependencies:
-    "@stylexjs/stylex": 0.4.1
+    "@stylexjs/stylex": "workspace:*"
     "@types/react": 18.2.46
     "@types/react-dom": 18.2.18
     react: 18.3.0-canary-c5b937576-20231219
@@ -17099,25 +17091,28 @@ __metadata:
     typescript: 5.3.3
     vite: 5.0.10
     vite-plugin-stylex-dev: "workspace:*"
-    waku: 0.19.0-alpha.2
+    waku: 0.20.2-alpha.0
   languageName: unknown
   linkType: soft
 
-"waku@npm:0.19.0-alpha.2":
-  version: 0.19.0-alpha.2
-  resolution: "waku@npm:0.19.0-alpha.2"
+"waku@npm:0.20.2-alpha.0":
+  version: 0.20.2-alpha.0
+  resolution: "waku@npm:0.20.2-alpha.0"
   dependencies:
-    "@hono/node-server": 1.4.0
-    "@swc/core": 1.3.102
+    "@hono/node-server": 1.9.1
+    "@swc/core": 1.4.12
     "@vitejs/plugin-react": 4.2.1
-    hono: 3.11.12
-    react-server-dom-webpack: 18.3.0-canary-c5b937576-20231219
-    vite: 5.0.10
+    dotenv: 16.4.5
+    hono: 4.2.2
+    rsc-html-stream: 0.0.3
+    vite: 5.2.8
   peerDependencies:
-    react: 18.3.0-canary-c5b937576-20231219
+    react: 19.0.0-beta-4508873393-20240430
+    react-dom: 19.0.0-beta-4508873393-20240430
+    react-server-dom-webpack: 19.0.0-beta-4508873393-20240430
   bin:
-    waku: dist/cli.js
-  checksum: e40055ea2f62b207ade6c8ca193352a9ac8103959420fa228025e9e40cdef8b237cc168ed5c829384a7ec3f8701d60310bfa74fb136b1ab48ae03db8a9bf0666
+    waku: cli.js
+  checksum: bafe20f04a0387efe537e8958df4121bb364a7c17d67df40c5e23cef5fa74ba4255cbb75ec881cd0563d4dbdff059250dba4f0d4cba865235703268777cd91ba
   languageName: node
   linkType: hard
 

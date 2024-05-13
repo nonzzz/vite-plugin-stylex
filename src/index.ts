@@ -20,6 +20,7 @@ function stylex(opts: StylexPluginOptions = {}) {
         : 'prod'
 
       const root = searchForPackageRoot(conf.root)
+      context.root = root
       const { stylexOptions, importSources } = context
       if (!stylexOptions.unstable_moduleResolution) {
         stylexOptions.unstable_moduleResolution = { type: 'commonJS', rootDir: root }
@@ -50,7 +51,7 @@ function stylex(opts: StylexPluginOptions = {}) {
       }
       
       if (typeof context.extendOptions === 'object' && Object.keys(context.extendOptions).length) {
-      // sync stylex extend options
+        // sync stylex extend options
         context.extendOptions.unstable_moduleResolution = stylexOptions.unstable_moduleResolution || {}
         context.extendOptions.classNamePrefix = stylexOptions.classNamePrefix || 'x'
         const fork = conf.plugins as Plugin[]

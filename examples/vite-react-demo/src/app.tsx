@@ -1,8 +1,10 @@
 import { css, html } from 'react-strict-dom'
 import { Fragment } from 'react'
-import { injectGlobalStyle } from '@stylex-extend/core'
+import { injectGlobalStyle, inline } from '@stylex-extend/core'
+import { props } from '@stylexjs/stylex'
 import Button from './button'
 import { colors } from './tokens.stylex'
+import './stylex.css'
 
 injectGlobalStyle({
   p: {
@@ -33,7 +35,7 @@ function ExampleBlock() {
 function App() {
   return (
     <Fragment>
-      <p>Hello Stylex Extend</p>
+      <p {...props(inline({ color: 'green', fontSize: '30px' }))}>Hello Stylex Extend</p>
       <Button>123</Button>
       <ExampleBlock />
     </Fragment>

@@ -49,9 +49,9 @@
     "url": "https://github.com/nonzzz/vite-plugin-stylex.git"
   },
   "devDependencies": {
-    "@stylex-extend/core": "^0.2.3",
-    "@stylex-extend/react": "^0.2.3",
-    "@stylexjs/stylex": "^0.5.1",
+    "@stylex-extend/core": "^0.3.0",
+    "@stylex-extend/react": "^0.3.0",
+    "@stylexjs/stylex": "^0.6.1",
     "@swc-node/register": "^1.9.0",
     "@swc/core": "^1.4.16",
     "@types/babel__core": "^7.20.5",
@@ -81,7 +81,7 @@
   "dependencies": {
     "@babel/core": "^7.23.9",
     "@rollup/pluginutils": "^5.1.0",
-    "@stylex-extend/babel-plugin": "^0.2.2",
+    "@stylex-extend/babel-plugin": "^0.3.0",
     "@stylexjs/babel-plugin": "^0.6.1"
   },
   "resolutions": {
