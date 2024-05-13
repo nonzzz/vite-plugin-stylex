@@ -1,5 +1,5 @@
 import fs from 'fs'
-import type { Plugin, ViteDevServer } from 'vite'
+import type { ModuleNode, Plugin, ViteDevServer } from 'vite'
 import { DEFINE } from '../core'
 import { StateContext } from '../core/state-context'
 import { parseURLRequest } from '../core/manually-order'
@@ -18,15 +18,39 @@ export function stylexDev(plugin: Plugin, context: StateContext, cssPlugins: Plu
   const [plugin_1] = cssPlugins
   const cssId = isManuallyControlCSS ? controlCSSByManually.id : DEFINE.MODULE_CSS
 
-  const transformHook = hijackHook(plugin_1, 'transform', async (fn, c, args) => {
-    const result = await fn.apply(c, args)
+  const reloadModule = async (viteServer: ViteDevServer, id: string) => {
+    const { moduleGraph } = viteServer
+    let modules: Set<ModuleNode> = new Set()
+    if (isManuallyControlCSS) {
+      const files = moduleGraph.getModulesByFile(id)
+      if (files) {
+        modules = files
+      }
+    } else {
+      const module = moduleGraph.getModuleById(id)
+      module && modules.add(module)
+    }
+    for (const m of [...modules]) {
+      await viteServer.reloadModule(m)
+    }
+  }
+
+  hijackHook(plugin_1, 'transform', async (fn, c, args) => {
     const { original } = parseURLRequest(args[1])
+    if (isManuallyControlCSS) {
+      args[0] = fs.readFileSync(controlCSSByManually.id!, 'utf8')
+        .replace(controlCSSByManually.symbol!, context.processCSS())
+    }
+    const result = await fn.apply(c, args)
     if (original === cssId && typeof result === 'object' && result?.code) {
       const module = viteDevServer?.moduleGraph.getModuleById(args[1])
-      module && Object.defineProperty(module, '__stylex__', { value: result.code, configurable: true })
+      if (module) {
+        Object.defineProperty(module, '__stylex__', { value: result.code, configurable: true })
+        console.log(module)
+      }
     }
     return result
-  }, true)
+  })
 
   plugin.resolveId = function (id) {
     if (id === DEFINE.MODULE_ID) return DEFINE.MODULE_CSS 
@@ -43,21 +67,9 @@ export function stylexDev(plugin: Plugin, context: StateContext, cssPlugins: Plu
       if (!context.styleRules.has(id)) return res
       if (!isManuallyControlCSS) {
         res.code = [`import "${DEFINE.MODULE_ID}";`, res.code].join('\n')
-      }
-      if (isManuallyControlCSS) {
-        const pass: string[] = []
-        const ids = new Set(c.getModuleIds())
-        ids.forEach((id) => parseURLRequest(id).original === cssId && pass.push(id))
-        let code = fs.readFileSync(controlCSSByManually.id!, 'utf8')
-        code = code.replace(controlCSSByManually.symbol!, context.processCSS())
-        for (const id of pass) {
-          await transformHook.apply(c, [code, id, args[2]])
-        }
-      }
+      } 
       if (viteDevServer) {
-        const { moduleGraph } = viteDevServer
-        const module = moduleGraph.getModuleById(DEFINE.MODULE_CSS)
-        module && moduleGraph.invalidateModule(module, new Set(), Date.now())
+        await reloadModule(viteDevServer, isManuallyControlCSS ? controlCSSByManually.id! : DEFINE.MODULE_CSS)
       }
     }
     return res

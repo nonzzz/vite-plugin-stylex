@@ -20,6 +20,8 @@ declare module 'vite' {
 
 const VALID_ID_PREFIX = '/@id/'
 
+const NUXT_ID_PREFIX = '/_nuxt/'
+
 const VITE_HMR_APIS = ['createHotContext', 'updateStyle', 'removeStyle']
 
 export function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): NextHandleFunction {
@@ -29,37 +31,12 @@ export function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): 
     ? context.controlCSSByManually.id!
     : DEFINE.MODULE_CSS)
   const pass = context.isManuallyControlCSS ? slash('/' + path.relative(context.root, cssId)) : cssId
-  // path.relative(context.root, context.controlCSSByManually.id!)
-  // const handleModule = (module: ModuleNode, pathName: string, accept = '') => {
-  //   const isAssets = accept.includes('text/css')
-  //   const paths = pathName.split('/')
-  //   paths.pop()
-  //   let base = ''
-  //   const filter = paths.filter(p => !['@id', '@fs'].includes(p))
-  //   base = filter.join('/')
-  //   if (!base) base = '/'
-  //   let code = ''
-  //   // @ts-expect-error
-  //   const css = module.__stylex__ || context.processCSS()
-  //   if (isAssets) {
-  //     code = css
-  //   } else {
-  //     code = [
-  //       `import {createHotContext as __vite__createHotContext} from ${JSON.stringify(path.posix.join(base, '@vite/client'))};`,
-  //       'import.meta.hot = __vite__createHotContext("/@id/@stylex-dev.css");',
-  //       `import {updateStyle as __vite__updateStyle,removeStyle as __vite__removeStyle} from ${JSON.stringify(path.posix.join(base, '@vite/client'))};`,
-  //       'const __vite__id = "@stylex-dev.css"',
-  //       `const __vite__css = ${JSON.stringify(css)}`,
-  //       '__vite__updateStyle(__vite__id, __vite__css)',
-  //       'import.meta.hot.accept()',
-  //       'import.meta.hot.prune(() => __vite__removeStyle(__vite__id))'
-  //     ].join('\n')
-  //   }
-  //   return {
-  //     code,
-  //     isAssets
-  //   }
-  // }
+  const getURLPrefix = (url: string) => {
+    if (url.startsWith(NUXT_ID_PREFIX)) {
+      return NUXT_ID_PREFIX
+    }
+    return '/'
+  }
 
   const pickupModule = (id: string) => {
     if (context.isManuallyControlCSS) {
@@ -76,15 +53,11 @@ export function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): 
   // we define a placeholder to tell vite should hmr the final css code.
   const handleModule = (pathName: string, isAssets: boolean) => {
     const cssModule = pickupModule(cssId)
-    console.log(cssModule.transformResult?.code)
     const css = cssModule?.__stylex__ || context.processCSS()
-    if (isAssets) {
-      return css
-    }
-    // _nuxt/@id/__x00__vite-plugin:stylex.css
+    if (isAssets) return css
     const importSpecifers = VITE_HMR_APIS.map(api => api + ' as __vite__' + api)
     const hmr = [
-      `import { ${importSpecifers.join(',')} } from "/@vite/client";`,
+      `import { ${importSpecifers.join(',')} } from "${getURLPrefix(pathName)}@vite/client";`,
       `import.meta.hot = __vite__createHotContext(${JSON.stringify(pathName)});`,
       `const __vite__id = ${JSON.stringify(cssId)}`,
       `const __vite__css = ${JSON.stringify(css)}`,
@@ -97,12 +70,16 @@ export function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): 
 
   // https://github.com/vitejs/vite/blob/main/packages/vite/src/node/plugins/importAnalysis.ts#L351
   const ensurePass = (url: string) => {
+    const prefix = getURLPrefix(url)
+    if (prefix === NUXT_ID_PREFIX) {
+      url = url.slice(NUXT_ID_PREFIX.length)
+    }
     if (url.startsWith(VALID_ID_PREFIX)) {
       url = url.slice(VALID_ID_PREFIX.length)
     }
     return url === pass
   }
- 
+
   return function stylexDevMiddleware(req, res, next) {
     const protocol = 'encrypted' in (req?.socket ?? {}) ? 'https' : 'http'
     const { host } = req.headers
