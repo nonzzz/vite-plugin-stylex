@@ -2,6 +2,7 @@
 import { create, props } from '@stylexjs/stylex'
 import './init.css'
 import '@stylex-dev.css'
+import { ClientBanner } from './client-banner.js'
 
 const styles = create({
   title: {
@@ -16,6 +17,7 @@ const App = ({ name }: { name: string }) => {
       <title>Waku example</title>
       <h1 {...props(styles.title)}>Hello {name}</h1>
       <h3>This is a server component.</h3>
+      <ClientBanner />
     </div>
   )
 }

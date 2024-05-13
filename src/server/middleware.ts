@@ -30,7 +30,7 @@ export function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): 
   const cssId = slash(context.isManuallyControlCSS
     ? context.controlCSSByManually.id!
     : DEFINE.MODULE_CSS)
-  const pass = context.isManuallyControlCSS ? slash('/' + path.relative(context.root, cssId)) : cssId
+  const pass = '/' + slash(context.isManuallyControlCSS ? path.relative(context.root, cssId) : cssId)
   const getURLPrefix = (url: string) => {
     if (url.startsWith(NUXT_ID_PREFIX)) {
       return NUXT_ID_PREFIX
@@ -76,6 +76,9 @@ export function createStylexDevMiddleware(options: StylexDevMiddlewareOptions): 
     }
     if (url.startsWith(VALID_ID_PREFIX)) {
       url = url.slice(VALID_ID_PREFIX.length)
+    }
+    if (!url.startsWith('/')) {
+      url = '/' + url
     }
     return url === pass
   }

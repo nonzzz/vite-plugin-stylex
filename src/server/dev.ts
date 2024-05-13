@@ -46,7 +46,6 @@ export function stylexDev(plugin: Plugin, context: StateContext, cssPlugins: Plu
       const module = viteDevServer?.moduleGraph.getModuleById(args[1])
       if (module) {
         Object.defineProperty(module, '__stylex__', { value: result.code, configurable: true })
-        console.log(module)
       }
     }
     return result
@@ -77,6 +76,7 @@ export function stylexDev(plugin: Plugin, context: StateContext, cssPlugins: Plu
   
   plugin.configureServer = function (server) {
     viteDevServer = server
+    if (isManuallyControlCSS) return
     // we can't give up this part even is not a good way.
     return () => {
       const middleware = createStylexDevMiddleware({ viteServer: server, context })
