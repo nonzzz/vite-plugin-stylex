@@ -3,7 +3,7 @@ const parserVue = require('vue-eslint-parser')
 const parserTs = require('@typescript-eslint/parser')
 const pluginVue = require('eslint-plugin-vue')
 
-module.exports = nonzzz({ ts: true, jsx: true, react: true, unusedImports: false }, { ignores: ['dist', 'node_modules', 'public', '**/*output.js'] }, {
+module.exports = nonzzz({ ts: true, jsx: true, react: true }, { ignores: ['dist', 'node_modules', 'public', '**/*output.js'] }, {
   plugins: {
     vue: pluginVue
   },

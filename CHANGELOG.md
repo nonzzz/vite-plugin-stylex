@@ -1,3 +1,11 @@
+## 0.7.3
+
+# Patches
+
+- Repsect `manuallyControlCssOrder` option for hmr.
+- Fix hmr can't work with some case.
+
+
 ## 0.7.1
 
 # Patches
