@@ -77,6 +77,11 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
       }
     },
     closeBundle() {
+      if (this.meta.watchMode) {
+        stateContext.styleRules.clear()
+        stateContext.globalStyleRules.clear()
+        return
+      }
       stateContext.destroy()
     },
     api: {
