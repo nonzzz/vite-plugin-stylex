@@ -1,3 +1,9 @@
+## 0.7.4
+
+# Patches
+
+- Fix build watch mode can't  work.
+
 ## 0.7.3
 
 # Patches

@@ -2908,14 +2908,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stylex-extend/babel-plugin@npm:^0.2.2":
-  version: 0.2.3
-  resolution: "@stylex-extend/babel-plugin@npm:0.2.3"
+"@stylex-extend/babel-plugin@npm:0.3.1":
+  version: 0.3.1
+  resolution: "@stylex-extend/babel-plugin@npm:0.3.1"
   dependencies:
     "@babel/core": ^7.23.9
     "@stylexjs/shared": ^0.5.1
     stylis: ^4.3.1
-  checksum: 36a1ee92f0d97a4ff16a1bab28fea4de7c6f02e2b9ed3a0274627bfeebe5d3263efdf5e65a095629721cf49cae9d640b916fa4bbf0ce735bbb404e06bca4d08f
+  checksum: 7cdb3bec55b95a4a7fb52803b7b2e28aa20621a1729ccb74d360b6ff4f0bb8952896b08d74adc8a211c8b4c6aac010d182eded16a8f9b74b8cc43c790d19064e
   languageName: node
   linkType: hard
 
@@ -16787,7 +16787,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.23.9
     "@rollup/pluginutils": ^5.1.0
-    "@stylex-extend/babel-plugin": ^0.2.2
+    "@stylex-extend/babel-plugin": 0.3.1
     "@stylex-extend/core": 0.3.1
     "@stylex-extend/react": 0.3.1
     "@stylexjs/babel-plugin": ^0.6.1
