@@ -34,10 +34,10 @@ export default defineConfig({
 | --------------------------- | --------------------------------------------- | ---------------------------------------------- | ---------------------------------------------------------- |
 | `include`                   | `string \| RegExp \| Array<string \| RegExp>` | `/\.(mjs\|js\|ts\|vue\|jsx\|tsx)(\?.*\|)$/`    | Include all assets matching any of these conditions.       |
 | `exclude`                   | `string \| RegExp \| Array<string \| RegExp>` | `-`                                            | Exclude all assets matching any of these conditions.       |
-| `importSources`             | `string[]`                                    | `['stylex', '@stylexjs/stylex']`               | Only assets bigger than this size are processed (in bytes) |
+| `importSources`             | `string[]`                                    | `['stylex', '@stylexjs/stylex']`               | See stylex document. |
 | `babelConfig`               | `object`                                      | `{}`                                           | Babel config for stylex                                    |
 | `unstable_moduleResolution` | `Record<string,any>`                          | `{ type: 'commonJS', rootDir: process.cwd() }` | See stylex document                                        |
-| `useCSSLayers`              | `boolean`                                     | `default`                                      | See stylex document                                        |
+| `useCSSLayers`              | `boolean`                                     | `false`                                      | See stylex document                                        |
 | `optimizedDeps`             | `Array<string>`                               | `[]`                                           | Work with external stylex files or libraries               |
 | `manuallyControlCssOrder`   | `boolean \|object`                            | `false`                                        | control css order by manually                              |
 | `enableStylexExtend`        | `boolean \| StylexExtendOptions`              | `false`                                        | see `@stylex-extend/babel-plugin` docss                    |
