@@ -70,7 +70,7 @@ function stylex(opts: StylexPluginOptions = {}) {
  */
 const stylexPlugin = stylex
 
-export { stylex, stylexPlugin, stylex as edfault }
+export { stylex, stylexPlugin, stylex as default }
 
 export type { StylexPluginOptions } from './interface'
 

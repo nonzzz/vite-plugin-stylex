@@ -56,7 +56,6 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
       if (!stateContext.skipResolve(code, id)) return
       const { original } = parseURLRequest(id)
       code = await stateContext.rewriteImportStmts(code, original)
-      console.log(code)
       const result = await transformAsync(code, {
         babelrc: false,
         filename: original,

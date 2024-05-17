@@ -17092,6 +17092,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "vite-watch-demo@workspace:examples/watch"
   dependencies:
+    lightningcss: ^1.24.1
     vite: ^5.0.6
     vite-plugin-stylex-dev: "workspace:*"
   languageName: unknown

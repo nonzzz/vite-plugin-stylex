@@ -1,9 +1,13 @@
 import { create, props } from '@stylexjs/stylex'
 import { Text } from './text'
+import './stylex.css'
 
 const styles = create({
   text: {
-    color: 'green'
+    color: {
+      default: 'red',
+      '@media (--mx-1)': 'green'
+    }
   }
 })
 
