@@ -16904,6 +16904,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"vite-watch-demo@workspace:examples/watch":
+  version: 0.0.0-use.local
+  resolution: "vite-watch-demo@workspace:examples/watch"
+  dependencies:
+    vite: ^5.0.6
+    vite-plugin-stylex-dev: "workspace:*"
+  languageName: unknown
+  linkType: soft
+
 "vite@npm:^5.2.9":
   version: 5.2.9
   resolution: "vite@npm:5.2.9"

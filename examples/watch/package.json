@@ -1,0 +1,10 @@
+{
+    "name": "vite-watch-demo",
+    "devDependencies": {
+        "vite": "^5.0.6",
+        "vite-plugin-stylex-dev": "workspace:*"
+    },
+    "scripts": {
+        "build": "vite build --watch"
+    }
+}
