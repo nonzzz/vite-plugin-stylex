@@ -1,0 +1,11 @@
+{
+    "name": "vite-watch-demo",
+    "devDependencies": {
+        "lightningcss": "^1.24.1",
+        "vite": "^5.0.6",
+        "vite-plugin-stylex-dev": "workspace:*"
+    },
+    "scripts": {
+        "build": "vite build --watch"
+    }
+}

@@ -14,6 +14,7 @@ function stylex(opts: StylexPluginOptions = {}) {
   const viteCSSPlugins: Plugin[] = []
   const plugin = <Plugin>{ 
     ...hooks,
+    api,
     configResolved(conf) {
       context.env = conf.command === 'serve'
         ? 'dev'
@@ -69,7 +70,7 @@ function stylex(opts: StylexPluginOptions = {}) {
  */
 const stylexPlugin = stylex
 
-export { stylex, stylexPlugin, stylex as edfault }
+export { stylex, stylexPlugin, stylex as default }
 
 export type { StylexPluginOptions } from './interface'
 

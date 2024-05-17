@@ -44,19 +44,23 @@ export function stylexProd(plugin: Plugin, context: StateContext, cssPlugins: Pl
 
   const postHook = hijackHook(plugin_2, 'transform', (fn, c, args) => fn.apply(c, args), true)
 
-  const transform = hijackHook(plugin, 'transform', async (fn, c, args) => {
+  plugin.transform = hijackHook(plugin, 'transform', async (fn, c, args) => {
     const result = await fn.apply(c, args)
     if (typeof result === 'object' && result && context.styleRules.has(args[1])) {
       const pass = []
       const css = isManuallyControlCSS ? fs.readFileSync(controlCSSByManually.id!, 'utf8') : ''
       if (isManuallyControlCSS) {
-        const ids = new Set(c.getModuleIds())
         const { base, transformOnly } = lazy.ids
-        if (ids.has(transformOnly)) {
-          pass.push(transformOnly)
-        }
-        if (ids.has(base)) {
+        if (c.meta.watchMode) {
           pass.push(base)
+        } else {
+          const ids = new Set(c.getModuleIds())
+          if (ids.has(transformOnly)) {
+            pass.push(transformOnly)
+          }
+          if (ids.has(base)) {
+            pass.push(base)
+          }
         }
       } else {
         pass.push(DEFINE.MODULE_CSS)
@@ -69,6 +73,4 @@ export function stylexProd(plugin: Plugin, context: StateContext, cssPlugins: Pl
     }
     return result
   }, true)
-
-  plugin.transform = transform
 }
