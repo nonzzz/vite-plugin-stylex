@@ -1,3 +1,10 @@
+## 0.7.5
+
+# Patches
+
+- Fix exports error.
+- Fix cleanup of styleRules in library watch mode. 
+
 ## 0.7.4
 
 # Patches
