@@ -1,0 +1,10 @@
+{
+    "name": "rollup-watch",
+    "scripts": {
+        "build": "rollup --config rollup.config.mjs --watch"
+    },
+    "devDependencies": {
+        "rollup": "^4.17.2",
+        "vite-plugin-stylex-dev": "workspace:*"
+    }
+}

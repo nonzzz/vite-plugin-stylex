@@ -14,6 +14,7 @@ function stylex(opts: StylexPluginOptions = {}) {
   const viteCSSPlugins: Plugin[] = []
   const plugin = <Plugin>{ 
     ...hooks,
+    api,
     configResolved(conf) {
       context.env = conf.command === 'serve'
         ? 'dev'

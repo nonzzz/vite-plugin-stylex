@@ -41,10 +41,14 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
   return {
     name: 'stylex',
     buildStart() {
-      stateContext.styleRules.clear()
+      if (!this.meta.watchMode) {
+        stateContext.styleRules.clear()
+      }
     },
     shouldTransformCachedModule({ id, meta }) {
-      stateContext.styleRules.set(id, meta.stylexRules)
+      if ('stylex' in meta && meta.stylex) {
+        stateContext.styleRules.set(id, meta.stylex)
+      }
       return false
     },
     async transform(code, id) {
@@ -52,6 +56,7 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
       if (!stateContext.skipResolve(code, id)) return
       const { original } = parseURLRequest(id)
       code = await stateContext.rewriteImportStmts(code, original)
+      console.log(code)
       const result = await transformAsync(code, {
         babelrc: false,
         filename: original,
@@ -77,11 +82,7 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
       }
     },
     closeBundle() {
-      if (this.meta.watchMode) {
-        stateContext.styleRules.clear()
-        stateContext.globalStyleRules.clear()
-        return
-      }
+      if (this.meta.watchMode) return
       stateContext.destroy()
     },
     api: {
