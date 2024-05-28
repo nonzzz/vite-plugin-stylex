@@ -21,7 +21,7 @@ $ yarn add vite-plugin-stylex-dev -D
 
 ```ts
 import { defineConfig } from "vite";
-import { stylexPlugin } from "vite-plugin-stylex-dev";
+import { stylex } from "vite-plugin-stylex-dev";
 
 export default defineConfig({
   plugins: [stylex()],
