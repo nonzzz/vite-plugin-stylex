@@ -12,7 +12,7 @@ function stylex(opts: StylexPluginOptions = {}) {
   const { api, ...hooks } = _stylex(opts)
   const context = api.stateContext as StateContext
   const viteCSSPlugins: Plugin[] = []
-  const plugin = <Plugin>{ 
+  const plugin = <Plugin> {
     ...hooks,
     api,
     configResolved(conf) {
@@ -37,8 +37,11 @@ function stylex(opts: StylexPluginOptions = {}) {
       viteCSSPlugins.push(...conf.plugins.filter(p => DEFINE.HIJACK_PLUGINS.includes(p.name)))
       viteCSSPlugins.sort((a, b) => a.name.length < b.name.length ? -1 : 1)
 
-      const optimizedDeps = unique([...(Array.isArray(opts.optimizedDeps) ? opts.optimizedDeps : []),
-        ...importSources.map(s => typeof s === 'object' ? s.from : s), ...WELL_KNOW_LIBRARIES])
+      const optimizedDeps = unique([
+        ...(Array.isArray(opts.optimizedDeps) ? opts.optimizedDeps : []),
+        ...(importSources as any).map((s: any) => typeof s === 'object' ? s.from : s),
+        ...WELL_KNOW_LIBRARIES
+      ])
       if (context.env === 'dev') {
         conf.optimizeDeps.exclude = [...optimizedDeps, ...(conf.optimizeDeps.exclude ?? [])]
         stylexDev(plugin, context, viteCSSPlugins)
@@ -50,7 +53,7 @@ function stylex(opts: StylexPluginOptions = {}) {
           ? [...conf.ssr.noExternal, ...optimizedDeps]
           : conf.ssr.noExternal
       }
-      
+
       if (typeof context.extendOptions === 'object' && Object.keys(context.extendOptions).length) {
         // sync stylex extend options
         context.extendOptions.unstable_moduleResolution = stylexOptions.unstable_moduleResolution || {}
@@ -70,7 +73,7 @@ function stylex(opts: StylexPluginOptions = {}) {
  */
 const stylexPlugin = stylex
 
-export { stylex, stylexPlugin, stylex as default }
+export { stylex, stylex as default, stylexPlugin }
 
 export type { StylexPluginOptions } from './interface'
 

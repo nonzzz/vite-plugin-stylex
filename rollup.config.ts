@@ -17,12 +17,13 @@ export default defineConfig([
       { file: 'dist/index.js', format: 'cjs', exports: 'named' }
     ],
     plugins: [
-      swc(), minify({ mangle: true, module: true, compress: true, sourceMap: true })
+      swc(),
+      minify({ mangle: true, module: true, compress: true, sourceMap: true })
     ]
   },
   {
     input: 'src/index.ts',
     output: { file: 'dist/index.d.ts' },
-    plugins: [dts()] 
+    plugins: [dts({})]
   }
 ])

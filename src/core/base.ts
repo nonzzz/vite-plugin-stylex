@@ -60,12 +60,15 @@ export function stylex(opts: StylexPluginOptions = {}): Plugin {
         babelrc: false,
         filename: original,
         presets: babelConfig?.presets || [],
-        plugins: [...(babelConfig?.plugins || []), stylexBabelPlugin.withOptions({
-          ...stateContext.stylexOptions,
-          dev: stateContext.env === 'dev',
-          importSources,
-          runtimeInjection: false
-        })]
+        plugins: [
+          ...(babelConfig?.plugins || []),
+          stylexBabelPlugin.withOptions({
+            ...stateContext.stylexOptions,
+            dev: stateContext.env === 'dev',
+            importSources: stateContext.importSources as any,
+            runtimeInjection: false
+          })
+        ]
       })
       if (!result) return
       if (result.metadata && 'stylex' in result.metadata) {
