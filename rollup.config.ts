@@ -1,7 +1,7 @@
 import { builtinModules, createRequire } from 'module'
 import { defineConfig } from 'rollup'
 import dts from 'rollup-plugin-dts'
-import { minify, swc } from 'rollup-plugin-swc3'
+import { swc } from 'rollup-plugin-swc3'
 
 const _require = createRequire(import.meta.url)
 const { dependencies } = _require('./package.json')
@@ -17,8 +17,8 @@ export default defineConfig([
       { file: 'dist/index.js', format: 'cjs', exports: 'named' }
     ],
     plugins: [
-      swc(),
-      minify({ mangle: true, module: true, compress: true, sourceMap: true })
+      swc()
+      // minify({ mangle: true, module: true, compress: true, sourceMap: true })
     ]
   },
   {

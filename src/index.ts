@@ -1,80 +1,92 @@
-import path from 'path'
 import type { Plugin } from 'vite'
-import { DEFINE, stylex as _stylex } from './core'
-import { stylexDev, stylexProd } from './server'
-import { StateContext } from './core/state-context'
+import type { Plugin as RollupPlugin } from 'rollup'
+import type { Rule } from '@stylexjs/babel-plugin'
 import type { StylexPluginOptions } from './interface'
-import { searchForPackageRoot, slash, unique } from './shared'
-import { WELL_KNOW_LIBRARIES } from './core/approve'
-import { stylexExtend } from './core/extend'
+import { createPluginContext, parseRequest } from './context'
+import { transformStylex } from './transformer'
+import { createForViteServer } from './plugins'
 
-function stylex(opts: StylexPluginOptions = {}) {
-  const { api, ...hooks } = _stylex(opts)
-  const context = api.stateContext as StateContext
-  const viteCSSPlugins: Plugin[] = []
+type BabelConfig = StylexPluginOptions['babelConfig']
+
+export type StylexPluginAPI = {
+  ctx: ReturnType<typeof createPluginContext>
+}
+
+const defaultBabelConfig = <BabelConfig> {
+  plugins: [],
+  presets: []
+}
+
+const defaultOptions = <StylexPluginOptions> {
+  useCSSLayers: false,
+  babelConfig: defaultBabelConfig,
+  importSources: ['stylex', '@stylexjs/stylex'],
+  include: /\.(mjs|js|ts|vue|jsx|tsx)(\?.*|)$/,
+  optimizedDeps: [],
+  manuallyControlCssOrder: false,
+  enableStylexExtend: false
+}
+
+function stylex(options: StylexPluginOptions = {}) {
+  options = { ...defaultOptions, ...options }
+
+  const c = createPluginContext(options)
+
   const plugin = <Plugin> {
-    ...hooks,
-    api,
-    configResolved(conf) {
-      context.env = conf.command === 'serve'
-        ? 'dev'
-        : 'prod'
-
-      const root = searchForPackageRoot(conf.root)
-      context.root = root
-      const { stylexOptions, importSources } = context
-      if (!stylexOptions.unstable_moduleResolution) {
-        stylexOptions.unstable_moduleResolution = { type: 'commonJS', rootDir: root }
+    name: 'stylex',
+    api: {
+      ctx: c
+    },
+    buildStart() {
+      if (this.meta.watchMode) {
+        c.styleRules.clear()
       }
-
-      if (context.controlCSSByManually.id) {
-        context.controlCSSByManually.id = path.isAbsolute(context.controlCSSByManually.id)
-          ? context.controlCSSByManually.id
-          : path.join(root, context.controlCSSByManually.id)
-        context.controlCSSByManually.id = slash(context.controlCSSByManually.id)
+    },
+    shouldTransformCachedModule({ id, meta }) {
+      if ('stylex' in meta && meta.stylex) {
+        c.styleRules.set(id, meta.stylex)
       }
-
-      viteCSSPlugins.push(...conf.plugins.filter(p => DEFINE.HIJACK_PLUGINS.includes(p.name)))
-      viteCSSPlugins.sort((a, b) => a.name.length < b.name.length ? -1 : 1)
-
-      const optimizedDeps = unique([
-        ...(Array.isArray(opts.optimizedDeps) ? opts.optimizedDeps : []),
-        ...(importSources as any).map((s: any) => typeof s === 'object' ? s.from : s),
-        ...WELL_KNOW_LIBRARIES
-      ])
-      if (context.env === 'dev') {
-        conf.optimizeDeps.exclude = [...optimizedDeps, ...(conf.optimizeDeps.exclude ?? [])]
-        stylexDev(plugin, context, viteCSSPlugins)
-      } else {
-        stylexProd(plugin, context, viteCSSPlugins)
+      return false
+    },
+    async transform(code, id) {
+      c.setupRollupPluginContext(this)
+      if (!c.skipResolve(code, id)) return
+      const { original } = parseRequest(id)
+      code = await c.rewriteImportStmts(code, original)
+      const result = await transformStylex(code, { filename: original, env: c.env, options: c.stylexOptions })
+      if (!result || !result.code) return
+      if (result.metadata && 'stylex' in result.metadata) {
+        const rules = result.metadata.stylex as Rule[]
+        if (rules.length) c.styleRules.set(id, rules)
       }
-      if (conf.appType === 'custom') {
-        conf.ssr.noExternal = Array.isArray(conf.ssr.noExternal)
-          ? [...conf.ssr.noExternal, ...optimizedDeps]
-          : conf.ssr.noExternal
-      }
-
-      if (typeof context.extendOptions === 'object' && Object.keys(context.extendOptions).length) {
-        // sync stylex extend options
-        context.extendOptions.unstable_moduleResolution = stylexOptions.unstable_moduleResolution || {}
-        context.extendOptions.classNamePrefix = stylexOptions.classNamePrefix || 'x'
-        const fork = conf.plugins as Plugin[]
-        const pos = fork.findIndex(p => p.name === 'stylex')
-        fork.splice(pos, 0, stylexExtend(context))
-      }
+      return { code: result.code, map: result.map, meta: result.metadata }
     }
   }
+
+  const server = createForViteServer(c)
+  server(plugin)
 
   return plugin
 }
 
-/**
- * @deprecated will be remove in next major version
- */
-const stylexPlugin = stylex
+stylex.getPluginAPI = (plugins: readonly Plugin[]): StylexPluginAPI => plugins.find(p => p.name === 'stylex')?.api
 
-export { stylex, stylex as default, stylexPlugin }
+export type AdapterStylexPluginOptions = StylexPluginOptions & {
+  filename: string
+}
 
-export type { StylexPluginOptions } from './interface'
+function adapter(plugin: typeof stylex, options: AdapterStylexPluginOptions): RollupPlugin {
+  const { filename = 'stylex.css', ...rest } = options
+  const { api, ...hooks } = plugin(rest)
+  const { ctx } = api as StylexPluginAPI
+  return {
+    ...hooks,
+    generateBundle() {
+      this.emitFile({ fileName: filename, source: ctx.produceCSS(), type: 'asset' })
+    }
+  }
+}
 
-export { adapter } from './core'
+export { adapter, stylex, stylex as default }
+
+export type { StylexOptions, StylexPluginOptions } from './interface'

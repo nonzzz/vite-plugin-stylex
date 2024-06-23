@@ -1,4 +1,5 @@
 import { create, props } from '@stylexjs/stylex'
+import 'virtual:stylex.css'
 
 const styles = create({
   link: {
