@@ -47,9 +47,9 @@ export function stylexBuild(plugin: Plugin, ctx: PluginContext, cssPlugins: Plug
             const { original } = parseRequest(entry)
             css = ctx.isManuallyControlCSS ? fs.readFileSync(original, 'utf8').replace(ctx.controlCSSByManually.symbol!, css) : css
           }
-          const res = await cssHooks.get('vite:css')?.apply({} as any, [css, entry])
+          const res = await cssHooks.get('vite:css')?.apply(ctx.rollupPluginContext!, [css, entry])
           // @ts-expect-error
-          await cssHooks.get('vite:css-post')?.apply({} as any, [res?.code || '', entry])
+          await cssHooks.get('vite:css-post')?.apply(ctx.rollupPluginContext!, [res?.code || '', entry])
           chunk.modules[entry] = { code: null, originalLength: 0, removedExports: [], renderedExports: [], renderedLength: 0 }
         }
         return null

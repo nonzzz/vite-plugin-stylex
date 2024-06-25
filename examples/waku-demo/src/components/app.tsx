@@ -1,7 +1,6 @@
 /* eslint-disable stylistic/jsx-one-expression-per-line */
 import { create, props } from '@stylexjs/stylex'
 import './init.css'
-import '@stylex-dev.css'
 import { ClientBanner } from './client-banner.js'
 
 const styles = create({

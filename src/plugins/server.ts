@@ -1,4 +1,5 @@
-import type { Plugin, Update, ViteDevServer } from 'vite'
+import fs from 'fs'
+import type { HookHandler, Plugin, Update, ViteDevServer } from 'vite'
 import { PluginContext, parseRequest } from '../context'
 import { hash, hijackHook } from '../shared'
 
@@ -46,7 +47,8 @@ if (!import.meta.url.include('?')) {
 
 hmr = `\nif (import.meta.hot) { ${hmr} }`
 
-export function stylexServer(plugin: Plugin, ctx: PluginContext) {
+export function stylexServer(plugin: Plugin, ctx: PluginContext, cssPlugins: Plugin[]) {
+  const cssHooks = new Map<'vite:css' | 'vite:css-post' | string & ({}), HookHandler<Plugin['transform']>>()
   let viteDevServer: ViteDevServer | null = null
   let lastServerTime = Date.now()
   const modules = new Set<string>()
@@ -63,8 +65,6 @@ export function stylexServer(plugin: Plugin, ctx: PluginContext) {
     lastServerTime = Date.now()
     return { css, hash: hash(css) }
   }
-
-  // const onInvalidate
 
   const update = (ids: Set<string>) => {
     if (!viteDevServer) return
@@ -119,6 +119,10 @@ export function stylexServer(plugin: Plugin, ctx: PluginContext) {
           code: `${css}__stylex_hash_${hash}{--:'';}`,
           map: { mappings: '' }
         }
+      } else {
+        if (ctx.isManuallyControlCSS && original === ctx.controlCSSByManually.id) {
+          entries.add(id)
+        }
       }
     },
     configureServer(server) {
@@ -145,10 +149,19 @@ export function stylexServer(plugin: Plugin, ctx: PluginContext) {
       modules.add(original)
       invalidate(new Set([...entries, ...modules]))
     }
-    if (original.match(CONSTANTS.RESOLVED_ID_REG)) {
-      const code = args[0] + hmr
-      return { code, map: { mappings: '' } }
+
+    if (ctx.isManuallyControlCSS && ctx.controlCSSByManually.id === original) {
+      //  FIXME
+      // Find a better way pipe to vite's internal processer
+      if (!cssHooks.size) {
+        cssPlugins.forEach((p) => {
+          cssHooks.set(p.name, hijackHook(p, 'transform', (fn, c, args) => fn.apply(c, args), true))
+        })
+      }
+      const css = fs.readFileSync(ctx.controlCSSByManually.id, 'utf8').replace(ctx.controlCSSByManually.symbol!, generateCSS().css)
+      return cssHooks.get('vite:css')?.apply(c, [css, id, args[2]])
     }
+
     return result
   })
 }

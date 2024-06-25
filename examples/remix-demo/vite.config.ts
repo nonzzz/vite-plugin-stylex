@@ -17,11 +17,15 @@ export default defineConfig({
       }
     }
   },
-  plugins: [remix(), tsconfigPaths({ root: __dirname }), stylex(
-    {
-      manuallyControlCssOrder: {
-        id: path.join(__dirname, 'app/styles/index.css')
+  plugins: [
+    remix(),
+    tsconfigPaths({ root: __dirname }),
+    stylex(
+      {
+        manuallyControlCssOrder: {
+          id: path.join(__dirname, 'app/styles/index.css')
+        }
       }
-    }
-  )]
+    )
+  ]
 })

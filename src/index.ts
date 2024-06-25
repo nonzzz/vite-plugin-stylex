@@ -1,9 +1,10 @@
 import type { Plugin } from 'vite'
 import type { Plugin as RollupPlugin } from 'rollup'
 import type { Rule } from '@stylexjs/babel-plugin'
+import type { StylexExtendTransformObject } from '@stylex-extend/babel-plugin'
 import type { StylexPluginOptions } from './interface'
-import { createPluginContext, parseRequest } from './context'
-import { transformStylex } from './transformer'
+import { PluginContext, createPluginContext, parseRequest, scanImportStmt } from './context'
+import { transformStylex, transformStylexExtend } from './transformer'
 import { createForViteServer } from './plugins'
 
 type BabelConfig = StylexPluginOptions['babelConfig']
@@ -27,6 +28,47 @@ const defaultOptions = <StylexPluginOptions> {
   enableStylexExtend: false
 }
 
+function extend(ctx: PluginContext) {
+  let extend: StylexExtendTransformObject | null = null
+  return <Plugin> {
+    name: 'stylex-extend',
+    buildStart() {
+      ctx.globalStyles = {}
+      if (!extend) {
+        import('@stylex-extend/babel-plugin').then(mod => extend = mod.default)
+      }
+    },
+    transform: {
+      order: 'pre',
+      async handler(code, id) {
+        if (id.includes('/node_modules/')) return
+        if (!ctx.filter(id)) return
+        ctx.setupRollupPluginContext(this)
+        const { original } = parseRequest(id)
+        const parserOptions: string[] = []
+        if (!original.endsWith('.ts')) {
+          parserOptions.push('jsx')
+        }
+        if (/\.tsx?$/.test(original)) {
+          parserOptions.push('typescript')
+        }
+        const stmts = scanImportStmt(code, id, { plugins: parserOptions })
+        code = await ctx.rewriteImportStmts(code, original, stmts)
+        const result = await transformStylexExtend(code, {
+          filename: original,
+          options: { parserOptions, opts: ctx.stylexExtendOptions, extend: extend! },
+          env: ctx.env
+        })
+        if (!result || !result.code) return
+        if (result.metadata && 'globalStyle' in result.metadata) {
+          ctx.globalStyles[original] = result.metadata.globalStyle as string
+        }
+        return { code: result.code, map: result.map }
+      }
+    }
+  }
+}
+
 function stylex(options: StylexPluginOptions = {}) {
   options = { ...defaultOptions, ...options }
 
@@ -44,7 +86,8 @@ function stylex(options: StylexPluginOptions = {}) {
     },
     shouldTransformCachedModule({ id, meta }) {
       if ('stylex' in meta && meta.stylex) {
-        c.styleRules.set(id, meta.stylex)
+        const { original } = parseRequest(id)
+        c.styleRules.set(original, meta.stylex)
       }
       return false
     },
@@ -57,13 +100,13 @@ function stylex(options: StylexPluginOptions = {}) {
       if (!result || !result.code) return
       if (result.metadata && 'stylex' in result.metadata) {
         const rules = result.metadata.stylex as Rule[]
-        if (rules.length) c.styleRules.set(id, rules)
+        if (rules.length) c.styleRules.set(original, rules)
       }
       return { code: result.code, map: result.map, meta: result.metadata }
     }
   }
 
-  const server = createForViteServer(c)
+  const server = createForViteServer(c, extend)
   server(plugin)
 
   return plugin

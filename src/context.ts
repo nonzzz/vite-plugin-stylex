@@ -3,6 +3,7 @@ import stylexBabelPlugin from '@stylexjs/babel-plugin'
 import type { Rule } from '@stylexjs/babel-plugin'
 import { createFilter } from '@rollup/pluginutils'
 import { parseSync } from '@babel/core'
+import type { StylexExtendBabelPluginOptions } from '@stylex-extend/babel-plugin'
 import type { ManuallyControlCssOrder, RollupPluginContext, StylexPluginOptions } from './interface'
 import { error, slash } from './shared'
 import { CONSTANTS } from './plugins/server'
@@ -21,6 +22,11 @@ export interface ParserOptions {
 export const defaultControlCSSOptions = {
   id: 'stylex.css',
   symbol: '@stylex-dev;'
+}
+
+export const defaultStylexExtendOptions = {
+  enableInjectGlobalStyle: true,
+  stylex: { helper: 'props' }
 }
 
 function handleRelativePath(from: string, to: string) {
@@ -52,6 +58,7 @@ export function parseRequest(id: string) {
 
 export class PluginContext {
   styleRules: Map<string, Rule[]>
+  globalStyles: Record<string, string>
   #pluginOptions: StylexPluginOptions
   root: string
   #env: Env
@@ -62,6 +69,7 @@ export class PluginContext {
     this.#rollupPluginContext = null
     this.#pluginOptions = options
     this.#stmts = []
+    this.globalStyles = {}
     this.root = process.cwd()
     this.#env = process.env.NODE_ENV === 'production' ? 'build' : 'server'
   }
@@ -70,8 +78,16 @@ export class PluginContext {
     return createFilter(this.#pluginOptions.include, this.#pluginOptions.exclude)
   }
 
-  get stylexExtendOptions() {
-    return this.#pluginOptions.enableStylexExtend
+  get stylexExtendOptions(): StylexExtendBabelPluginOptions {
+    const { enableStylexExtend } = this.#pluginOptions
+    if (typeof enableStylexExtend === 'boolean' && enableStylexExtend) {
+      return { ...defaultStylexExtendOptions }
+    }
+    if (typeof enableStylexExtend === 'object') {
+      if (!enableStylexExtend) return { ...defaultStylexExtendOptions }
+      return { ...defaultStylexExtendOptions, ...enableStylexExtend }
+    }
+    return {}
   }
 
   get stylexOptions() {
@@ -101,9 +117,9 @@ export class PluginContext {
   // Alough stylex/stylex-extend support translate path aliases to relative path
   // But it only supports tsconfig-style aliases. Now we have parsed the import stmt
   // So why not transform them to relative path directly?
-  async rewriteImportStmts(code: string, id: string) {
+  async rewriteImportStmts(code: string, id: string, stmts = this.#stmts) {
     let byteOffset = 0
-    for (const stmt of this.#stmts) {
+    for (const stmt of stmts) {
       if (!stmt.n) continue
       if (path.isAbsolute(stmt.n) || stmt.n[0] === '.') continue
       if (!this.importSources.some(i => stmt.n!.includes(typeof i === 'string' ? i : i.from))) continue
@@ -127,12 +143,14 @@ export class PluginContext {
   produceCSS() {
     if (!this.styleRules.size) return ''
     const { useCSSLayers } = this.stylexOptions
-    return stylexBabelPlugin.processStylexRules([...this.styleRules.values()].flat().filter(Boolean), useCSSLayers!)
+    return stylexBabelPlugin.processStylexRules([...this.styleRules.values()].flat().filter(Boolean), useCSSLayers!) + '\n' +
+      Object.values(this.globalStyles).join('\n')
   }
 
   destory() {
     this.styleRules.clear()
     this.root = process.cwd()
+    this.globalStyles = {}
     this.#rollupPluginContext = null
   }
 

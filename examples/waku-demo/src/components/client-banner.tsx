@@ -16,8 +16,6 @@ const styles = create({
 export const ClientBanner = () => {
   useEffect(() => {
     console.log('ClientBanner rendered!')
-  })
-  return (
-    <div {...props(styles.root)}>This is a client banner by StyleX CSS</div>
-  )
+  }, [])
+  return <div {...props(styles.root)}>This is a client banner by StyleX CSS</div>
 }
