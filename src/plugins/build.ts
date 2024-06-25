@@ -31,6 +31,7 @@ export function stylexBuild(plugin: Plugin, ctx: PluginContext, cssPlugins: Plug
       }
     },
     renderChunk: {
+      // By declare order we can get better performance for generate styles.
       async handler(_, chunk) {
         if (!cssHooks.size) {
           cssPlugins.forEach((p) => {
