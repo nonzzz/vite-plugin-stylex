@@ -1,8 +1,15 @@
 import { transformAsync } from '@babel/core'
 import stylexBabelPlugin from '@stylexjs/babel-plugin'
-import type { StylexExtendBabelPluginOptions, StylexExtendTransformObject } from '@stylex-extend/babel-plugin'
+import _stylexExtendBabelPlugin from '@stylex-extend/babel-plugin'
+import type { StylexExtendBabelPluginOptions } from '@stylex-extend/babel-plugin'
 import type { StylexPluginOptions } from './interface'
 import type { Env } from './context'
+
+function interopDefault(m: any) {
+  return m.default || m
+}
+
+const stylexExtendBabelPlugin = interopDefault(_stylexExtendBabelPlugin)
 
 export interface TransformOptions<T> {
   filename: string
@@ -11,7 +18,7 @@ export interface TransformOptions<T> {
 }
 
 export interface TransformExtendOptions {
-  extend: StylexExtendTransformObject
+  // extend: StylexExtendTransformObject
   opts: StylexExtendBabelPluginOptions
   parserOptions: any[]
 }
@@ -35,9 +42,9 @@ export async function transformStylex(code: string, { filename, options, env }: 
 }
 
 export function transformStylexExtend(code: string, { filename, options }: TransformOptions<TransformExtendOptions>) {
-  const { extend, opts, parserOptions } = options
+  const { opts, parserOptions } = options
   return transformAsync(code, {
-    plugins: [extend.withOptions(opts)],
+    plugins: [stylexExtendBabelPlugin.withOptions(opts)],
     parserOpts: { plugins: parserOptions },
     babelrc: false,
     filename

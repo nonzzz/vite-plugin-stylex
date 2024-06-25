@@ -34,7 +34,7 @@ export function createForViteServer(ctx: PluginContext, extend: (c: PluginContex
       const pos = conf.plugins.findIndex(p => p.name === 'stylex')
       // @ts-expect-error
       conf.plugins.splice(pos, 0, extend(ctx))
+      ctx.env === 'build' ? stylexBuild(plugin, ctx, cssPlugins) : stylexServer(plugin, ctx, cssPlugins, conf)
     }
-    ctx.env === 'build' ? stylexBuild(plugin, ctx, cssPlugins) : stylexServer(plugin, ctx, cssPlugins)
   }
 }

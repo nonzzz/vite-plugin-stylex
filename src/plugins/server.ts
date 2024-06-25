@@ -1,5 +1,5 @@
 import fs from 'fs'
-import type { HookHandler, Plugin, Update, ViteDevServer } from 'vite'
+import type { HookHandler, Plugin, ResolvedConfig, Update, ViteDevServer } from 'vite'
 import { PluginContext, parseRequest } from '../context'
 import { hash, hijackHook } from '../shared'
 
@@ -47,7 +47,7 @@ if (!import.meta.url.include('?')) {
 
 hmr = `\nif (import.meta.hot) { ${hmr} }`
 
-export function stylexServer(plugin: Plugin, ctx: PluginContext, cssPlugins: Plugin[]) {
+export function stylexServer(plugin: Plugin, ctx: PluginContext, cssPlugins: Plugin[], conf: ResolvedConfig) {
   const cssHooks = new Map<'vite:css' | 'vite:css-post' | string & ({}), HookHandler<Plugin['transform']>>()
   let viteDevServer: ViteDevServer | null = null
   let lastServerTime = Date.now()
@@ -133,12 +133,9 @@ export function stylexServer(plugin: Plugin, ctx: PluginContext, cssPlugins: Plu
     }
   }
 
-  hijackHook(plugin, 'configResolved', (fn, _, c) => {
-    const pos = c[0].plugins.findIndex(p => p.name === 'stylex')
-    // @ts-expect-error
-    c[0].plugins.splice(pos, 0, schedule)
-    fn(...c)
-  })
+  const pos = conf.plugins.findIndex(p => p.name === 'stylex')
+  // @ts-expect-error
+  conf.plugins.splice(pos, 0, schedule)
   //
   hijackHook(plugin, 'transform', async (fn, c, args) => {
     const id = args[1]
@@ -162,6 +159,10 @@ export function stylexServer(plugin: Plugin, ctx: PluginContext, cssPlugins: Plu
       return cssHooks.get('vite:css')?.apply(c, [css, id, args[2]])
     }
 
+    if (original.match(CONSTANTS.RESOLVED_ID_REG) && args[0].includes('import.meta.hot')) {
+      const code = args[0] + hmr
+      return { code, map: { mappings: '' } }
+    }
     return result
   })
 }

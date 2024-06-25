@@ -107,6 +107,7 @@ export class PluginContext {
     let pass = false
     for (const stmt of this.#stmts) {
       const { n } = stmt
+      // @ts-ignore
       if (n && this.importSources.some(i => !path.isAbsolute(n) && n.includes(typeof i === 'string' ? i : i.from))) {
         pass = true
       }
@@ -122,6 +123,7 @@ export class PluginContext {
     for (const stmt of stmts) {
       if (!stmt.n) continue
       if (path.isAbsolute(stmt.n) || stmt.n[0] === '.') continue
+      // @ts-ignore
       if (!this.importSources.some(i => stmt.n!.includes(typeof i === 'string' ? i : i.from))) continue
       const resolved = await this.#rollupPluginContext!.resolve(stmt.n, id)
       if (resolved && resolved.id && !resolved.external) {

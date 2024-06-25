@@ -1,7 +1,6 @@
 import type { Plugin } from 'vite'
 import type { Plugin as RollupPlugin } from 'rollup'
 import type { Rule } from '@stylexjs/babel-plugin'
-import type { StylexExtendTransformObject } from '@stylex-extend/babel-plugin'
 import type { StylexPluginOptions } from './interface'
 import { PluginContext, createPluginContext, parseRequest, scanImportStmt } from './context'
 import { transformStylex, transformStylexExtend } from './transformer'
@@ -29,14 +28,10 @@ const defaultOptions = <StylexPluginOptions> {
 }
 
 function extend(ctx: PluginContext) {
-  let extend: StylexExtendTransformObject | null = null
   return <Plugin> {
     name: 'stylex-extend',
     buildStart() {
       ctx.globalStyles = {}
-      if (!extend) {
-        import('@stylex-extend/babel-plugin').then(mod => extend = mod.default)
-      }
     },
     transform: {
       order: 'pre',
@@ -56,7 +51,7 @@ function extend(ctx: PluginContext) {
         code = await ctx.rewriteImportStmts(code, original, stmts)
         const result = await transformStylexExtend(code, {
           filename: original,
-          options: { parserOptions, opts: ctx.stylexExtendOptions, extend: extend! },
+          options: { parserOptions, opts: ctx.stylexExtendOptions },
           env: ctx.env
         })
         if (!result || !result.code) return
