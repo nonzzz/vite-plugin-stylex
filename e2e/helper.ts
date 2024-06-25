@@ -6,7 +6,7 @@ export async function createChromeBrowser(port: number) {
   const page = await browser.newPage()
   const localURL = `http://localhost:${port}`
   page.goto(localURL)
-  return { page }
+  return { page, browser }
 }
 
 // I don't know why vite don't accept port 0
@@ -27,6 +27,6 @@ export async function createE2EServer(taskName: string) {
     root: path.join(__dirname, 'fixtures', taskName)
   })
   await server.listen()
-  const { page } = await createChromeBrowser(server.config.server.port!)
-  return { page, server }
+  const { page, browser } = await createChromeBrowser(server.config.server.port!)
+  return { page, server, browser }
 }

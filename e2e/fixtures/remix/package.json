@@ -1,0 +1,28 @@
+{
+  "name": "remix-e2e",
+  "private": true,
+  "sideEffects": false,
+  "scripts": {
+    "dev": "vite dev"
+  },
+  "dependencies": {
+    "@remix-run/node": "^2.8.1",
+    "@remix-run/react": "^2.8.1",
+    "@remix-run/serve": "^2.8.1",
+    "@stylexjs/stylex": "^0.3.0",
+    "isbot": "^3.6.8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^2.8.1",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "lightningcss": "^1.24.1",
+    "typescript": "^5.1.6",
+    "vite": "^5.0.6",
+    "@stylex-extend/react": "^0.3.2",
+    "@stylex-extend/core": "^0.3.2",
+    "vite-plugin-stylex-dev": "workspace:*"
+  }
+}

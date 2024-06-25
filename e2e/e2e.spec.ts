@@ -3,28 +3,30 @@ import type { ExecutionContext } from 'ava'
 import { Page } from 'playwright'
 import { createE2EServer } from './helper'
 
+function getColorText(s: string) {
+  return s.match(/--color:(\w*);?/)?.[1]
+}
+
 async function switchColor(t: ExecutionContext<unknown>, page: Page) {
   await page.waitForSelector('button')
   const elementHandle = await page.$('button')
   const textHandle = await page.$('#text')
-  const windowHandle = await page.evaluateHandle(() => Promise.resolve(window))
-  const red = await page.evaluate(([window, el]) => {
-    return (window as Window).getComputedStyle(el as Element).color
-  }, [windowHandle, textHandle])
-  t.is(red, 'rgb(255, 0, 0)')
+  const red = await textHandle?.getAttribute('style')!
+  t.is(getColorText(red!), 'red')
   await elementHandle!.click()
-  const blue = await page.evaluate(([window, el]) => {
-    return (window as Window).getComputedStyle(el as Element).color
-  }, [windowHandle, textHandle])
-  t.is(blue, 'rgb(0, 0, 255)')
+  await page.waitForTimeout(1000)
+  const blue = await textHandle?.getAttribute('style')!
+  t.is(getColorText(blue!), 'blue')
 }
 
-test('vite-react-spa', async (t) => {
-  const { page } = await createE2EServer('vite-react-spa')
+test.serial('vite-react-spa', async (t) => {
+  const { page, browser } = await createE2EServer('vite-react-spa')
   await switchColor(t, page)
+  await browser.close()
 })
 
-// test('vite-vue-spa', async (t) => {
-//   const { page } = await createE2EServer('vite-vue-spa')
-//   await switchColor(t, page)
-// })
+test.serial('remix', async (t) => {
+  const { page, browser } = await createE2EServer('remix')
+  await switchColor(t, page)
+  await browser.close()
+})
