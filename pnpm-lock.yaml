@@ -6,7 +6,7 @@ settings:
 
 overrides:
   sharp: 0.32.6
-  vite: ^5.2.9
+  vite: ^5.3.1
   '@stylexjs/stylex': ^0.6.1
 
 importers:
@@ -102,7 +102,7 @@ importers:
         specifier: ^5.5.2
         version: 5.5.2
       vite:
-        specifier: ^5.2.9
+        specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
       vite-plugin-inspect:
         specifier: ^0.8.4
@@ -113,6 +113,51 @@ importers:
       vue-eslint-parser:
         specifier: ^9.3.2
         version: 9.4.3(eslint@8.57.0)
+
+  e2e/fixtures/vite-react-spa:
+    devDependencies:
+      '@stylex-extend/react':
+        specifier: ^0.3.2
+        version: 0.3.2
+      '@types/react':
+        specifier: ^18.2.45
+        version: 18.2.46
+      '@types/react-dom':
+        specifier: ^18.2.18
+        version: 18.2.18
+      '@vitejs/plugin-react':
+        specifier: ^4.2.1
+        version: 4.3.1(vite@5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1))
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      vite:
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
+      vite-plugin-stylex-dev:
+        specifier: workspace:*
+        version: link:../../..
+
+  e2e/fixtures/vite-vue-spa:
+    dependencies:
+      '@vitejs/plugin-vue':
+        specifier: 4.5.1
+        version: 4.5.1(vite@5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1))(vue@3.4.30(typescript@5.5.2))
+      '@vitejs/plugin-vue-jsx':
+        specifier: ^4.0.0
+        version: 4.0.0(vite@5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1))(vue@3.4.30(typescript@5.5.2))
+      vite:
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
+      vite-plugin-stylex-dev:
+        specifier: workspace:*
+        version: link:../../..
+      vue:
+        specifier: ^3.3.10
+        version: 3.4.30(typescript@5.5.2)
 
   examples/astro-demo:
     dependencies:
@@ -147,7 +192,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
       vite:
-        specifier: ^5.2.9
+        specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
       vite-plugin-stylex-dev:
         specifier: workspace:*
@@ -192,7 +237,7 @@ importers:
         specifier: ^1.3.0
         version: 1.5.7(@types/node@20.14.8)(lightningcss@1.25.1)(rollup@4.18.0)(terser@5.31.1)
       vite:
-        specifier: ^5.2.9
+        specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
       vite-plugin-stylex-dev:
         specifier: workspace:*
@@ -241,7 +286,7 @@ importers:
         specifier: ^5.1.6
         version: 5.3.3
       vite:
-        specifier: ^5.2.9
+        specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
       vite-plugin-stylex-dev:
         specifier: workspace:*
@@ -274,7 +319,7 @@ importers:
         specifier: ^4.2.7
         version: 4.2.18
       vite:
-        specifier: ^5.2.9
+        specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
       vite-plugin-stylex-dev:
         specifier: workspace:*
@@ -286,7 +331,7 @@ importers:
         specifier: ^5.0.4
         version: 5.0.5(vite@5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1))(vue@3.4.30(typescript@5.5.2))
       vite:
-        specifier: ^5.2.9
+        specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
       vite-plugin-stylex-dev:
         specifier: workspace:*
@@ -320,7 +365,7 @@ importers:
         specifier: ^0.0.4
         version: 0.0.4(react-dom@18.3.1(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.2.46)(encoding@0.1.13)(react@18.3.1))(react@18.3.1)
       vite:
-        specifier: ^5.2.9
+        specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
       vite-plugin-stylex-dev:
         specifier: workspace:*
@@ -357,7 +402,7 @@ importers:
         specifier: 5.3.3
         version: 5.3.3
       vite:
-        specifier: ^5.2.9
+        specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
       vite-plugin-stylex-dev:
         specifier: workspace:*
@@ -369,7 +414,7 @@ importers:
         specifier: ^1.24.1
         version: 1.25.1
       vite:
-        specifier: ^5.2.9
+        specifier: ^5.3.1
         version: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
       vite-plugin-stylex-dev:
         specifier: workspace:*
@@ -1870,7 +1915,7 @@ packages:
   '@nuxt/devtools-kit@1.3.6':
     resolution: {integrity: sha512-FM0s9CrTxwvaMcakWZc7oGqzSj4GPalcY3PmyZhollMyR2dqBB1n0ZfnTdLm8KUSgc7jdFR6DuG7PfQwAm06tQ==}
     peerDependencies:
-      vite: ^5.2.9
+      vite: ^5.3.1
 
   '@nuxt/devtools-wizard@1.3.6':
     resolution: {integrity: sha512-M6kEkYCC0EsvvNKXXeVSSBDrUMHNkCyq+E8o+8LEPDQvhZ5pOsB6hpxt0DR+2sOE18zAcHSWeSurnwbW7ac4hA==}
@@ -1880,7 +1925,7 @@ packages:
     resolution: {integrity: sha512-M3sRQDKG/iK+iQmvIl9vfEgc/Nv1D6S7GFvhmq1s7ZCSkrmZPGWLxRkIAJOwZk+WnvjYUHkN6XCcoi9a1EWmrA==}
     hasBin: true
     peerDependencies:
-      vite: ^5.2.9
+      vite: ^5.3.1
 
   '@nuxt/kit@3.12.2':
     resolution: {integrity: sha512-5kOqEzfc3FsAncjK2je7vuq4/QsR5ypViTnop52mlFLf0Ku1NMCrWCSWYowAh4P0yqTACMAZYa+HdRZHscU84g==}
@@ -2245,7 +2290,7 @@ packages:
       '@remix-run/react': ^2.9.2
       '@remix-run/serve': ^2.9.2
       typescript: ^5.1.0
-      vite: ^5.2.9
+      vite: ^5.3.1
       wrangler: ^3.28.2
     peerDependenciesMeta:
       '@remix-run/serve':
@@ -2539,8 +2584,14 @@ packages:
   '@stylex-extend/react@0.3.1':
     resolution: {integrity: sha512-A8ndbT4mehaf3zBvjI3/BUgb6hJmsU0TYyrmJqZBxpbvtE/u4BcxaV8Hga/4ejXr9vHnior7g9urNdXmMyP54Q==}
 
+  '@stylex-extend/react@0.3.2':
+    resolution: {integrity: sha512-fPcxNoDQ3TJVK6A1KtLnDjgNsd3tdJFEbyv9Ph6jv8WFzZr2mQ91qevfzunQ0uHh5YduhRRs76m9NdrsMBczgg==}
+
   '@stylex-extend/shared@0.3.1':
     resolution: {integrity: sha512-E6zRQvjvbIfaevA6JDdHAx0IFkpqfCkw4n9H9oenN013ipu5pfAkzcVXr3hQisLf6kpyw/KBnzgdmzdGbRgynw==}
+
+  '@stylex-extend/shared@0.3.2':
+    resolution: {integrity: sha512-O5z88E2hlX+lk0wVCcgSfUVJw8iytJqyRmYpN/OS+sP52Sm1VCGbNhpkKiZcONs2ffsGwvF2BFSf/IlXjP6Jfw==}
 
   '@stylexjs/babel-plugin@0.6.1':
     resolution: {integrity: sha512-LIYXvaaq2ZCs80G53SxdpbZ3sY0dJcTClEcSWN33QL8y8UL64OKiK17iIoYVnUIhBN/5P6QIDm+UwwB3D9EiVw==}
@@ -2585,7 +2636,7 @@ packages:
     peerDependencies:
       '@sveltejs/vite-plugin-svelte': ^3.0.0
       svelte: ^4.0.0 || ^5.0.0-next.0
-      vite: ^5.2.9
+      vite: ^5.3.1
 
   '@sveltejs/vite-plugin-svelte-inspector@2.1.0':
     resolution: {integrity: sha512-9QX28IymvBlSCqsCll5t0kQVxipsfhFFL+L2t3nTWfXnddYwxBuAEtTtlaVQpRz9c37BhJjltSeY4AJSC03SSg==}
@@ -2593,14 +2644,14 @@ packages:
     peerDependencies:
       '@sveltejs/vite-plugin-svelte': ^3.0.0
       svelte: ^4.0.0 || ^5.0.0-next.0
-      vite: ^5.2.9
+      vite: ^5.3.1
 
   '@sveltejs/vite-plugin-svelte@3.1.1':
     resolution: {integrity: sha512-rimpFEAboBBHIlzISibg94iP09k/KYdHgVhJlcsTfn7KMBhc70jFX/GRWkRdFCc2fdnk+4+Bdfej23cMDnJS6A==}
     engines: {node: ^18.0.0 || >=20}
     peerDependencies:
       svelte: ^4.0.0 || ^5.0.0-next.0
-      vite: ^5.2.9
+      vite: ^5.3.1
 
   '@swc-node/core@1.13.1':
     resolution: {integrity: sha512-emB5l2nZsXjUEAuusqjYvWnQMLWZp6K039Mv8aq5SX1rsNM/N7DNhw1i4/DX7AyzNZ0tT+ASWyTvqEURldp5HA==}
@@ -3038,26 +3089,33 @@ packages:
     resolution: {integrity: sha512-oojO9IDc4nCUUi8qIR11KoQm0XFFLIwsRBwHRR4d/88IWghn1y6ckz/bJ8GHDCsYEJee8mDzqtJxh15/cisJNQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
-      vite: ^5.2.9
+      vite: ^5.3.1
 
   '@vitejs/plugin-react@4.3.1':
     resolution: {integrity: sha512-m/V2syj5CuVnaxcUJOQRel/Wr31FFXRFlnOoq1TVtkCxsY5veGMTEmpWHndrhB2U8ScHtCQB1e+4hWYExQc6Lg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
-      vite: ^5.2.9
+      vite: ^5.3.1
 
   '@vitejs/plugin-vue-jsx@4.0.0':
     resolution: {integrity: sha512-A+6wL2AdQhDsLsDnY+2v4rRDI1HLJGIMc97a8FURO9tqKsH5QvjWrzsa5DH3NlZsM742W2wODl2fF+bfcTWtXw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
-      vite: ^5.2.9
+      vite: ^5.3.1
       vue: ^3.0.0
+
+  '@vitejs/plugin-vue@4.5.1':
+    resolution: {integrity: sha512-DaUzYFr+2UGDG7VSSdShKa9sIWYBa1LL8KC0MNOf2H5LjcTPjob0x8LbkqXWmAtbANJCkpiQTj66UVcQkN2s3g==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    peerDependencies:
+      vite: ^5.3.1
+      vue: ^3.2.25
 
   '@vitejs/plugin-vue@5.0.5':
     resolution: {integrity: sha512-LOjm7XeIimLBZyzinBQ6OSm3UBCNVCpLkxGC0oWmm2YPzVZoxMsdvNVimLTBzpAnR9hl/yn1SHGuRfe6/Td9rQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
-      vite: ^5.2.9
+      vite: ^5.3.1
       vue: ^3.2.25
 
   '@vue-macros/common@1.10.4':
@@ -8604,7 +8662,7 @@ packages:
   vite-hot-client@0.2.3:
     resolution: {integrity: sha512-rOGAV7rUlUHX89fP2p2v0A2WWvV3QMX2UYq0fRqsWSvFvev4atHWqjwGoKaZT1VTKyLGk533ecu3eyd0o59CAg==}
     peerDependencies:
-      vite: ^5.2.9
+      vite: ^5.3.1
 
   vite-imagetools@6.2.9:
     resolution: {integrity: sha512-C4ZYhgj2vAj43/TpZ06XlDNP0p/7LIeYbgUYr+xG44nM++4HGX6YZBKAYpiBNgiCFUTJ6eXkRppWBrfPMevgmg==}
@@ -8624,7 +8682,7 @@ packages:
       optionator: ^0.9.1
       stylelint: '>=13'
       typescript: '*'
-      vite: ^5.2.9
+      vite: ^5.3.1
       vls: '*'
       vti: '*'
       vue-tsc: '>=1.3.9'
@@ -8651,7 +8709,7 @@ packages:
     engines: {node: '>=14'}
     peerDependencies:
       '@nuxt/kit': '*'
-      vite: ^5.2.9
+      vite: ^5.3.1
     peerDependenciesMeta:
       '@nuxt/kit':
         optional: true
@@ -8659,12 +8717,12 @@ packages:
   vite-plugin-vue-inspector@5.1.2:
     resolution: {integrity: sha512-M+yH2LlQtVNzJAljQM+61CqDXBvHim8dU5ImGaQuwlo13tMDHue5D7IC20YwDJuWDODiYc/cZBUYspVlyPf2vQ==}
     peerDependencies:
-      vite: ^5.2.9
+      vite: ^5.3.1
 
   vite-tsconfig-paths@4.3.2:
     resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
     peerDependencies:
-      vite: ^5.2.9
+      vite: ^5.3.1
     peerDependenciesMeta:
       vite:
         optional: true
@@ -8700,7 +8758,7 @@ packages:
   vitefu@0.2.5:
     resolution: {integrity: sha512-SgHtMLoqaeeGnd2evZ849ZbACbnwQCIwRH57t18FxcXoZop0uQu0uzlIhJBlF/eWVzuce0sHeqPcDo+evVcg8Q==}
     peerDependencies:
-      vite: ^5.2.9
+      vite: ^5.3.1
     peerDependenciesMeta:
       vite:
         optional: true
@@ -11833,7 +11891,15 @@ snapshots:
     dependencies:
       '@stylex-extend/shared': 0.3.1
 
+  '@stylex-extend/react@0.3.2':
+    dependencies:
+      '@stylex-extend/shared': 0.3.2
+
   '@stylex-extend/shared@0.3.1':
+    dependencies:
+      csstype: 3.1.3
+
+  '@stylex-extend/shared@0.3.2':
     dependencies:
       csstype: 3.1.3
 
@@ -12502,6 +12568,11 @@ snapshots:
       vue: 3.4.30(typescript@5.5.2)
     transitivePeerDependencies:
       - supports-color
+
+  '@vitejs/plugin-vue@4.5.1(vite@5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1))(vue@3.4.30(typescript@5.5.2))':
+    dependencies:
+      vite: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
+      vue: 3.4.30(typescript@5.5.2)
 
   '@vitejs/plugin-vue@5.0.5(vite@5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1))(vue@3.4.30(typescript@5.5.2))':
     dependencies:

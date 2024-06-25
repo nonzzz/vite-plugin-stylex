@@ -1,5 +1,6 @@
 import type { Plugin } from 'vite'
 import type { Plugin as RollupPlugin } from 'rollup'
+import { createFilter } from '@rollup/pluginutils'
 import type { Rule } from '@stylexjs/babel-plugin'
 import type { StylexPluginOptions } from './interface'
 import { PluginContext, createPluginContext, parseRequest, scanImportStmt } from './context'
@@ -28,6 +29,7 @@ const defaultOptions = <StylexPluginOptions> {
 }
 
 function extend(ctx: PluginContext) {
+  const filter = createFilter(/\.[jt]sx?$/, [])
   return <Plugin> {
     name: 'stylex-extend',
     buildStart() {
@@ -37,7 +39,7 @@ function extend(ctx: PluginContext) {
       order: 'pre',
       async handler(code, id) {
         if (id.includes('/node_modules/')) return
-        if (!ctx.filter(id)) return
+        if (!filter(id)) return
         ctx.setupRollupPluginContext(this)
         const { original } = parseRequest(id)
         const parserOptions: string[] = []

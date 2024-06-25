@@ -84,7 +84,7 @@ export class PluginContext {
       return { ...defaultStylexExtendOptions }
     }
     if (typeof enableStylexExtend === 'object') {
-      if (!enableStylexExtend) return { ...defaultStylexExtendOptions }
+      if (!enableStylexExtend) return {}
       return { ...defaultStylexExtendOptions, ...enableStylexExtend }
     }
     return {}

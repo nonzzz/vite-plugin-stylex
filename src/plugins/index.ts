@@ -32,8 +32,10 @@ export function createForViteServer(ctx: PluginContext, extend: (c: PluginContex
       cssPlugins.push(...conf.plugins.filter(p => CONSTANTS.CSS_PLUGINS.includes(p.name)))
       cssPlugins.sort((a, b) => a.name.length < b.name.length ? -1 : 1)
       const pos = conf.plugins.findIndex(p => p.name === 'stylex')
-      // @ts-expect-error
-      conf.plugins.splice(pos, 0, extend(ctx))
+      if (Object.keys(ctx.stylexExtendOptions).length) {
+        // @ts-expect-error
+        conf.plugins.splice(pos, 0, extend(ctx))
+      }
       ctx.env === 'build' ? stylexBuild(plugin, ctx, cssPlugins) : stylexServer(plugin, ctx, cssPlugins, conf)
     }
   }

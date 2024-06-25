@@ -86,7 +86,7 @@
   },
   "resolutions": {
     "sharp": "0.32.6",
-    "vite": "^5.2.9",
+    "vite": "^5.3.1",
     "@stylexjs/stylex": "^0.6.1"
   },
   "ava": {

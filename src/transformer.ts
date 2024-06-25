@@ -18,7 +18,6 @@ export interface TransformOptions<T> {
 }
 
 export interface TransformExtendOptions {
-  // extend: StylexExtendTransformObject
   opts: StylexExtendBabelPluginOptions
   parserOptions: any[]
 }
