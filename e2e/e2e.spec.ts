@@ -30,3 +30,15 @@ test.serial('remix', async (t) => {
   await switchColor(t, page)
   await browser.close()
 })
+
+// test.serial('waku', async (t) => {
+//   const { page, browser } = await createE2EServer('waku')
+//   await switchColor(t, page)
+//   await browser.close()
+// })
+
+// test.serial('qwik', async (t) => {
+//   const { page, browser } = await createE2EServer('qwik')
+//   await switchColor(t, page)
+//   await browser.close()
+// })

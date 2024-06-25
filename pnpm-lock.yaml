@@ -7,7 +7,7 @@ settings:
 overrides:
   sharp: 0.32.6
   vite: ^5.3.1
-  '@stylexjs/stylex': ^0.6.1
+  '@stylexjs/stylex': ^0.7.0
 
 importers:
 
@@ -20,11 +20,11 @@ importers:
         specifier: ^5.1.0
         version: 5.1.0(rollup@4.18.0)
       '@stylex-extend/babel-plugin':
-        specifier: 0.3.1
-        version: 0.3.1
+        specifier: 0.3.3
+        version: 0.3.3
       '@stylexjs/babel-plugin':
-        specifier: ^0.6.1
-        version: 0.6.1
+        specifier: ^0.7.0
+        version: 0.7.0
     devDependencies:
       '@stylex-extend/core':
         specifier: 0.3.1
@@ -33,8 +33,8 @@ importers:
         specifier: 0.3.1
         version: 0.3.1
       '@stylexjs/stylex':
-        specifier: ^0.6.1
-        version: 0.6.1
+        specifier: ^0.7.0
+        version: 0.7.0
       '@swc-node/register':
         specifier: ^1.9.0
         version: 1.9.2(@swc/core@1.6.5)(@swc/types@0.1.9)(typescript@5.5.2)
@@ -114,6 +114,30 @@ importers:
         specifier: ^9.3.2
         version: 9.4.3(eslint@8.57.0)
 
+  e2e/fixtures/qwik:
+    devDependencies:
+      '@builder.io/qwik':
+        specifier: ^1.5.7
+        version: 1.5.7(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)(undici@6.19.2)
+      '@builder.io/qwik-city':
+        specifier: ^1.5.7
+        version: 1.5.7(@types/node@20.14.8)(lightningcss@1.25.1)(rollup@4.18.0)(terser@5.31.1)
+      '@stylex-extend/core':
+        specifier: ^0.3.3
+        version: 0.3.3
+      '@stylex-extend/react':
+        specifier: ^0.3.3
+        version: 0.3.3
+      vite:
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
+      vite-plugin-stylex-dev:
+        specifier: workspace:*
+        version: link:../../..
+      vite-tsconfig-paths:
+        specifier: ^4.2.1
+        version: 4.3.2(typescript@5.5.2)(vite@5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1))
+
   e2e/fixtures/remix:
     dependencies:
       '@remix-run/node':
@@ -126,8 +150,8 @@ importers:
         specifier: ^2.8.1
         version: 2.9.2(typescript@5.5.2)
       '@stylexjs/stylex':
-        specifier: ^0.6.1
-        version: 0.6.1
+        specifier: ^0.7.0
+        version: 0.7.0
       isbot:
         specifier: ^3.6.8
         version: 3.8.0
@@ -142,11 +166,11 @@ importers:
         specifier: ^2.8.1
         version: 2.9.2(@remix-run/react@2.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.2))(@remix-run/serve@2.9.2(typescript@5.5.2))(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)(typescript@5.5.2)(vite@5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1))
       '@stylex-extend/core':
-        specifier: ^0.3.2
-        version: 0.3.2
+        specifier: ^0.3.3
+        version: 0.3.3
       '@stylex-extend/react':
-        specifier: ^0.3.2
-        version: 0.3.2
+        specifier: ^0.3.3
+        version: 0.3.3
       '@types/react':
         specifier: ^18.2.20
         version: 18.2.46
@@ -169,8 +193,8 @@ importers:
   e2e/fixtures/vite-react-spa:
     devDependencies:
       '@stylex-extend/react':
-        specifier: ^0.3.2
-        version: 0.3.2
+        specifier: ^0.3.3
+        version: 0.3.3
       '@types/react':
         specifier: ^18.2.45
         version: 18.2.46
@@ -210,6 +234,43 @@ importers:
       vue:
         specifier: ^3.3.10
         version: 3.4.30(typescript@5.5.2)
+
+  e2e/fixtures/waku:
+    dependencies:
+      '@stylexjs/stylex':
+        specifier: ^0.7.0
+        version: 0.7.0
+      react:
+        specifier: 18.3.0-canary-c5b937576-20231219
+        version: 18.3.0-canary-c5b937576-20231219
+      react-dom:
+        specifier: 18.3.0-canary-c5b937576-20231219
+        version: 18.3.0-canary-c5b937576-20231219(react@18.3.0-canary-c5b937576-20231219)
+      react-server-dom-webpack:
+        specifier: 18.3.0-canary-f1039be4a-20240107
+        version: 18.3.0-canary-f1039be4a-20240107(react-dom@18.3.0-canary-c5b937576-20231219(react@18.3.0-canary-c5b937576-20231219))(react@18.3.0-canary-c5b937576-20231219)(webpack@5.92.1(@swc/core@1.6.5))
+      waku:
+        specifier: 0.20.2
+        version: 0.20.2(@types/node@20.14.8)(lightningcss@1.25.1)(react-dom@18.3.0-canary-c5b937576-20231219(react@18.3.0-canary-c5b937576-20231219))(react-server-dom-webpack@18.3.0-canary-f1039be4a-20240107(react-dom@18.3.0-canary-c5b937576-20231219(react@18.3.0-canary-c5b937576-20231219))(react@18.3.0-canary-c5b937576-20231219)(webpack@5.92.1(@swc/core@1.6.5)))(react@18.3.0-canary-c5b937576-20231219)(terser@5.31.1)
+    devDependencies:
+      '@stylex-extend/react':
+        specifier: ^0.3.3
+        version: 0.3.3
+      '@types/react':
+        specifier: 18.2.46
+        version: 18.2.46
+      '@types/react-dom':
+        specifier: 18.2.18
+        version: 18.2.18
+      typescript:
+        specifier: 5.3.3
+        version: 5.3.3
+      vite:
+        specifier: ^5.3.1
+        version: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
+      vite-plugin-stylex-dev:
+        specifier: workspace:*
+        version: link:../../..
 
   examples/astro-demo:
     dependencies:
@@ -256,8 +317,8 @@ importers:
         specifier: ^3.8.2
         version: 3.12.2(magicast@0.3.4)(rollup@4.18.0)
       '@stylexjs/stylex':
-        specifier: ^0.6.1
-        version: 0.6.1
+        specifier: ^0.7.0
+        version: 0.7.0
       '@unhead/shared':
         specifier: ^1.8.9
         version: 1.9.14
@@ -310,8 +371,8 @@ importers:
         specifier: ^2.8.1
         version: 2.9.2(typescript@5.3.3)
       '@stylexjs/stylex':
-        specifier: ^0.6.1
-        version: 0.6.1
+        specifier: ^0.7.0
+        version: 0.7.0
       isbot:
         specifier: ^3.6.8
         version: 3.8.0
@@ -429,8 +490,8 @@ importers:
   examples/waku-demo:
     dependencies:
       '@stylexjs/stylex':
-        specifier: ^0.6.1
-        version: 0.6.1
+        specifier: ^0.7.0
+        version: 0.7.0
       react:
         specifier: 18.3.0-canary-c5b937576-20231219
         version: 18.3.0-canary-c5b937576-20231219
@@ -1786,6 +1847,10 @@ packages:
   '@hapi/topo@5.1.0':
     resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
 
+  '@hono/node-server@1.11.1':
+    resolution: {integrity: sha512-GW1Iomhmm1o4Z+X57xGby8A35Cu9UZLL7pSMdqDBkD99U5cywff8F+8hLk5aBTzNubnsFAvWQ/fZjNwPsEn9lA==}
+    engines: {node: '>=18.14.1'}
+
   '@hono/node-server@1.9.1':
     resolution: {integrity: sha512-XBru0xbtRlTZJyAiFJLn7XDKbCVXBaRhVQAQhB9TwND2gwj8jf9SDWIj/7VxVtNAjURJf7Ofcz58DRA6DPYiWA==}
     engines: {node: '>=18.14.1'}
@@ -2627,29 +2692,29 @@ packages:
   '@sinonjs/fake-timers@10.3.0':
     resolution: {integrity: sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==}
 
-  '@stylex-extend/babel-plugin@0.3.1':
-    resolution: {integrity: sha512-gQJe6vCntSvPYp4JC+6MrQJwt4xWbU/kx29iLk489aUrD0BKHDVH4aPJVscpFLflLKMDE0SNdfPcMW9j+F8XkQ==}
+  '@stylex-extend/babel-plugin@0.3.3':
+    resolution: {integrity: sha512-QoKK/1VwCvEtuFmmrZp9UKJ1/hFq0aMFRe4L4IsULNUmDWjLMBsQe3UXs/JhHjCo1EZ/rc88eCXjAAU0KWf1ZA==}
 
   '@stylex-extend/core@0.3.1':
     resolution: {integrity: sha512-69fjfjkx5ezapZYiYUX53s+bOAp9b2A6OdKTmQYR0Fn1OZuF2RthsfUmrwrVwtSw1UITy1ayQC7Rz9kkHuu6ww==}
 
-  '@stylex-extend/core@0.3.2':
-    resolution: {integrity: sha512-CWdNsxCikzUluml9oDKyu/1bQpI6LGqWr2KYrS3VumApw29UbcqdWuF0gR5majya0HILvHr3d6TSHKInodK34w==}
+  '@stylex-extend/core@0.3.3':
+    resolution: {integrity: sha512-6d2TBijWt2wQQGGzR0V9ZPwiNKLmEeKcZJWb3sCT49t9EQ5kgJzIhLOL41Bqt/FXvw8gLlP5cKXPIY16BWWyoQ==}
 
   '@stylex-extend/react@0.3.1':
     resolution: {integrity: sha512-A8ndbT4mehaf3zBvjI3/BUgb6hJmsU0TYyrmJqZBxpbvtE/u4BcxaV8Hga/4ejXr9vHnior7g9urNdXmMyP54Q==}
 
-  '@stylex-extend/react@0.3.2':
-    resolution: {integrity: sha512-fPcxNoDQ3TJVK6A1KtLnDjgNsd3tdJFEbyv9Ph6jv8WFzZr2mQ91qevfzunQ0uHh5YduhRRs76m9NdrsMBczgg==}
+  '@stylex-extend/react@0.3.3':
+    resolution: {integrity: sha512-OGO5k4KBLIOdaCg6gQIGetXAf3iylY0MkPthv2XfVd9nevTuZUxEFmBmdzmORBqP0bzFKJoa6mGAYFEc/Mta/Q==}
 
   '@stylex-extend/shared@0.3.1':
     resolution: {integrity: sha512-E6zRQvjvbIfaevA6JDdHAx0IFkpqfCkw4n9H9oenN013ipu5pfAkzcVXr3hQisLf6kpyw/KBnzgdmzdGbRgynw==}
 
-  '@stylex-extend/shared@0.3.2':
-    resolution: {integrity: sha512-O5z88E2hlX+lk0wVCcgSfUVJw8iytJqyRmYpN/OS+sP52Sm1VCGbNhpkKiZcONs2ffsGwvF2BFSf/IlXjP6Jfw==}
+  '@stylex-extend/shared@0.3.3':
+    resolution: {integrity: sha512-n1ITn+4socNgc8wS4IGIR0Uh4LypTx1hmHRd1VHwBQ+FybUCyM2jOYPr1B2J3nBJ7YTK7JmIUD9UAQBtlsKnyw==}
 
-  '@stylexjs/babel-plugin@0.6.1':
-    resolution: {integrity: sha512-LIYXvaaq2ZCs80G53SxdpbZ3sY0dJcTClEcSWN33QL8y8UL64OKiK17iIoYVnUIhBN/5P6QIDm+UwwB3D9EiVw==}
+  '@stylexjs/babel-plugin@0.7.0':
+    resolution: {integrity: sha512-LmCXsv/GDY33//DEtvf7NeUvgTiF9S94G0MIznn3OHyqUUcpkeXLsv+RCTQ2fKg48SNYKPrh3OndYd5bcU0Nrg==}
 
   '@stylexjs/open-props@0.3.0':
     resolution: {integrity: sha512-0wCoGMjLlnNR76x/xA13jdDDhxWx05YBnXRLx0LOJeDdzKzSw4d/X+IfOP1+NchAepy2tAm0YQ6Yn9mHG7tL7g==}
@@ -2657,11 +2722,11 @@ packages:
   '@stylexjs/shared@0.5.1':
     resolution: {integrity: sha512-3kuvLfPr1P5lbLjvtEjXmJxyBOygudhH93DA8OtNnb0H3bQjDZJQqaR/Pde67tlsdbqU5pFuaeueKkZhnuurzA==}
 
-  '@stylexjs/shared@0.6.1':
-    resolution: {integrity: sha512-9rK9Sni9Nk9zRMHDEolhDszGID3tCYi3rh14+t4lmKehL87LqOgnoDQMjEMLAY4/SFLWLPaHFSKavF8wXtRYsg==}
+  '@stylexjs/shared@0.7.0':
+    resolution: {integrity: sha512-c8/iPdAHU3oZQKtng6XTSinRUMwIbx72FoQGouEqRLN6idZBpv2lsGpNHgtxQATosF5/zb0Shq0v5ViadMRoXQ==}
 
-  '@stylexjs/stylex@0.6.1':
-    resolution: {integrity: sha512-1dKZG4VA8qxNf8LqiDWM0JL2YIFpLlblRivv0fabpc+PY02FqwOMdKRWscNCZy2dHGrUOGjjUvkPIU/doAqGzg==}
+  '@stylexjs/stylex@0.7.0':
+    resolution: {integrity: sha512-uhChS9os3d57AZYU1FNGBvJUjuXe8ldWFqjyQ4JbEaBu6H3fCiuTv+KVGZf+JNrFhogmdaYmbORagI59AOFO7Q==}
 
   '@stylistic/eslint-plugin-js@0.0.12':
     resolution: {integrity: sha512-VPH7ZMMr2gZ/Cm30NyZRy9U/7gQOL3xZZSwG58D/NdHTBpyOlasnwN0lx4KmRzSECUIkscod9AbQ11yx2QCs5Q==}
@@ -2730,6 +2795,12 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
+  '@swc/core-darwin-arm64@1.4.17':
+    resolution: {integrity: sha512-HVl+W4LezoqHBAYg2JCqR+s9ife9yPfgWSj37iIawLWzOmuuJ7jVdIB7Ee2B75bEisSEKyxRlTl6Y1Oq3owBgw==}
+    engines: {node: '>=10'}
+    cpu: [arm64]
+    os: [darwin]
+
   '@swc/core-darwin-arm64@1.6.5':
     resolution: {integrity: sha512-RGQhMdni2v1/ANQ/2K+F+QYdzaucekYBewZcX1ogqJ8G5sbPaBdYdDN1qQ4kHLCIkPtGP6qC7c71qPEqL2RidQ==}
     engines: {node: '>=10'}
@@ -2738,6 +2809,12 @@ packages:
 
   '@swc/core-darwin-x64@1.4.12':
     resolution: {integrity: sha512-Wkk8rq1RwCOgg5ybTlfVtOYXLZATZ+QjgiBNM7pIn03A5/zZicokNTYd8L26/mifly2e74Dz34tlIZBT4aTGDA==}
+    engines: {node: '>=10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@swc/core-darwin-x64@1.4.17':
+    resolution: {integrity: sha512-WYRO9Fdzq4S/he8zjW5I95G1zcvyd9yyD3Tgi4/ic84P5XDlSMpBDpBLbr/dCPjmSg7aUXxNQqKqGkl6dQxYlA==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [darwin]
@@ -2754,6 +2831,12 @@ packages:
     cpu: [arm]
     os: [linux]
 
+  '@swc/core-linux-arm-gnueabihf@1.4.17':
+    resolution: {integrity: sha512-cgbvpWOvtMH0XFjvwppUCR+Y+nf6QPaGu6AQ5hqCP+5Lv2zO5PG0RfasC4zBIjF53xgwEaaWmGP5/361P30X8Q==}
+    engines: {node: '>=10'}
+    cpu: [arm]
+    os: [linux]
+
   '@swc/core-linux-arm-gnueabihf@1.6.5':
     resolution: {integrity: sha512-B0g/dROCE747RRegs/jPHuKJgwXLracDhnqQa80kFdgWEMjlcb7OMCgs5OX86yJGRS4qcYbiMGD0Pp7Kbqn3yw==}
     engines: {node: '>=10'}
@@ -2762,6 +2845,12 @@ packages:
 
   '@swc/core-linux-arm64-gnu@1.4.12':
     resolution: {integrity: sha512-DhW47DQEZKCdSq92v5F03rqdpjRXdDMqxfu4uAlZ9Uo1wJEGvY23e1SNmhji2sVHsZbBjSvoXoBLk0v00nSG8w==}
+    engines: {node: '>=10'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@swc/core-linux-arm64-gnu@1.4.17':
+    resolution: {integrity: sha512-l7zHgaIY24cF9dyQ/FOWbmZDsEj2a9gRFbmgx2u19e3FzOPuOnaopFj0fRYXXKCmtdx+anD750iBIYnTR+pq/Q==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
@@ -2778,6 +2867,12 @@ packages:
     cpu: [arm64]
     os: [linux]
 
+  '@swc/core-linux-arm64-musl@1.4.17':
+    resolution: {integrity: sha512-qhH4gr9gAlVk8MBtzXbzTP3BJyqbAfUOATGkyUtohh85fPXQYuzVlbExix3FZXTwFHNidGHY8C+ocscI7uDaYw==}
+    engines: {node: '>=10'}
+    cpu: [arm64]
+    os: [linux]
+
   '@swc/core-linux-arm64-musl@1.6.5':
     resolution: {integrity: sha512-jyCKqoX50Fg8rJUQqh4u5PqnE7nqYKXHjVH2WcYr114/MU21zlsI+YL6aOQU1XP8bJQ2gPQ1rnlnGJdEHiKS/w==}
     engines: {node: '>=10'}
@@ -2786,6 +2881,12 @@ packages:
 
   '@swc/core-linux-x64-gnu@1.4.12':
     resolution: {integrity: sha512-HLZIWNHWuFIlH+LEmXr1lBiwGQeCshKOGcqbJyz7xpqTh7m2IPAxPWEhr/qmMTMsjluGxeIsLrcsgreTyXtgNA==}
+    engines: {node: '>=10'}
+    cpu: [x64]
+    os: [linux]
+
+  '@swc/core-linux-x64-gnu@1.4.17':
+    resolution: {integrity: sha512-vRDFATL1oN5oZMImkwbgSHEkp8xG1ofEASBypze01W1Tqto8t+yo6gsp69wzCZBlxldsvPpvFZW55Jq0Rn+UnA==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
@@ -2802,6 +2903,12 @@ packages:
     cpu: [x64]
     os: [linux]
 
+  '@swc/core-linux-x64-musl@1.4.17':
+    resolution: {integrity: sha512-zQNPXAXn3nmPqv54JVEN8k2JMEcMTQ6veVuU0p5O+A7KscJq+AGle/7ZQXzpXSfUCXlLMX4wvd+rwfGhh3J4cw==}
+    engines: {node: '>=10'}
+    cpu: [x64]
+    os: [linux]
+
   '@swc/core-linux-x64-musl@1.6.5':
     resolution: {integrity: sha512-AQpBjBnelQDSbeTJA50AXdS6+CP66LsXIMNTwhPSgUfE7Bx1ggZV11Fsi4Q5SGcs6a8Qw1cuYKN57ZfZC5QOuA==}
     engines: {node: '>=10'}
@@ -2810,6 +2917,12 @@ packages:
 
   '@swc/core-win32-arm64-msvc@1.4.12':
     resolution: {integrity: sha512-K8LjjgZ7VQFtM+eXqjfAJ0z+TKVDng3r59QYn7CL6cyxZI2brLU3lNknZcUFSouZD+gsghZI/Zb8tQjVk7aKDQ==}
+    engines: {node: '>=10'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@swc/core-win32-arm64-msvc@1.4.17':
+    resolution: {integrity: sha512-z86n7EhOwyzxwm+DLE5NoLkxCTme2lq7QZlDjbQyfCxOt6isWz8rkW5QowTX8w9Rdmk34ncrjSLvnHOeLY17+w==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [win32]
@@ -2826,6 +2939,12 @@ packages:
     cpu: [ia32]
     os: [win32]
 
+  '@swc/core-win32-ia32-msvc@1.4.17':
+    resolution: {integrity: sha512-JBwuSTJIgiJJX6wtr4wmXbfvOswHFj223AumUrK544QV69k60FJ9q2adPW9Csk+a8wm1hLxq4HKa2K334UHJ/g==}
+    engines: {node: '>=10'}
+    cpu: [ia32]
+    os: [win32]
+
   '@swc/core-win32-ia32-msvc@1.6.5':
     resolution: {integrity: sha512-WZdu4gISAr3yOm1fVwKhhk6+MrP7kVX0KMP7+ZQFTN5zXQEiDSDunEJKVgjMVj3vlR+6mnAqa/L0V9Qa8+zKlQ==}
     engines: {node: '>=10'}
@@ -2838,6 +2957,12 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@swc/core-win32-x64-msvc@1.4.17':
+    resolution: {integrity: sha512-jFkOnGQamtVDBm3MF5Kq1lgW8vx4Rm1UvJWRUfg+0gx7Uc3Jp3QMFeMNw/rDNQYRDYPG3yunCC+2463ycd5+dg==}
+    engines: {node: '>=10'}
+    cpu: [x64]
+    os: [win32]
+
   '@swc/core-win32-x64-msvc@1.6.5':
     resolution: {integrity: sha512-ezXgucnMTzlFIxQZw7ls/5r2hseFaRoDL04cuXUOs97E8r+nJSmFsRQm/ygH5jBeXNo59nyZCalrjJAjwfgACA==}
     engines: {node: '>=10'}
@@ -2846,6 +2971,15 @@ packages:
 
   '@swc/core@1.4.12':
     resolution: {integrity: sha512-QljRxTaUajSLB9ui93cZ38/lmThwIw/BPxjn+TphrYN6LPU3vu9/ykjgHtlpmaXDDcngL4K5i396E7iwwEUxYg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      '@swc/helpers': ^0.5.0
+    peerDependenciesMeta:
+      '@swc/helpers':
+        optional: true
+
+  '@swc/core@1.4.17':
+    resolution: {integrity: sha512-tq+mdWvodMBNBBZbwFIMTVGYHe9N7zvEaycVVjfvAx20k1XozHbHhRv+9pEVFJjwRxLdXmtvFZd3QZHRAOpoNQ==}
     engines: {node: '>=10'}
     peerDependencies:
       '@swc/helpers': ^0.5.0
@@ -5176,6 +5310,10 @@ packages:
 
   hono@4.2.2:
     resolution: {integrity: sha512-mDmjBHF6uBNN3TASdAbDCFsN9FLbrlgXyFZkhLEkU7hUgk0+T9hcsUrL/nho4qV+Xk0RDHx7gop4Q1gelZZVRw==}
+    engines: {node: '>=16.0.0'}
+
+  hono@4.3.2:
+    resolution: {integrity: sha512-wiZcF5N06tc232U11DnqW6hP8DNoypjsrxslKXfvOqOAkTdh7K1HLZJH/92Mf+urxUTGi96f1w4xx/1Qozoqiw==}
     engines: {node: '>=16.0.0'}
 
   hookable@5.5.3:
@@ -8870,6 +9008,15 @@ packages:
       typescript:
         optional: true
 
+  waku@0.20.2:
+    resolution: {integrity: sha512-Usk2QMq3kr85O3Pq+OqBpg3TgLXZbB+jE7Hwoe52qn+YQNgXAjlmHKtLnMsuT6HX+VD/wEBfyHOJp3X8aQ28RQ==}
+    engines: {node: ^20.8.0 || ^18.17.0}
+    hasBin: true
+    peerDependencies:
+      react: 19.0.0-beta-e7d213dfb0-20240507
+      react-dom: 19.0.0-beta-e7d213dfb0-20240507
+      react-server-dom-webpack: 19.0.0-beta-e7d213dfb0-20240507
+
   waku@0.20.2-alpha.0:
     resolution: {integrity: sha512-O6A8boWKD0jno+Hu7UQpAHa941RPi36IlQA95CBjm+EkxxoWAn7DTaoXVDttI8fZGZfsJrUf52xZOyjnylkrdQ==}
     engines: {node: ^20.8.0 || ^18.17.0}
@@ -10551,6 +10698,8 @@ snapshots:
     dependencies:
       '@hapi/hoek': 9.3.0
 
+  '@hono/node-server@1.11.1': {}
+
   '@hono/node-server@1.9.1': {}
 
   '@humanwhocodes/config-array@0.11.14':
@@ -12062,7 +12211,7 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.1
 
-  '@stylex-extend/babel-plugin@0.3.1':
+  '@stylex-extend/babel-plugin@0.3.3':
     dependencies:
       '@babel/core': 7.24.7
       '@stylexjs/shared': 0.5.1
@@ -12074,34 +12223,34 @@ snapshots:
     dependencies:
       '@stylex-extend/shared': 0.3.1
 
-  '@stylex-extend/core@0.3.2':
+  '@stylex-extend/core@0.3.3':
     dependencies:
-      '@stylex-extend/shared': 0.3.2
+      '@stylex-extend/shared': 0.3.3
 
   '@stylex-extend/react@0.3.1':
     dependencies:
       '@stylex-extend/shared': 0.3.1
 
-  '@stylex-extend/react@0.3.2':
+  '@stylex-extend/react@0.3.3':
     dependencies:
-      '@stylex-extend/shared': 0.3.2
+      '@stylex-extend/shared': 0.3.3
 
   '@stylex-extend/shared@0.3.1':
     dependencies:
       csstype: 3.1.3
 
-  '@stylex-extend/shared@0.3.2':
+  '@stylex-extend/shared@0.3.3':
     dependencies:
       csstype: 3.1.3
 
-  '@stylexjs/babel-plugin@0.6.1':
+  '@stylexjs/babel-plugin@0.7.0':
     dependencies:
       '@babel/core': 7.24.7
       '@babel/helper-module-imports': 7.24.7
       '@babel/traverse': 7.24.7
       '@babel/types': 7.24.7
-      '@stylexjs/shared': 0.6.1
-      '@stylexjs/stylex': 0.6.1
+      '@stylexjs/shared': 0.7.0
+      '@stylexjs/stylex': 0.7.0
     transitivePeerDependencies:
       - supports-color
 
@@ -12116,11 +12265,11 @@ snapshots:
     dependencies:
       postcss-value-parser: 4.2.0
 
-  '@stylexjs/shared@0.6.1':
+  '@stylexjs/shared@0.7.0':
     dependencies:
       postcss-value-parser: 4.2.0
 
-  '@stylexjs/stylex@0.6.1':
+  '@stylexjs/stylex@0.7.0':
     dependencies:
       css-mediaquery: 0.1.2
       invariant: 2.2.4
@@ -12241,10 +12390,16 @@ snapshots:
   '@swc/core-darwin-arm64@1.4.12':
     optional: true
 
+  '@swc/core-darwin-arm64@1.4.17':
+    optional: true
+
   '@swc/core-darwin-arm64@1.6.5':
     optional: true
 
   '@swc/core-darwin-x64@1.4.12':
+    optional: true
+
+  '@swc/core-darwin-x64@1.4.17':
     optional: true
 
   '@swc/core-darwin-x64@1.6.5':
@@ -12253,10 +12408,16 @@ snapshots:
   '@swc/core-linux-arm-gnueabihf@1.4.12':
     optional: true
 
+  '@swc/core-linux-arm-gnueabihf@1.4.17':
+    optional: true
+
   '@swc/core-linux-arm-gnueabihf@1.6.5':
     optional: true
 
   '@swc/core-linux-arm64-gnu@1.4.12':
+    optional: true
+
+  '@swc/core-linux-arm64-gnu@1.4.17':
     optional: true
 
   '@swc/core-linux-arm64-gnu@1.6.5':
@@ -12265,10 +12426,16 @@ snapshots:
   '@swc/core-linux-arm64-musl@1.4.12':
     optional: true
 
+  '@swc/core-linux-arm64-musl@1.4.17':
+    optional: true
+
   '@swc/core-linux-arm64-musl@1.6.5':
     optional: true
 
   '@swc/core-linux-x64-gnu@1.4.12':
+    optional: true
+
+  '@swc/core-linux-x64-gnu@1.4.17':
     optional: true
 
   '@swc/core-linux-x64-gnu@1.6.5':
@@ -12277,10 +12444,16 @@ snapshots:
   '@swc/core-linux-x64-musl@1.4.12':
     optional: true
 
+  '@swc/core-linux-x64-musl@1.4.17':
+    optional: true
+
   '@swc/core-linux-x64-musl@1.6.5':
     optional: true
 
   '@swc/core-win32-arm64-msvc@1.4.12':
+    optional: true
+
+  '@swc/core-win32-arm64-msvc@1.4.17':
     optional: true
 
   '@swc/core-win32-arm64-msvc@1.6.5':
@@ -12289,10 +12462,16 @@ snapshots:
   '@swc/core-win32-ia32-msvc@1.4.12':
     optional: true
 
+  '@swc/core-win32-ia32-msvc@1.4.17':
+    optional: true
+
   '@swc/core-win32-ia32-msvc@1.6.5':
     optional: true
 
   '@swc/core-win32-x64-msvc@1.4.12':
+    optional: true
+
+  '@swc/core-win32-x64-msvc@1.4.17':
     optional: true
 
   '@swc/core-win32-x64-msvc@1.6.5':
@@ -12313,6 +12492,22 @@ snapshots:
       '@swc/core-win32-arm64-msvc': 1.4.12
       '@swc/core-win32-ia32-msvc': 1.4.12
       '@swc/core-win32-x64-msvc': 1.4.12
+
+  '@swc/core@1.4.17':
+    dependencies:
+      '@swc/counter': 0.1.3
+      '@swc/types': 0.1.9
+    optionalDependencies:
+      '@swc/core-darwin-arm64': 1.4.17
+      '@swc/core-darwin-x64': 1.4.17
+      '@swc/core-linux-arm-gnueabihf': 1.4.17
+      '@swc/core-linux-arm64-gnu': 1.4.17
+      '@swc/core-linux-arm64-musl': 1.4.17
+      '@swc/core-linux-x64-gnu': 1.4.17
+      '@swc/core-linux-x64-musl': 1.4.17
+      '@swc/core-win32-arm64-msvc': 1.4.17
+      '@swc/core-win32-ia32-msvc': 1.4.17
+      '@swc/core-win32-x64-msvc': 1.4.17
 
   '@swc/core@1.6.5':
     dependencies:
@@ -15473,6 +15668,8 @@ snapshots:
 
   hono@4.2.2: {}
 
+  hono@4.3.2: {}
+
   hookable@5.5.3: {}
 
   hosted-git-info@6.1.1:
@@ -18589,7 +18786,7 @@ snapshots:
 
   react-strict-dom@0.0.4(react-dom@18.3.1(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.2.46)(encoding@0.1.13)(react@18.3.1))(react@18.3.1):
     dependencies:
-      '@stylexjs/stylex': 0.6.1
+      '@stylexjs/stylex': 0.7.0
       css-mediaquery: 0.1.2
       postcss-value-parser: 4.2.0
       react: 18.3.1
@@ -20162,6 +20359,29 @@ snapshots:
       '@vue/shared': 3.4.30
     optionalDependencies:
       typescript: 5.5.2
+
+  waku@0.20.2(@types/node@20.14.8)(lightningcss@1.25.1)(react-dom@18.3.0-canary-c5b937576-20231219(react@18.3.0-canary-c5b937576-20231219))(react-server-dom-webpack@18.3.0-canary-f1039be4a-20240107(react-dom@18.3.0-canary-c5b937576-20231219(react@18.3.0-canary-c5b937576-20231219))(react@18.3.0-canary-c5b937576-20231219)(webpack@5.92.1(@swc/core@1.6.5)))(react@18.3.0-canary-c5b937576-20231219)(terser@5.31.1):
+    dependencies:
+      '@hono/node-server': 1.11.1
+      '@swc/core': 1.4.17
+      '@vitejs/plugin-react': 4.2.1(vite@5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1))
+      dotenv: 16.4.5
+      hono: 4.3.2
+      react: 18.3.0-canary-c5b937576-20231219
+      react-dom: 18.3.0-canary-c5b937576-20231219(react@18.3.0-canary-c5b937576-20231219)
+      react-server-dom-webpack: 18.3.0-canary-f1039be4a-20240107(react-dom@18.3.0-canary-c5b937576-20231219(react@18.3.0-canary-c5b937576-20231219))(react@18.3.0-canary-c5b937576-20231219)(webpack@5.92.1(@swc/core@1.6.5))
+      rsc-html-stream: 0.0.3
+      vite: 5.3.1(@types/node@20.14.8)(lightningcss@1.25.1)(terser@5.31.1)
+    transitivePeerDependencies:
+      - '@swc/helpers'
+      - '@types/node'
+      - less
+      - lightningcss
+      - sass
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
 
   waku@0.20.2-alpha.0(@types/node@20.14.8)(lightningcss@1.25.1)(react-dom@18.3.0-canary-c5b937576-20231219(react@18.3.0-canary-c5b937576-20231219))(react-server-dom-webpack@18.3.0-canary-f1039be4a-20240107(react-dom@18.3.0-canary-c5b937576-20231219(react@18.3.0-canary-c5b937576-20231219))(react@18.3.0-canary-c5b937576-20231219)(webpack@5.92.1(@swc/core@1.6.5)))(react@18.3.0-canary-c5b937576-20231219)(terser@5.31.1):
     dependencies:

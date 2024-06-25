@@ -12,6 +12,6 @@
     "react-dom": "^18.2.0",
     "vite": "^5.0.10",
     "vite-plugin-stylex-dev": "workspace:*",
-    "@stylex-extend/react": "^0.3.2"
+    "@stylex-extend/react": "^0.3.3"
   }
 }

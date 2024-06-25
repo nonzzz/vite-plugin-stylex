@@ -21,8 +21,8 @@
     "lightningcss": "^1.24.1",
     "typescript": "^5.1.6",
     "vite": "^5.0.6",
-    "@stylex-extend/react": "^0.3.2",
-    "@stylex-extend/core": "^0.3.2",
+    "@stylex-extend/react": "^0.3.3",
+    "@stylex-extend/core": "^0.3.3",
     "vite-plugin-stylex-dev": "workspace:*"
   }
 }

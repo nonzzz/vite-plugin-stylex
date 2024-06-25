@@ -1,0 +1,30 @@
+{
+  "name": "qwik-e2e",
+  "engines": {
+    "node": ">=15.0.0"
+  },
+  "private": true,
+  "trustedDependencies": [
+    "sharp"
+  ],
+  "scripts": {
+    "build": "qwik build",
+    "build.client": "vite build",
+    "build.preview": "vite build --ssr src/entry.preview.tsx",
+    "deploy": "echo 'Run \"npm run qwik add\" to install a server adapter'",
+    "dev": "vite --mode ssr",
+    "dev.debug": "node --inspect-brk ./node_modules/vite/bin/vite.js --mode ssr --force",
+    "preview": "qwik build preview && vite preview --open",
+    "start": "vite --open --mode ssr",
+    "qwik": "qwik"
+  },
+  "devDependencies": {
+    "@builder.io/qwik": "^1.5.7",
+    "@builder.io/qwik-city": "^1.5.7",
+    "vite": "^5.0.6",
+    "vite-plugin-stylex-dev": "workspace:*",
+    "vite-tsconfig-paths": "^4.2.1",
+    "@stylex-extend/react": "^0.3.3",
+    "@stylex-extend/core": "^0.3.3"
+  }
+}
