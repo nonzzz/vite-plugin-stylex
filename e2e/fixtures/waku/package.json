@@ -1,0 +1,24 @@
+{
+  "name": "waku-e2e",
+  "type": "module",
+  "dependencies": {
+    "@stylexjs/stylex": "workspace:*",
+    "react": "19.0.0-rc.0",
+    "react-dom": "19.0.0-rc.0",
+    "react-server-dom-webpack": "19.0.0-rc.0",
+    "waku": "0.20.2"
+  },
+  "scripts": {
+    "dev": "waku dev",
+    "build": "waku build",
+    "start": "waku start"
+  },
+  "devDependencies": {
+    "@types/react": "18.2.46",
+    "@types/react-dom": "18.2.18",
+    "typescript": "5.3.3",
+    "vite": "5.0.10",
+    "vite-plugin-stylex-dev": "workspace:*",
+    "@stylex-extend/react": "^0.3.3"
+  }
+}

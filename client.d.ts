@@ -1,3 +1,3 @@
-declare module '@stylex-dev.css' {
+declare module 'virtual:stylex.css' {
   export {}
 }

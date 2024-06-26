@@ -11,12 +11,12 @@ jobs:
         run: corepack enable
       - uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 22
       - name: Install Dependices
-        run: yarn install
+        run: pnpm install
 
       - name: Run Test
-        run: yarn test
+        run: pnpm run test
 
       - name: Report Coverage
         uses: codecov/codecov-action@v2

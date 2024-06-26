@@ -1,4 +1,5 @@
 import * as stylex from '@stylexjs/stylex'
+import 'virtual:stylex.css'
 
 const styles = stylex.create({
   foo: {

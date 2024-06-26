@@ -1,6 +1,7 @@
 import * as stylex from @stylexjs/stylex
 import ReactDOM from react-dom/client
 import React from react
+import virtual:stylex.css
 
 styles := stylex.create
   base:

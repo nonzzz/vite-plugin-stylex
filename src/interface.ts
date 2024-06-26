@@ -1,12 +1,38 @@
-import type { FilterPattern, HookHandler, Plugin } from 'vite'
-import type { Options } from '@stylexjs/babel-plugin'
+import type { FilterPattern, HookHandler, Plugin, ResolvedConfig } from 'vite'
+import type { Options, Rule } from '@stylexjs/babel-plugin'
 import type { PluginItem } from '@babel/core'
 import type { StylexExtendBabelPluginOptions } from '@stylex-extend/babel-plugin'
 import { noop } from './shared'
+import type { Env, PluginContext } from './context'
 
-type Mutable<T> = {
-  -readonly [P in keyof T]: T[P];
+export type Mutable<T> = {
+  -readonly [P in keyof T]: T[P]
 }
+
+interface AdapterViteOptions {
+  cssPlugins: Plugin[]
+  config: ResolvedConfig
+}
+export interface AdapterContext {
+  env: Env
+  vite: AdapterViteOptions
+  rules: PluginContext['styleRules']
+  useCSSLayers: boolean
+  produceCSS: (input?: Map<string, Rule[]>) => string
+  transform: HookHandler<Plugin['transform']>
+}
+
+export interface AdapterConfig {
+  name: string
+  setup: (ctx: AdapterContext, plugin: Plugin) => void
+}
+
+export type Pretty<T> =
+  & {
+    [key in keyof T]: T[key] extends (...args: any[]) => any ? (...args: Parameters<T[key]>) => ReturnType<T[key]>
+      : T[key] & NonNullable<unknown>
+  }
+  & NonNullable<unknown>
 
 export type InternalOptions = Mutable<Omit<Options, 'dev' | 'runtimeInjection' | 'aliases'>>
 
@@ -19,12 +45,12 @@ export interface ManuallyControlCssOrder {
   symbol?: string
 }
 
-export interface StylexPluginOptions extends Partial<InternalOptions> {
+interface InternalStylexPluginOptions extends Partial<InternalOptions> {
   babelConfig?: {
     plugins?: Array<PluginItem>
     presets?: Array<PluginItem>
-  },
-  useCSSLayers?: boolean,
+  }
+  useCSSLayers?: boolean
   include?: FilterPattern
   exclude?: FilterPattern
   /**
@@ -39,10 +65,16 @@ export interface StylexPluginOptions extends Partial<InternalOptions> {
    * @experimental
    */
   enableStylexExtend?: boolean | StylexExtendOptions
+  /**
+   * @experimental
+   */
+  adapter?: () => AdapterConfig
   [prop: string]: unknown
 }
 
-export type TransformStylexOptions = Partial<InternalOptions > & {
+export type StylexPluginOptions = Pretty<InternalStylexPluginOptions>
+
+export type TransformStylexOptions = Partial<InternalOptions> & {
   plugins: Array<PluginItem>
   presets: Array<PluginItem>
   dev: boolean
