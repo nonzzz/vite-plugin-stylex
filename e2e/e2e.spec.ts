@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { Page } from 'playwright'
-import { createE2EServer } from './helper'
+import { createE2EServer, createWakuE2EServer } from './helper'
 
 function getColorText(s: string) {
   return s.match(/--color:(\w*);?/)?.[1]
@@ -24,11 +24,11 @@ test('vite-react-spa', async () => {
   await browser.close()
 })
 
-// test('vite-vue-spa', async () => {
-//   const { page, browser } = await createE2EServer('vite-vue-spa')
-//   await switchColor(page)
-//   await browser.close()
-// })
+test('vite-vue-spa', async () => {
+  const { page, browser } = await createE2EServer('vite-vue-spa')
+  await switchColor(page)
+  await browser.close()
+})
 
 test('remix', async () => {
   const { page, browser } = await createE2EServer('remix')
@@ -36,14 +36,15 @@ test('remix', async () => {
   await browser.close()
 })
 
-// test('waku', async (t) => {
-//   const { page, browser } = await createE2EServer('waku')
-//   await switchColor(t, page)
-//   await browser.close()
-// })
+test('waku', async () => {
+  const { cp, page, browser } = await createWakuE2EServer()
+  await switchColor(page)
+  await browser.close()
+  cp.kill('SIGTERM')
+})
 
-// test('qwik', async (t) => {
-//   const { page, browser } = await createE2EServer('qwik')
-//   await switchColor(t, page)
-//   await browser.close()
-// })
+test('qwik', async () => {
+  const { page, browser } = await createE2EServer('qwik', 'ssr')
+  await switchColor(page)
+  await browser.close()
+})

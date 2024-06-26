@@ -1,8 +1,5 @@
-import { lazy } from 'react'
 import { defineEntries } from 'waku/server'
-import { Slot } from 'waku/client'
-
-const App = lazy(() => import('./components/app.js'))
+import App from './components/app'
 
 export default defineEntries(
   // renderEntries
@@ -15,11 +12,12 @@ export default defineEntries(
   async () => [{ pathname: '/', entries: [{ input: '' }] }],
   // getSsrConfig
   async (pathname) => {
+    console.log(pathname)
     switch (pathname) {
       case '/':
         return {
           input: '',
-          body: <Slot id="App" />
+          body: <App />
         }
       default:
         return null

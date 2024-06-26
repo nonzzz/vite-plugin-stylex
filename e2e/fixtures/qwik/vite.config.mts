@@ -5,15 +5,10 @@ import { stylex } from 'vite-plugin-stylex-dev'
 
 export default defineConfig(() => {
   return {
-    plugins: [qwikCity(), qwikVite(), stylex()],
+    plugins: [qwikCity(), qwikVite(), stylex({ enableStylexExtend: true })],
     dev: {
       headers: {
         'Cache-Control': 'public, max-age=0'
-      }
-    },
-    preview: {
-      headers: {
-        'Cache-Control': 'public, max-age=600'
       }
     }
   }

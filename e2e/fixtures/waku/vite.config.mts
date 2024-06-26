@@ -6,5 +6,5 @@ export default defineConfig({
   ssr: {
     external: ['@stylexjs/stylex']
   },
-  plugins: [stylex()]
+  plugins: [stylex({ enableStylexExtend: true })]
 })

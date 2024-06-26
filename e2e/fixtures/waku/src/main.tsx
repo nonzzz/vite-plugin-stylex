@@ -1,12 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
-import { Root, Slot } from 'waku/client'
+import { Root } from 'waku/client'
+import App from './components/app'
 import 'virtual:stylex.css'
 
 const rootElement = (
   <StrictMode>
     <Root>
-      <Slot id="App" />
+      <App />
     </Root>
   </StrictMode>
 )

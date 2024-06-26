@@ -4,15 +4,13 @@
     "target": "esnext",
     "downlevelIteration": true,
     "esModuleInterop": true,
-    "module": "nodenext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "skipLibCheck": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "types": ["react/experimental"],
     "jsx": "react-jsx",
-    "jsxImportSource": "@stylex-extend/react",
-    "outDir": "./dist",
-    "composite": true
-  },
-  "include": ["./src"]
+    "jsxImportSource": "@stylex-extend/react"
+  }
 }

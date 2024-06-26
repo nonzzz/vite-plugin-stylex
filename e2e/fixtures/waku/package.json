@@ -3,9 +3,9 @@
   "type": "module",
   "dependencies": {
     "@stylexjs/stylex": "workspace:*",
-    "react": "18.3.0-canary-c5b937576-20231219",
-    "react-dom": "18.3.0-canary-c5b937576-20231219",
-    "react-server-dom-webpack": "18.3.0-canary-f1039be4a-20240107",
+    "react": "19.0.0-rc.0",
+    "react-dom": "19.0.0-rc.0",
+    "react-server-dom-webpack": "19.0.0-rc.0",
     "waku": "0.20.2"
   },
   "scripts": {
