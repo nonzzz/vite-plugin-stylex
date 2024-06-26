@@ -1,25 +1,16 @@
 import type { Plugin, ViteDevServer } from 'vite'
-import { Rule } from '@stylexjs/babel-plugin'
+import type { Rule } from '@stylexjs/babel-plugin'
 import type { AdapterConfig } from '../interface'
 import { CONSTANTS } from '../plugins/server'
 import { parseRequest } from '../context'
 
 const STYLEX_FOR_WAKU_MARKER = '/__stylex__waku.css'
-/** */
 
-const hmr = (css: string) => `
-import { createHotContext as __vite__createHotContext } from "/@vite/client"
-import.meta.hot = __vite__createHotContext("/__stylex__waku.css")
-import { updateStyle as __vite__updateStyle, removeStyle as __vite__removeStyle } from "/@vite/client"
+const CLASSIC_WAKU_MARKER = '@stylex-dev.css'
 
-const __vite__id = "/__stylex__waku.css"
-const __vite__css = ${JSON.stringify(css)}
-__vite__updateStyle(__vite__id, __vite__css)
-import.meta.hot.accept()
-import.meta.hot.prune(() => __vite__removeStyle(__vite__id))
-
-`
 const sharedRules = new Map<string, Rule[]>()
+
+// I would like know why can't sync the rules for sharedRules. It seems like got two instance of waku
 
 export function waku() {
   return <AdapterConfig> {
@@ -37,7 +28,7 @@ export function waku() {
         for (const id of ids) {
           const mod = viteDevServer?.moduleGraph.getModuleById(id)
           if (!mod) continue
-          viteDevServer?.moduleGraph.invalidateModule(mod)
+          viteDevServer?.reloadModule(mod)
         }
       }
 
@@ -52,27 +43,18 @@ export function waku() {
               // update hmr
             }
           })
-
-          viteDevServer.middlewares.use((req, res, next) => {
-            const protocol = 'encrypted' in (req?.socket ?? {}) ? 'https' : 'http'
-            const { host } = req.headers
-            // @ts-ignore
-            const url = new URL(req.originalUrl, `${protocol}://${host}`)
-            if (url.pathname === STYLEX_FOR_WAKU_MARKER) {
-              res.writeHead(200, {
-                'Content-Type': 'application/javascript',
-                'x-powered-by': 'vite-plugin-stylex-dev'
-              })
-              res.end(hmr(ctx.produceCSS(sharedRules)))
-              return
-            }
-            next()
-          })
         },
         load(id) {
-          if (id === STYLEX_FOR_WAKU_MARKER) {
+          // Idk why i can't set css rule. waku seems like split vite plugin and
+          // run in two instance? you can print the sharedRules and run example/waku
+          // you can get collection one is three the other one is two.
+          // CLASSIC_WAKU_MARKER is work for rsc. but we should take care for them.
+          if (id === STYLEX_FOR_WAKU_MARKER || id === CLASSIC_WAKU_MARKER) {
+            if (id === CLASSIC_WAKU_MARKER) {
+              entries.add(id)
+            }
             return {
-              code: '',
+              code: ctx.produceCSS(sharedRules),
               map: { mappings: '' }
             }
           }
@@ -86,11 +68,16 @@ export function waku() {
         async transform(code, id, opt) {
           const result = await ctx.transform?.apply(this, [code, id, opt])
           const { original } = parseRequest(id)
-          if (ctx.rules.has(original)) {
+          if (typeof result === 'object' && result?.meta && 'stylex' in result.meta) {
+            const rule: Rule[][] = []
+            if (result.meta.stylex.length > 0) {
+              rule.push(result.meta.stylex)
+            }
             effects.add(original)
-            sharedRules.set(original, ctx.rules.get(original)!)
-            invalidate(entries)
+            sharedRules.set(original, result.meta.stylex)
+            invalidate(new Set([...entries]))
           }
+
           return result
         }
       }

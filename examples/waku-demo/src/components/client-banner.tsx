@@ -6,7 +6,7 @@ import { create, props } from '@stylexjs/stylex'
 
 const styles = create({
   root: {
-    backgroundColor: 'red',
+    backgroundColor: 'blue',
     color: '#fff',
     padding: '10px',
     textAlign: 'center'

@@ -4,9 +4,11 @@ import './init.css'
 import { ClientBanner } from './client-banner.js'
 import { ServerBanner } from './server-banner.js'
 
+import { ServerButton } from './server-button.js'
+
 const styles = create({
   title: {
-    fontSize: '16px',
+    fontSize: '26px',
     color: 'red'
   }
 })
@@ -19,6 +21,7 @@ const App = ({ name }: { name: string }) => {
       <h3>This is a server component.</h3>
       <ClientBanner />
       <ServerBanner />
+      <ServerButton />
     </div>
   )
 }

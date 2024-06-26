@@ -20,6 +20,7 @@
     "@types/react-dom": "18.2.18",
     "typescript": "5.3.3",
     "vite": "5.0.10",
-    "vite-plugin-stylex-dev": "workspace:*"
+    "vite-plugin-stylex-dev": "workspace:*",
+    "vite-plugin-stylex-dev-classic": "npm:vite-plugin-stylex-dev@0.7.5"
   }
 }

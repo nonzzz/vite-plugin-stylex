@@ -17,6 +17,7 @@ export interface AdapterContext {
   env: Env
   vite: AdapterViteOptions
   rules: PluginContext['styleRules']
+  useCSSLayers: boolean
   produceCSS: (input?: Map<string, Rule[]>) => string
   transform: HookHandler<Plugin['transform']>
 }

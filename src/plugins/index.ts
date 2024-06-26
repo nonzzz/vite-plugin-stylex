@@ -16,7 +16,8 @@ export function createForViteServer(ctx: PluginContext, extend: (c: PluginContex
         transform: plugin.transform as any,
         vite: { cssPlugins, config: conf },
         env: ctx.env,
-        rules: ctx.styleRules
+        rules: ctx.styleRules,
+        useCSSLayers: ctx.stylexOptions.useCSSLayers ?? false
       }
 
       ctx.env = conf.command === 'serve' ? 'server' : 'build'
