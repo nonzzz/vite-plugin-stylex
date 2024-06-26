@@ -1,5 +1,5 @@
 import path from 'path'
-import test from 'ava'
+import { expect, test } from 'vitest'
 import type { UserConfig } from 'vite'
 import { stylex } from '../src'
 import type { StylexPluginOptions } from '../src'
@@ -41,26 +41,28 @@ async function build(fixture: string, opts: BuildOptions = {}) {
   throw new Error(`Build failed with ${fixture}`)
 }
 
-test('normal', async (t) => {
+test('normal', async () => {
   const [css, js] = await build('normal', { vite: { build: { cssMinify: false } } })
-  t.snapshot(css)
-  t.snapshot(js)
+  expect(css).toMatchSnapshot()
+  expect(js).toMatchSnapshot()
   const [css_1] = await build('normal')
-  t.snapshot(css_1)
+  expect(css_1).toMatchSnapshot()
 })
 
-test('postcss', async (t) => {
-  const [css] = await build('pxtorem', { vite: {
-    css: {
-      postcss: {
-        plugins: [(await import('postcss-pxtorem')).default]
+test('postcss', async () => {
+  const [css] = await build('pxtorem', {
+    vite: {
+      css: {
+        postcss: {
+          plugins: [(await import('postcss-pxtorem')).default]
+        }
       }
     }
-  } })
-  t.snapshot(css)
+  })
+  expect(css).toMatchSnapshot()
 })
 
-test('lightning css', async (t) => {
+test('lightning css', async () => {
   const [css] = await build('lightning-css', {
     vite: {
       css: {
@@ -78,19 +80,19 @@ test('lightning css', async (t) => {
       }
     }
   })
-  t.snapshot(css)
+  expect(css).toMatchSnapshot()
 })
 
-test('aliases', async (t) => {
+test('aliases', async () => {
   const [css] = await build('path-alias', {
     vite: {
       plugins: [(await import('vite-tsconfig-paths')).default({ root: path.join(__dirname, 'fixtures', 'path-alias') })]
     }
   })
-  t.snapshot(css)
+  expect(css).toMatchSnapshot()
 })
 
-test('ts config paths', async (t) => {
+test('ts config paths', async () => {
   const [css] = await build('path-alias', {
     vite: {
       resolve: {
@@ -103,10 +105,10 @@ test('ts config paths', async (t) => {
       }
     }
   })
-  t.snapshot(css)
+  expect(css).toMatchSnapshot()
 })
 
-test('empty', async (t) => {
+test('empty', async () => {
   const [css] = await build('empty')
-  t.snapshot(css)
+  expect(css).toMatchSnapshot()
 })
