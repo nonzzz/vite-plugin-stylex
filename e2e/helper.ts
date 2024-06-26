@@ -1,9 +1,7 @@
 import path from 'path'
 import child_porcess from 'child_process'
+import net from 'net'
 import { chromium } from 'playwright'
-
-// @ts-expect-error
-import waitPort from 'wait-port'
 
 export async function createChromeBrowser(port: number) {
   const browser = await chromium.launch()
@@ -36,12 +34,33 @@ export async function createE2EServer(taskName: string, mode = 'development') {
   return { page, server, browser }
 }
 
+function waitForPort(port: number, host = 'localhost', timeout = 30000) {
+  const startTime = Date.now()
+  return new Promise((resolve, reject) => {
+    const check = () => {
+      const client = new net.Socket()
+      client.once('connect', () => {
+        client.end()
+        resolve(true)
+      }).once('error', (err) => {
+        if (Date.now() - startTime > timeout) {
+          reject(err)
+        } else {
+          setTimeout(check, 100) // Retry after 100ms
+        }
+      })
+        .connect(port, host)
+    }
+    check()
+  })
+}
+
 export async function createWakuE2EServer(port = genRandomPort()) {
   // waku don't expose cli so we should get the cli entry by two step
   const wakuPoint = require.resolve('waku', { paths: [__dirname] })
   const waku = path.join(path.dirname(wakuPoint), 'cli.js')
   const cp = child_porcess.exec(`node ${waku} dev --port ${port}`, { cwd: path.join(__dirname, 'fixtures', 'waku') })
-  await waitPort({ port })
+  await waitForPort(port)
   const { page, browser } = await createChromeBrowser(port)
   console.log(`http://localhost:${port}`)
   return { cp, page, browser }

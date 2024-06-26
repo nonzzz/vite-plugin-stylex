@@ -110,9 +110,6 @@ importers:
       vue-eslint-parser:
         specifier: ^9.3.2
         version: 9.4.3(eslint@8.57.0)
-      wait-port:
-        specifier: ^1.1.0
-        version: 1.1.0
 
   e2e/fixtures/qwik:
     devDependencies:
@@ -8861,11 +8858,6 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
-
-  wait-port@1.1.0:
-    resolution: {integrity: sha512-3e04qkoN3LxTMLakdqeWth8nih8usyg+sf1Bgdf9wwUkp05iuK1eSY/QpLvscT/+F/gA89+LpUmmgBtesbqI2Q==}
-    engines: {node: '>=10'}
-    hasBin: true
 
   waku@0.20.2:
     resolution: {integrity: sha512-Usk2QMq3kr85O3Pq+OqBpg3TgLXZbB+jE7Hwoe52qn+YQNgXAjlmHKtLnMsuT6HX+VD/wEBfyHOJp3X8aQ28RQ==}
@@ -20074,14 +20066,6 @@ snapshots:
       '@vue/shared': 3.4.30
     optionalDependencies:
       typescript: 5.5.2
-
-  wait-port@1.1.0:
-    dependencies:
-      chalk: 4.1.2
-      commander: 9.5.0
-      debug: 4.3.5
-    transitivePeerDependencies:
-      - supports-color
 
   waku@0.20.2(@types/node@20.14.8)(lightningcss@1.25.1)(react-dom@19.0.0-rc.0(react@19.0.0-rc.0))(react-server-dom-webpack@19.0.0-rc.0(react-dom@19.0.0-rc.0(react@19.0.0-rc.0))(react@19.0.0-rc.0)(webpack@5.92.1(@swc/core@1.6.5)))(react@19.0.0-rc.0)(terser@5.31.1):
     dependencies:
