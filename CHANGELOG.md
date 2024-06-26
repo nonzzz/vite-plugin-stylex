@@ -1,15 +1,27 @@
+## 0.8.0
+
+# Improve
+
+- Add new option `adapter`.
+- Remove the logic of default stylex inject.
+- Make `hmr` happy.
+
+# Ohters
+
+- Bump `@stylexjs/babel-plugin` version.
+
 ## 0.7.5
 
 # Patches
 
 - Fix exports error.
-- Fix cleanup of styleRules in library watch mode. 
+- Fix cleanup of styleRules in library watch mode.
 
 ## 0.7.4
 
 # Patches
 
-- Fix build watch mode can't  work.
+- Fix build watch mode can't work.
 
 ## 0.7.3
 
@@ -17,7 +29,6 @@
 
 - Repsect `manuallyControlCssOrder` option for hmr.
 - Fix hmr can't work with some case.
-
 
 ## 0.7.1
 
