@@ -140,10 +140,10 @@ export class PluginContext {
     return code
   }
 
-  produceCSS() {
-    if (!this.styleRules.size) return ''
+  produceCSS(input = this.styleRules) {
+    if (!input.size) return ''
     const { useCSSLayers } = this.stylexOptions
-    return stylexBabelPlugin.processStylexRules([...this.styleRules.values()].flat().filter(Boolean), useCSSLayers!) + '\n' +
+    return stylexBabelPlugin.processStylexRules([...input.values()].flat().filter(Boolean), useCSSLayers!) + '\n' +
       Object.values(this.globalStyles).join('\n')
   }
 

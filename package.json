@@ -17,6 +17,11 @@
     "./client": {
       "types": "./client.d.ts"
     },
+    "./adapter": {
+      "types": "./dist/adapter/index.d.ts",
+      "import": "./dist/adapter/index.mjs",
+      "require": "./dist/adapter/index.js"
+    },
     "./*": "./*"
   },
   "files": [

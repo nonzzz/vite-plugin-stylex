@@ -1,13 +1,24 @@
 import type { Plugin } from 'vite'
 import { PluginContext } from '../context'
-import { searchForPackageRoot, unique } from '../shared'
+import { error, searchForPackageRoot, unique } from '../shared'
+import type { AdapterContext } from '../interface'
 import { stylexBuild } from './build'
 import { CONSTANTS, stylexServer } from './server'
 
 export function createForViteServer(ctx: PluginContext, extend: (c: PluginContext) => Plugin) {
   const cssPlugins: Plugin[] = []
+
   return (plugin: Plugin) => {
     plugin.configResolved = function configResolved(conf) {
+      const adapterContext: AdapterContext = {
+        // eslint-disable-next-line prefer-spread
+        produceCSS: (...rest: any) => ctx.produceCSS.apply(ctx, rest),
+        transform: plugin.transform as any,
+        vite: { cssPlugins, config: conf },
+        env: ctx.env,
+        rules: ctx.styleRules
+      }
+
       ctx.env = conf.command === 'serve' ? 'server' : 'build'
       ctx.root = searchForPackageRoot(conf.root)
       const { importSources, stylexOptions } = ctx
@@ -37,6 +48,13 @@ export function createForViteServer(ctx: PluginContext, extend: (c: PluginContex
         conf.plugins.splice(pos, 0, extend(ctx))
       }
       ctx.env === 'build' ? stylexBuild(plugin, ctx, cssPlugins) : stylexServer(plugin, ctx, cssPlugins, conf)
+      if (typeof ctx.stylexOptions.adapter === 'function') {
+        const adapter = ctx.stylexOptions.adapter()
+        if (!adapter.name) {
+          throw error('adapter missing name.')
+        }
+        adapter.setup(adapterContext, plugin)
+      }
     }
   }
 }

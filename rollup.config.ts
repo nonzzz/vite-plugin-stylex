@@ -18,12 +18,27 @@ export default defineConfig([
     ],
     plugins: [
       swc()
-      // minify({ mangle: true, module: true, compress: true, sourceMap: true })
     ]
   },
   {
     input: 'src/index.ts',
     output: { file: 'dist/index.d.ts' },
+    plugins: [dts({})]
+  },
+  {
+    input: 'src/adapter/index.ts',
+    external,
+    output: [
+      { file: 'dist/adapter/index.mjs', format: 'esm', exports: 'named' },
+      { file: 'dist/adapter/index.js', format: 'cjs', exports: 'named' }
+    ],
+    plugins: [
+      swc()
+    ]
+  },
+  {
+    input: 'src/adapter/index.ts',
+    output: { file: 'dist/adapter/index.d.ts' },
     plugins: [dts({})]
   }
 ])
