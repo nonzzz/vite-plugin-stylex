@@ -107,8 +107,11 @@ export class PluginContext {
     let pass = false
     for (const stmt of this.#stmts) {
       const { n } = stmt
-      if (n && this.importSources.some(i => !path.isAbsolute(n) && n.includes(typeof i === 'string' ? i : i.from))) {
-        pass = true
+      if (n) {
+        if (n.endsWith('.css')) continue
+        if (this.importSources.some(i => !path.isAbsolute(n) && n.includes(typeof i === 'string' ? i : i.from))) {
+          pass = true
+        }
       }
     }
     return pass

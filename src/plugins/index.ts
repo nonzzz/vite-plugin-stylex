@@ -1,19 +1,21 @@
-import type { Plugin } from 'vite'
+import type { HookHandler, Plugin } from 'vite'
 import { PluginContext } from '../context'
-import { error, searchForPackageRoot, unique } from '../shared'
+import { error, hijackHook, searchForPackageRoot, unique } from '../shared'
 import type { AdapterContext } from '../interface'
 import { stylexBuild } from './build'
 import { CONSTANTS, stylexServer } from './server'
+import type { CssHooks } from './server'
 
 export function createForViteServer(ctx: PluginContext, extend: (c: PluginContext) => Plugin) {
   const cssPlugins: Plugin[] = []
+  const cssHooks: CssHooks = new Map()
 
   return (plugin: Plugin) => {
     plugin.configResolved = function configResolved(conf) {
       const adapterContext: AdapterContext = {
         // eslint-disable-next-line prefer-spread
         produceCSS: (...rest: any) => ctx.produceCSS.apply(ctx, rest),
-        transform: plugin.transform as any,
+        transform: plugin.transform as HookHandler<Plugin['transform']>,
         vite: { cssPlugins, config: conf },
         env: ctx.env,
         rules: ctx.styleRules,
@@ -41,14 +43,19 @@ export function createForViteServer(ctx: PluginContext, extend: (c: PluginContex
           ? [...conf.ssr.noExternal, ...optimizedDeps]
           : conf.ssr.noExternal
       }
-      cssPlugins.push(...conf.plugins.filter(p => CONSTANTS.CSS_PLUGINS.includes(p.name)))
-      cssPlugins.sort((a, b) => a.name.length < b.name.length ? -1 : 1)
+
+      conf.plugins.forEach(p => {
+        if (CONSTANTS.CSS_PLUGINS.includes(p.name)) {
+          cssHooks.set(p.name, hijackHook(p, 'transform', (fn, c, args) => fn.apply(c, args), true))
+        }
+      })
+
       const pos = conf.plugins.findIndex(p => p.name === 'stylex')
       if (Object.keys(ctx.stylexExtendOptions).length) {
         // @ts-expect-error
         conf.plugins.splice(pos, 0, extend(ctx))
       }
-      ctx.env === 'build' ? stylexBuild(plugin, ctx, cssPlugins) : stylexServer(plugin, ctx, cssPlugins, conf)
+      ctx.env === 'build' ? stylexBuild(plugin, ctx, cssPlugins) : stylexServer(plugin, { ctx, cssHooks, config: conf })
       if (typeof ctx.stylexOptions.adapter === 'function') {
         const adapter = ctx.stylexOptions.adapter()
         if (!adapter.name) {
