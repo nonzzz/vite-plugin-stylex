@@ -1,4 +1,3 @@
-import fs from 'fs'
 import type { HookHandler, Plugin, ResolvedConfig, Update, ViteDevServer } from 'vite'
 import { PluginContext, parseRequest } from '../context'
 import { hash, hijackHook } from '../shared'
@@ -22,8 +21,8 @@ export const CONSTANTS = {
   HASH_LENGTH: 6,
   CSS_PLUGINS: ['vite:css', 'vite:css-post'],
   WELL_KNOW_LIBRARIES: ['@stylexjs/open-props'],
-  STYLEX_START_COMMENT: '#--stylex-dev-start--#',
-  STYLEX_END_COMMENT: '#--stylex-dev-end--#'
+  STYLEX_START_COMMENT: '__stylex-dev-start__{--:"";}',
+  STYLEX_END_COMMENT: '__stylex-dev-end__{--:"";}'
 }
 
 export function resolveId(id: string) {
@@ -67,22 +66,18 @@ export function createHasteCSS(ctx: PluginContext, effects: Set<string>) {
         break
       }
     }
-
+    handler?.(css)
     return css
   }
 }
 
 export function stylexServer(self: Plugin, options: InternalConfig) {
-  // let viteDevServer: ViteDevServer | null = null
-  // let lastServerTime = Date.now()
-  // const modules = new Set<string>()
-
-  const { ctx, config, cssHooks } = options
+  const { ctx, config } = options
   let viteServer: ViteDevServer | null = null
-  const { isManuallyControlCSS, controlCSSByManually = { id, symbol } } = ctx
+  const { isManuallyControlCSS, controlCSSByManually } = ctx
   const effects = new Set<string>()
   const entries = new Set<string>()
-  // const diffs = new Set<string>()
+  let lastHash = ''
   let lastHMRTime = Date.now()
   let invalidateTimer: NodeJS.Timeout | null
   const generateCSS = createHasteCSS(ctx, effects)
@@ -121,15 +116,15 @@ export function stylexServer(self: Plugin, options: InternalConfig) {
     configureServer(server) {
       viteServer = server
       server.ws.on(CONSTANTS.WS_EVENT, () => {
-        lastHMRTime = Date.now()
-        update(entries)
+        let uuid = ''
+        generateCSS((css) => uuid = hash(css))
+        if (uuid !== lastHash) {
+          lastHMRTime = Date.now()
+          update(entries)
+        }
       })
     },
     resolveId(id) {
-      if (isManuallyControlCSS && id === controlCSSByManually.id) {
-        entries.add(CONSTANTS.STYLEX_CSS)
-        return CONSTANTS.STYLEX_CSS
-      }
       if (resolveId(id)) {
         entries.add(CONSTANTS.STYLEX_CSS)
         return CONSTANTS.STYLEX_CSS
@@ -137,16 +132,44 @@ export function stylexServer(self: Plugin, options: InternalConfig) {
     },
     load(id) {
       const { original } = parseRequest(id)
+
+      if (isManuallyControlCSS && original === controlCSSByManually.id) {
+        entries.add(id)
+      }
+
       if (original.match(CONSTANTS.RESOLVED_ID_REG) && !isManuallyControlCSS) {
         let uuid = ''
         const css = generateCSS((css) => {
           uuid = hash(css)
         })
         lastHMRTime = Date.now()
+        lastHash = uuid
         return {
-          code: CONSTANTS.STYLEX_START_COMMENT + `${css}__css_hash_${uuid}{--:'';}` + CONSTANTS.STYLEX_END_COMMENT,
+          code: `${css}__stylex_hash_${uuid}{--:'';}`,
           map: { mappings: '' }
         }
+      }
+    },
+    transform(code, id) {
+      if (isManuallyControlCSS && entries.has(id)) {
+        let uuid = ''
+        const css = generateCSS((css) => {
+          uuid = hash(css)
+        })
+        lastHMRTime = Date.now()
+        lastHash = uuid
+        if (code.includes(CONSTANTS.STYLEX_START_COMMENT) && code.includes(CONSTANTS.STYLEX_END_COMMENT)) {
+          const start = code.indexOf(CONSTANTS.STYLEX_START_COMMENT) + CONSTANTS.STYLEX_START_COMMENT.length
+          const end = code.indexOf(CONSTANTS.STYLEX_END_COMMENT)
+          code = code.substring(0, start) + css + code.substring(end)
+        } else {
+          code = code.replace(
+            controlCSSByManually.symbol!,
+            CONSTANTS.STYLEX_START_COMMENT +
+              `${css}__stylex_hash_${uuid}{--:'';}` + CONSTANTS.STYLEX_END_COMMENT
+          )
+        }
+        return { code, map: { mappings: '' } }
       }
     }
   } satisfies Plugin
@@ -157,9 +180,12 @@ export function stylexServer(self: Plugin, options: InternalConfig) {
 
     async transform(code, id) {
       // force blocking css generation
-      if (id === CONSTANTS.STYLEX_CSS && code.includes('import.meta.hot')) {
+      if (entries.has(id)) {
+        if (code.includes('import.meta.hot')) {
+          code = code + hmr
+        }
         return {
-          code: code + hmr,
+          code,
           map: { mappings: '' }
         }
       }

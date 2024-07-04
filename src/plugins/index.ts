@@ -55,7 +55,9 @@ export function createForViteServer(ctx: PluginContext, extend: (c: PluginContex
         // @ts-expect-error
         conf.plugins.splice(pos, 0, extend(ctx))
       }
-      ctx.env === 'build' ? stylexBuild(plugin, ctx, cssPlugins) : stylexServer(plugin, { ctx, cssHooks, config: conf })
+      ctx.env === 'build'
+        ? stylexBuild(plugin, { ctx, cssHooks, config: conf })
+        : stylexServer(plugin, { ctx, cssHooks, config: conf })
       if (typeof ctx.stylexOptions.adapter === 'function') {
         const adapter = ctx.stylexOptions.adapter()
         if (!adapter.name) {

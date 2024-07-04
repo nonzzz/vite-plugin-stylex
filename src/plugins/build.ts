@@ -1,13 +1,13 @@
 import fs from 'fs'
-import type { HookHandler, Plugin } from 'vite'
-import { PluginContext, parseRequest } from '../context'
-import { hijackHook } from '../shared'
+import type { Plugin } from 'vite'
+import { parseRequest } from '../context'
 import { CONSTANTS, resolveId } from './server'
+import type { InternalConfig } from './server'
 
 // This implement is a relatively stable version.
 
-export function stylexBuild(plugin: Plugin, ctx: PluginContext, cssPlugins: Plugin[]) {
-  const cssHooks = new Map<'vite:css' | 'vite:css-post' | string & ({}), HookHandler<Plugin['transform']>>()
+export function stylexBuild(plugin: Plugin, opts: InternalConfig) {
+  const { cssHooks, ctx } = opts
   const entries = new Set<string>()
   const self = <Partial<Plugin>> {
     enforce: 'post',
@@ -33,11 +33,6 @@ export function stylexBuild(plugin: Plugin, ctx: PluginContext, cssPlugins: Plug
     renderChunk: {
       // By declare order we can get better performance for generate styles.
       async handler(_, chunk) {
-        if (!cssHooks.size) {
-          cssPlugins.forEach((p) => {
-            cssHooks.set(p.name, hijackHook(p, 'transform', (fn, c, args) => fn.apply(c, args), true))
-          })
-        }
         if (!chunk.moduleIds.some(s => entries.has(s))) {
           return null
         }
