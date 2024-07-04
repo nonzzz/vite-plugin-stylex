@@ -79,7 +79,6 @@ export function stylexServer(self: Plugin, options: InternalConfig) {
   const entries = new Set<string>()
   let lastHash = ''
   let lastHMRTime = Date.now()
-  let invalidateTimer: NodeJS.Timeout | null
   const generateCSS = createHasteCSS(ctx, effects)
 
   const update = (ids: Set<string>) => {
@@ -103,10 +102,7 @@ export function stylexServer(self: Plugin, options: InternalConfig) {
       if (!mod) continue
       viteServer?.moduleGraph.invalidateModule(mod)
     }
-    invalidateTimer && clearTimeout(invalidateTimer)
-    invalidateTimer = setTimeout(() => {
-      update(ids)
-    }, 20)
+    update(ids)
   }
 
   const scan = {
@@ -203,10 +199,10 @@ export function stylexServer(self: Plugin, options: InternalConfig) {
     const result = await fn.apply(c, args)
     const { original } = parseRequest(args[1])
     if (result && typeof result === 'object') {
-      if (result.meta && Reflect.has(result.meta, 'stylex') && result.meta.stylex.length) {
+      if (ctx.styleRules.has(original)) {
         effects.add(original)
+        onInvalidate(new Set([args[1], ...entries]))
       }
-      onInvalidate(new Set([args[1], ...entries]))
     }
     return result
   })
