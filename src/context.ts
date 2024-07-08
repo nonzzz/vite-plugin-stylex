@@ -59,27 +59,30 @@ export function parseRequest(id: string) {
 export class PluginContext {
   styleRules: Map<string, Rule[]>
   globalStyles: Record<string, string>
-  #pluginOptions: StylexPluginOptions
+  pluginOptions: StylexPluginOptions
   root: string
-  #env: Env
-  #rollupPluginContext: RollupPluginContext | null
-  #stmts: ImportSpecifier[]
+  // We don't recommend using NODE_ENV to determine the environment type.
+  // Instead, we recommend using a custom environment variable.
+  // If their are any reports about this. we can add a note to the docs.
+  env: Env
+  rollupPluginContext: RollupPluginContext | null
+  stmts: ImportSpecifier[]
   constructor(options: StylexPluginOptions) {
     this.styleRules = new Map()
-    this.#rollupPluginContext = null
-    this.#pluginOptions = options
-    this.#stmts = []
+    this.rollupPluginContext = null
+    this.pluginOptions = options
+    this.stmts = []
     this.globalStyles = {}
     this.root = process.cwd()
-    this.#env = process.env.NODE_ENV === 'production' ? 'build' : 'server'
+    this.env = process.env.NODE_ENV === 'production' ? 'build' : 'server'
   }
 
   get filter() {
-    return createFilter(this.#pluginOptions.include, this.#pluginOptions.exclude)
+    return createFilter(this.pluginOptions.include, this.pluginOptions.exclude)
   }
 
   get stylexExtendOptions(): StylexExtendBabelPluginOptions {
-    const { enableStylexExtend } = this.#pluginOptions
+    const { enableStylexExtend } = this.pluginOptions
     if (typeof enableStylexExtend === 'boolean' && enableStylexExtend) {
       return { ...defaultStylexExtendOptions }
     }
@@ -91,21 +94,21 @@ export class PluginContext {
   }
 
   get stylexOptions() {
-    return this.#pluginOptions
+    return this.pluginOptions
   }
 
   setupRollupPluginContext(rollupPluginContext: RollupPluginContext) {
-    if (this.#rollupPluginContext) return
-    this.#rollupPluginContext = rollupPluginContext
+    if (this.rollupPluginContext) return
+    this.rollupPluginContext = rollupPluginContext
   }
 
   skipResolve(code: string, id: string) {
     if (!this.filter!(id) || id.startsWith('\0')) return false
     const { kind } = parseRequest(id)
     if (kind.includes('.css')) return false
-    this.#stmts = scanImportStmt(code, id)
+    this.stmts = scanImportStmt(code, id)
     let pass = false
-    for (const stmt of this.#stmts) {
+    for (const stmt of this.stmts) {
       const { n } = stmt
       if (n) {
         if (n.endsWith('.css')) continue
@@ -120,13 +123,13 @@ export class PluginContext {
   // Alough stylex/stylex-extend support translate path aliases to relative path
   // But it only supports tsconfig-style aliases. Now we have parsed the import stmt
   // So why not transform them to relative path directly?
-  async rewriteImportStmts(code: string, id: string, stmts = this.#stmts) {
+  async rewriteImportStmts(code: string, id: string, stmts = this.stmts) {
     let byteOffset = 0
     for (const stmt of stmts) {
       if (!stmt.n) continue
       if (path.isAbsolute(stmt.n) || stmt.n[0] === '.') continue
       if (!this.importSources.some(i => stmt.n!.includes(typeof i === 'string' ? i : i.from))) continue
-      const resolved = await this.#rollupPluginContext!.resolve(stmt.n, id)
+      const resolved = await this.rollupPluginContext!.resolve(stmt.n, id)
       if (resolved && resolved.id && !resolved.external) {
         if (resolved.id === stmt.n) continue
         if (CONSTANTS.RESOLVED_ID_REG.test(resolved.id)) continue
@@ -139,7 +142,7 @@ export class PluginContext {
         }
       }
     }
-    this.#stmts = []
+    this.stmts = []
     return code
   }
 
@@ -154,31 +157,12 @@ export class PluginContext {
     this.styleRules.clear()
     this.root = process.cwd()
     this.globalStyles = {}
-    this.#rollupPluginContext = null
-  }
-
-  // We don't recommend using NODE_ENV to determine the environment type.
-  // Instead, we recommend using a custom environment variable.
-  // If their are any reports about this. we can add a note to the docs.
-  get env() {
-    return this.#env
-  }
-
-  set env(env: Env) {
-    this.#env = env
+    this.rollupPluginContext = null
   }
 
   get importSources() {
-    if (!this.#pluginOptions.importSources) throw error('Missing "importSources" in options')
-    return this.#pluginOptions.importSources
-  }
-
-  get stmts() {
-    return this.#stmts
-  }
-
-  get rollupPluginContext() {
-    return this.#rollupPluginContext
+    if (!this.pluginOptions.importSources) throw error('Missing "importSources" in options')
+    return this.pluginOptions.importSources
   }
 
   get controlCSSByManually(): ManuallyControlCssOrder {

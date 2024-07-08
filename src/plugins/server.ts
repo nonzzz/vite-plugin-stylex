@@ -10,6 +10,12 @@ export interface InternalConfig {
   ctx: PluginContext
 }
 
+export interface ScannerAPI {
+  entries: Set<string>
+  effects: Set<string>
+  lastHMRTime: () => number
+}
+
 export const CONSTANTS = {
   WS_EVENT: 'stylex:hmr',
   VIRTUAL_STYLEX_ID: 'virtual:stylex.css',
@@ -48,7 +54,7 @@ try {
   }
 
 } catch (e) {
-  console.warn('[vite-plugin0-stylex]', e)
+  console.warn('[vite-plugin-stylex]', e)
 }
 if(!import.meta.url.includes('?')) {
    await new Promise(r => setTimeout(r, 100))
@@ -91,7 +97,7 @@ export function stylexServer(self: Plugin, options: InternalConfig) {
           acceptedPath: id,
           path: mod.url,
           timestamp: lastHMRTime,
-          type: 'js-update'
+          type: mod.type === 'css' ? 'css-update' : 'js-update'
         } satisfies Update
       }).filter((s) => s !== null) as Update[]
     })
@@ -109,6 +115,11 @@ export function stylexServer(self: Plugin, options: InternalConfig) {
     name: 'stylex:server-scan',
     enforce: 'pre',
     apply: 'serve',
+    api: {
+      entries,
+      effects,
+      lastHMRTime: () => lastHMRTime
+    },
     configureServer(server) {
       viteServer = server
       server.ws.on(CONSTANTS.WS_EVENT, () => {
@@ -128,7 +139,6 @@ export function stylexServer(self: Plugin, options: InternalConfig) {
     },
     load(id) {
       const { original } = parseRequest(id)
-
       if (isManuallyControlCSS && original === controlCSSByManually.id) {
         entries.add(id)
       }
@@ -147,6 +157,7 @@ export function stylexServer(self: Plugin, options: InternalConfig) {
       }
     },
     transform(code, id) {
+      // It's only update direct css file.
       if (isManuallyControlCSS && entries.has(id)) {
         let uuid = ''
         const css = generateCSS((css) => {
@@ -165,6 +176,7 @@ export function stylexServer(self: Plugin, options: InternalConfig) {
               `${css}__stylex_hash_${uuid}{--:'';}` + CONSTANTS.STYLEX_END_COMMENT
           )
         }
+
         return { code, map: { mappings: '' } }
       }
     }

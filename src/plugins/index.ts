@@ -1,7 +1,7 @@
 import type { HookHandler, Plugin } from 'vite'
 import { PluginContext } from '../context'
 import { error, hijackHook, searchForPackageRoot, unique } from '../shared'
-import type { AdapterContext } from '../interface'
+import type { AdapterOptions } from '../interface'
 import { stylexBuild } from './build'
 import { CONSTANTS, stylexServer } from './server'
 import type { CssHooks } from './server'
@@ -12,14 +12,10 @@ export function createForViteServer(ctx: PluginContext, extend: (c: PluginContex
 
   return (plugin: Plugin) => {
     plugin.configResolved = function configResolved(conf) {
-      const adapterContext: AdapterContext = {
-        // eslint-disable-next-line prefer-spread
-        produceCSS: (...rest: any) => ctx.produceCSS.apply(ctx, rest),
+      const adapterOptions: AdapterOptions = {
         transform: plugin.transform as HookHandler<Plugin['transform']>,
         vite: { cssPlugins, config: conf },
-        env: ctx.env,
-        rules: ctx.styleRules,
-        useCSSLayers: ctx.stylexOptions.useCSSLayers ?? false
+        context: ctx
       }
 
       ctx.env = conf.command === 'serve' ? 'server' : 'build'
@@ -63,7 +59,7 @@ export function createForViteServer(ctx: PluginContext, extend: (c: PluginContex
         if (!adapter.name) {
           throw error('adapter missing name.')
         }
-        adapter.setup(adapterContext, plugin)
+        adapter.setup(plugin, adapterOptions)
       }
     }
   }

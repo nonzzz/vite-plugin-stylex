@@ -1,9 +1,9 @@
 import type { FilterPattern, HookHandler, Plugin, ResolvedConfig } from 'vite'
-import type { Options, Rule } from '@stylexjs/babel-plugin'
+import type { Options } from '@stylexjs/babel-plugin'
 import type { PluginItem } from '@babel/core'
 import type { StylexExtendBabelPluginOptions } from '@stylex-extend/babel-plugin'
 import { noop } from './shared'
-import type { Env, PluginContext } from './context'
+import type { PluginContext } from './context'
 
 export type Mutable<T> = {
   -readonly [P in keyof T]: T[P]
@@ -13,18 +13,15 @@ interface AdapterViteOptions {
   cssPlugins: Plugin[]
   config: ResolvedConfig
 }
-export interface AdapterContext {
-  env: Env
+export interface AdapterOptions {
   vite: AdapterViteOptions
-  rules: PluginContext['styleRules']
-  useCSSLayers: boolean
-  produceCSS: (input?: Map<string, Rule[]>) => string
+  context: PluginContext
   transform: HookHandler<Plugin['transform']>
 }
 
 export interface AdapterConfig {
   name: string
-  setup: (ctx: AdapterContext, plugin: Plugin) => void
+  setup: (self: Plugin, options: AdapterOptions) => void
 }
 
 export type Pretty<T> =
