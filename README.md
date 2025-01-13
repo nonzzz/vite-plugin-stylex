@@ -4,6 +4,8 @@
 > This is an unofficial repo.
 > This plugin is dedicated to providing stable stylex integration.
 
+No longer maintained Migrate to [stylex-extend](https://github.com/nonzzz/stylex-extend)
+
 ## Features
 
 - [x] CSS automatic injection
